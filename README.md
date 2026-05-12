@@ -1,56 +1,146 @@
-# Welcome to your Expo app 👋
+# Sistema de Confeitaria
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo mobile de cardápio online para confeitaria, desenvolvido com React Native, Expo e Firebase.
 
-## Get started
+O sistema permite que clientes visualizem produtos e realizem pedidos, enquanto o administrador gerencia o cardápio e acompanha os pedidos.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+# Funcionalidades
 
-2. Start the app
+## Área do Dono da Confeitaria
 
-   ```bash
-   npx expo start
-   ```
+### Autenticação
+- Login com usuário e senha
+- Apenas usuários com função `ADMIN`
 
-In the output, you'll find options to open the app in a
+### Gerenciamento do Cardápio
+- Adicionar item
+- Editar item
+- Remover item
+- Listar itens
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Gerenciamento de Pedidos
+- Visualizar pedidos
+- Alterar status do pedido:
+  - `PENDENTE`
+  - `EM_PREPARO`
+  - `ENTREGUE`
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## Área do Cliente
 
-When you're ready, run:
+### Autenticação
+- Cadastro
+- Login
 
-```bash
-npm run reset-project
+### Cardápio
+- Visualizar itens disponíveis
+
+### Pedido
+- Criar pedido
+- Adicionar itens
+- Editar quantidade
+- Remover itens
+- Finalizar pedido
+
+### Acompanhamento
+- Ver status do pedido
+
+---
+
+# Fluxo do Cliente
+
+1. Cadastro
+2. Login
+3. Visualizar Cardápio
+4. Criar Pedido
+5. Adicionar Itens
+6. Finalizar Pedido
+7. Acompanhar Status do Pedido
+
+---
+
+# Fluxo do Admin / Dono da Confeitaria
+
+1. Login
+2. Gerenciar Cardápio
+3. Visualizar Pedidos
+4. Atualizar Status
+
+---
+
+# Estrutura do Projeto
+
+```txt
+src/
+├── screens/
+│   ├── auth/
+│   ├── cliente/
+│   └── admin/
+│
+├── components/
+│
+├── services/
+│   ├── firebase/
+│   ├── auth/
+│   └── firestore/
+│
+├── hooks/
+│
+├── contexts/
+│
+├── routes/
+│
+├── styles/
+│
+├── utils/
+│
+└── types/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+# Estrutura do Banco de Dados
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Usuarios
 
-## Learn more
+| Campo | Tipo |
+|---|---|
+| id | number |
+| nome | string |
+| senha | string |
+| funcao | string |
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Pedidos
 
-## Join the community
+| Campo | Tipo |
+|---|---|
+| clienteId | number |
+| status | string |
+| valorTotal | number |
+| criadoEm | timestamp |
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Itens
+
+| Campo | Tipo |
+|---|---|
+| nome | string |
+| descricao | string |
+| valor | number |
+| imagemUrl | string |
+
+---
+
+## Pedidos-Itens
+
+| Campo | Tipo |
+|---|---|
+| pedidoId | number |
+| itemId | number |
+| quantidade | number |
