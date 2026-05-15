@@ -1,18 +1,18 @@
 import { Timestamp } from "firebase/firestore"
 
 export class User {
-     private _id?: string
+    private _id?: string
     private _name: string
     private _email: string
     private _createdAt: Timestamp
-    constructor(name: string, email: string, createdAt: Timestamp,id?: string) {
-         this._id = id
+    constructor(name: string, email: string, createdAt: Timestamp, id?: string) {
+        this._id = id
         this._name = this.setName(name)
         this._email = this.setEmail(email)
         this._createdAt = this.setCreatedAt(createdAt)
     }
 
-        setId(id: string) {
+    setId(id: string) {
         if (this._id) {
             throw new Error("Id already assigned")
         }
@@ -60,7 +60,7 @@ export class User {
         if (!createdAt) {
             throw new Error("CreatedAt is null")
         }
-       
+
         return createdAt
     }
     getCreatedAt() {
