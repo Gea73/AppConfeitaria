@@ -13,7 +13,7 @@ async function createOrder(customerId: string, items: object, status: string) {
 
         return docRef.id
     } catch (error) {
-        console.error(error);
+         throw error
     }
 }
 
@@ -24,7 +24,7 @@ async function updateOrderStatus(orderId: string, status: string) {
             status: status
         })
     } catch (error) {
-        console.error(error);
+         throw error
     }
 }
 
@@ -35,7 +35,7 @@ async function updateOrderItems(orderId: string, items: object) {
             items: items
         })
     } catch (error) {
-        console.error(error);
+         throw error
     }
 }
 
@@ -44,7 +44,7 @@ async function getOrderById(id: string) {
         const docRef = doc(db, "orders", id)
         return await getDoc(docRef);
     } catch (error) {
-        console.error(error);
+         throw error
     }
 }
 
@@ -54,7 +54,7 @@ async function getOrdersByCustomer(customerId: string) {
         const querySnapshot = await getDocs(q);
         return querySnapshot;
     } catch (error) {
-        console.error(error);
+         throw error
     }
 }
 
@@ -63,6 +63,6 @@ async function deleteOrder(id: string) {
         const docRef = doc(db, "orders", id)
         await deleteDoc(docRef)
     } catch (error) {
-        console.error(error);
+        throw error
     }
 }

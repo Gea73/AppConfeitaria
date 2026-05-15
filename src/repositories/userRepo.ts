@@ -12,7 +12,7 @@ async function createUser(name: string, email: string) {
 
         return docRef.id
     } catch (error) {
-        console.error(error);
+         throw error
     }
 }
 
@@ -22,7 +22,7 @@ async function getUserById(id: string) {
        const docRef = doc(db,"users",id)
         return await getDoc(docRef);
     } catch (error) {
-        console.error(error);
+        throw error
     }
 }
 
@@ -33,6 +33,6 @@ async function getUserByEmail(email: string) {
         const querySnapshot = await getDocs(q);
         return querySnapshot;
     } catch (error) {
-        console.error(error);
+        throw error
     }
 }
