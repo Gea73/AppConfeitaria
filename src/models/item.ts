@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase/firestore"
+import { FieldValue, Timestamp } from "firebase/firestore"
 
 export class Item {
     private _id?: string
@@ -6,8 +6,8 @@ export class Item {
     private _description: string
     private _price: number
     private _imageUrl: string
-    private _createdAt: Timestamp
-    constructor(name: string, description: string, price: number, imageUrl: string, createdAt: Timestamp, id?: string) {
+    private _createdAt: Timestamp | FieldValue
+    constructor(name: string, description: string, price: number, imageUrl: string, createdAt: Timestamp | FieldValue, id?: string) {
         this._id = id
         this._name = this.setName(name)
         this._description = this.setDescription(description)
@@ -83,7 +83,7 @@ export class Item {
         return this._imageUrl
     }
 
-    setCreatedAt(createdAt: Timestamp) {
+    setCreatedAt(createdAt: Timestamp | FieldValue) {
         if (!createdAt) {
             throw new Error("CreatedAt is null")
         }
