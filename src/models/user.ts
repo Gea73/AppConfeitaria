@@ -1,25 +1,23 @@
-import { Timestamp } from "firebase/firestore"
+import { FieldValue, Timestamp } from "firebase/firestore"
 
 export class User {
-    private _id?: string
+    private _id: string
     private _name: string
     private _email: string
-    private _createdAt: Timestamp
-    constructor(name: string, email: string, createdAt: Timestamp, id?: string) {
-        this._id = id
+    private _createdAt: Timestamp | FieldValue
+    constructor(id: string, name: string, email: string, createdAt: Timestamp | FieldValue) {
+        this._id = this.setId(id)
         this._name = this.setName(name)
         this._email = this.setEmail(email)
         this._createdAt = this.setCreatedAt(createdAt)
     }
 
     setId(id: string) {
-        if (this._id) {
-            throw new Error("Id already assigned")
-        }
+
         if (!id || id.trim().length === 0) {
             throw new Error("Id is empty")
         }
-        this._id = id
+        return id;
     }
 
     getId() {
@@ -56,7 +54,7 @@ export class User {
         return this._email
     }
 
-    setCreatedAt(createdAt: Timestamp) {
+    setCreatedAt(createdAt: Timestamp | FieldValue) {
         if (!createdAt) {
             throw new Error("CreatedAt is null")
         }

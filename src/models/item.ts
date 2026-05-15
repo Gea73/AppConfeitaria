@@ -1,14 +1,14 @@
 import { FieldValue, Timestamp } from "firebase/firestore"
 
 export class Item {
-    private _id?: string
+    private _id: string
     private _name: string
     private _description: string
     private _price: number
     private _imageUrl: string
     private _createdAt: Timestamp | FieldValue
-    constructor(name: string, description: string, price: number, imageUrl: string, createdAt: Timestamp | FieldValue, id?: string) {
-        this._id = id
+    constructor( id: string,name: string, description: string, price: number, imageUrl: string, createdAt: Timestamp | FieldValue) {
+        this._id = this.setId(id)
         this._name = this.setName(name)
         this._description = this.setDescription(description)
         this._price = this.setPrice(price)
@@ -17,13 +17,10 @@ export class Item {
     }
 
     setId(id: string) {
-        if (this._id) {
-            throw new Error("Id already assigned")
-        }
         if (!id || id.trim().length === 0) {
             throw new Error("Id is empty")
         }
-        this._id = id
+        return id
     }
 
     getId() {

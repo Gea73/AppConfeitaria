@@ -1,15 +1,15 @@
-import { Timestamp } from "firebase/firestore";
+import { FieldValue, Timestamp } from "firebase/firestore";
 
 type orderStatus = "pending" | "preparing" | "delivered";
 
 export class Order {
-    private _id?: string
+    private _id: string
     private _customerId: string
     private _items: object
     private _status: orderStatus
-    private _createdAt: Timestamp
-    constructor(customerId: string, items: object, status: orderStatus, createdAt: Timestamp, id?: string) {
-        this._id = id
+    private _createdAt: Timestamp | FieldValue
+    constructor(id: string,customerId: string, items: object, status: orderStatus, createdAt: Timestamp | FieldValue ) {
+        this._id = this.setId(id)
         this._customerId = this.setCustomerId(customerId)
         this._items = this.setItems(items)
         this._status = this.setStatus(status)
@@ -17,13 +17,11 @@ export class Order {
     }
 
     setId(id: string) {
-        if (this._id) {
-            throw new Error("Id already assigned")
-        }
+
         if (!id || id.trim().length === 0) {
             throw new Error("Id is empty")
         }
-        this._id = id
+        return id
     }
 
     getId() {
@@ -64,7 +62,7 @@ export class Order {
     }
 
 
-    setCreatedAt(createdAt: Timestamp) {
+    setCreatedAt(createdAt: Timestamp | FieldValue) {
         if (!createdAt) {
             throw new Error("CreatedAt is null")
         }
