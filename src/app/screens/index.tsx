@@ -1,5 +1,5 @@
 import { colors, spacing, typography } from "@/styles/global";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 
@@ -9,7 +9,7 @@ export default function Login() {
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={stylesheet.titleContainer}>
                     <Text style={stylesheet.title}>Confeitaria</Text>
-                    <Image source={}/>
+                    
                 </View>
 
                 <View style={stylesheet.formContainer}>
