@@ -8,11 +8,11 @@ export class Order {
     private _items: object
     private _status: orderStatus
     private _createdAt: Timestamp | FieldValue
-    constructor(id: string,customerId: string, items: object, status: orderStatus, createdAt: Timestamp | FieldValue ) {
+    constructor(id: string, customerId: string, items: object, createdAt: Timestamp | FieldValue) {
         this._id = this.setId(id)
         this._customerId = this.setCustomerId(customerId)
         this._items = this.setItems(items)
-        this._status = this.setStatus(status)
+        this._status = "pending"
         this._createdAt = this.setCreatedAt(createdAt)
     }
 
