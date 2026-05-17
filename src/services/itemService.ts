@@ -4,9 +4,9 @@ import { itemRepo } from "../repositories/itemRepo";
 export const itemService = {
     createItem: async function (name: string, description: string, price: number, imageUrl: string) {
         try {
-            const data = await itemRepo.createItem(name, description, price, imageUrl)
+            const data = await itemRepo.createItem(name, description, price, imageUrl);
 
-            const item = new Item(data.id,name, description, price, imageUrl, data.createdAt, )
+            const item = new Item(data.id, name, description, price, imageUrl, data.createdAt,);
             return item;
 
         } catch (error) {
@@ -22,13 +22,13 @@ export const itemService = {
         try {
 
             if (description) {
-                await itemRepo.updateItemDescription(id, description)
+                await itemRepo.updateItemDescription(id, description);
             }
             if (price) {
-                await itemRepo.updateItemPrice(id, price)
+                await itemRepo.updateItemPrice(id, price);
             }
             if (imageUrl) {
-                await itemRepo.updateItemImage(id, imageUrl)
+                await itemRepo.updateItemImage(id, imageUrl);
             }
 
         } catch (error) {
@@ -41,10 +41,10 @@ export const itemService = {
 
     getItem: async function (id: string | null, name: string | null) {
         if (id) {
-            return await itemRepo.getItemById(id)
+            return await itemRepo.getItemById(id);
         }
         if (name) {
-            return await itemRepo.getItemByName(name)
+            return await itemRepo.getItemByName(name);
         }
 
     },
