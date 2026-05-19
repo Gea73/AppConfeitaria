@@ -21,15 +21,8 @@ export const itemService = {
     updateItem: async function (id: string, description: string | null, price: number | null, imageUrl: string | null) {
         try {
 
-            if (description) {
-                await itemRepo.updateItemDescription(id, description);
-            }
-            if (price) {
-                await itemRepo.updateItemPrice(id, price);
-            }
-            if (imageUrl) {
-                await itemRepo.updateItemImage(id, imageUrl);
-            }
+            await itemRepo.updateItem(id, description, price, imageUrl)
+
 
         } catch (error) {
             throw new Error("Item can't be updated", {

@@ -20,12 +20,8 @@ export const orderService = {
     updateOrder: async function (orderId: string, items: object | null, status: string | null) {
         try {
 
-            if (items) {
-                await orderRepo.updateOrderItems(orderId, items);
-            }
-            if (status) {
-                await orderRepo.updateOrderStatus(orderId, status);
-            }
+            await orderRepo.updateOrder(orderId, status, items)
+
         } catch (error) {
             throw new Error("Order couldn't be updated", {
                 cause: error

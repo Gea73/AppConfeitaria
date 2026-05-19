@@ -29,7 +29,7 @@ export const itemRepo = {
             return querySnapshot;
 
         } catch (error) {
-             throw error
+            throw error
         }
     },
 
@@ -44,38 +44,30 @@ export const itemRepo = {
     },
 
 
-    updateItemDescription: async function (id: string, description: string) {
+    updateItem: async function (id: string, description: string | null, price: number | null, imageUrl: string | null) {
         try {
             const docRef = doc(db, "items", id)
-            await updateDoc(docRef, {
-                description: description
-            })
+            let dataToUpdate = {}
+            if (description != null) {
+                dataToUpdate = { ...dataToUpdate, description: description }
+            }
+            if (price != null) {
+                dataToUpdate = { ...dataToUpdate, price: price }
+            }
+            if (imageUrl != null) {
+                dataToUpdate = { ...dataToUpdate, imageUrl: imageUrl }
+            }
+            await updateDoc(docRef,
+                dataToUpdate
+            )
+
         } catch (error) {
             throw error
         }
+
+
     },
 
-    updateItemPrice: async function (id: string, price: number) {
-        try {
-            const docRef = doc(db, "items", id)
-            await updateDoc(docRef, {
-                price: price
-            })
-        } catch (error) {
-            throw error
-        }
-    },
-
-    updateItemImage: async function (id: string, imageUrl: string) {
-        try {
-            const docRef = doc(db, "items", id)
-            await updateDoc(docRef, {
-                imageUrl: imageUrl
-            })
-        } catch (error) {
-            throw error
-        }
-    },
 
     deleteItem: async function (id: string) {
         try {

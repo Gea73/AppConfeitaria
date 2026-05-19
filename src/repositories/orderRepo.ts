@@ -19,28 +19,25 @@ export const orderRepo = {
         }
     },
 
-    updateOrderStatus: async function (orderId: string, status: string) {
+
+    updateOrder: async function (orderId: string, status: string | null, items: object | null) {
         try {
             const docRef = doc(db, "orders", orderId)
-            await updateDoc(docRef, {
-                status: status
-            })
+            let dataToUpdate = {}
+            if (status != null) {
+                dataToUpdate = { ...dataToUpdate, status: status }
+            }
+            if (items != null) {
+                dataToUpdate = { ...dataToUpdate, items: status }
+            }
+            await updateDoc(docRef, dataToUpdate)
         } catch (error) {
             throw error
         }
-    },
 
-    updateOrderItems: async function (orderId: string, items: object) {
-        try {
-            const docRef = doc(db, "orders", orderId)
-            await updateDoc(docRef, {
-                items: items
-            })
-        } catch (error) {
-            throw error
-        }
-    },
+    }
 
+    ,
     getOrderById: async function (id: string) {
         try {
             const docRef = doc(db, "orders", id)
