@@ -7,6 +7,7 @@ export const colors = {
     light: "#F2B7C6",
     mid: "#DD9296",
     strong: "#CC76A1",
+    main:"#EBB7B7",
     text: "white"
 }
 export const spacing = {
