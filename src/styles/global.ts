@@ -8,7 +8,8 @@ export const colors = {
     mid: "#DD9296",
     strong: "#CC76A1",
     main:"#EBB7B7",
-    text: "white"
+    text: "white",
+    details:"#B3B3B3"
 }
 export const spacing = {
     xs: 10,

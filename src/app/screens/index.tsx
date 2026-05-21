@@ -1,39 +1,72 @@
 import { colors, spacing, typography } from "@/styles/global";
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import {
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
+
 export default function Login() {
+  const [isPasswordVisible, setPasswordVisible] = useState(false)
   return (
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
-          <View style={stylesheet.logoContainer}>
-            <Image
-              style={stylesheet.logo}
-              source={require("@/assets/images/logo.png")}
-            />
-          </View>
-          <View style={stylesheet.titleContainer}>
-            <Text style={stylesheet.title}>Patisserie</Text>
-          </View>
+          <KeyboardAvoidingView style={{ flex: 1 }}
 
-          <View style={stylesheet.formContainer}>
-            <Text style={stylesheet.label}>Email</Text>
-            <TextInput style={stylesheet.input}></TextInput>
-            <Text style={stylesheet.label}>Senha</Text>
-            <TextInput style={stylesheet.input}></TextInput>
-            <Text>Esqueceu sua senha?</Text>
-            <TouchableOpacity style={stylesheet.button}>
-              <Text style={stylesheet.btnText}>Entrar</Text>
-            </TouchableOpacity>
-          </View>
+            behavior={Platform.OS === "ios" ? "padding" : "height"}>
+            <ScrollView>
+              <View style={stylesheet.logoContainer}>
+                <Image
+                  style={stylesheet.logo}
+                  source={require("@/assets/images/logo.png")}
+                />
+              </View>
+
+              <View style={stylesheet.titleContainer}>
+                <Text style={stylesheet.title}>Patisserie</Text>
+              </View>
+
+
+              <View style={stylesheet.formContainer}>
+
+                <View style={stylesheet.labelContainer}>
+                  <Text style={stylesheet.label}>Email</Text>
+                </View>
+
+                <TextInput placeholder="Digite seu email" placeholderTextColor={colors.details} style={stylesheet.input} />
+                <View style={stylesheet.labelContainer}>
+                  <Text style={stylesheet.label}>Senha</Text>
+                </View>
+
+                <View style={stylesheet.passwordContainer}>
+                  <TextInput secureTextEntry={isPasswordVisible} placeholder="Digite sua senha" placeholderTextColor={colors.details} style={stylesheet.inputPassword} />
+                  <TouchableOpacity onPress={() => setPasswordVisible(!isPasswordVisible)} style={{ position: "absolute", left: "70%" }}>
+                    <Ionicons name={isPasswordVisible ? "eye" : "eye-off"} size={20} color={colors.details} /></TouchableOpacity>
+                </View>
+
+                <View style={stylesheet.forgotPasswordContainer}>
+                  <Text style={stylesheet.forgotPasswordText}>Esqueceu sua senha?</Text>
+                </View>
+
+                <View style={stylesheet.buttonContainer}>
+                  <TouchableOpacity style={stylesheet.button}>
+                    <Text style={stylesheet.btnText}>Entrar</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </SafeAreaProvider>
     </>
@@ -61,28 +94,44 @@ const stylesheet = StyleSheet.create({
   },
   formContainer: {
     alignItems: "center",
+    marginTop: spacing.xl
+
   },
   input: {
     borderWidth: 1,
     width: "80%",
     padding: spacing.sm,
-    borderColor: colors.light,
-    borderRadius: 20,
+    marginTop: spacing.xs,
+    borderColor: colors.details,
+    borderRadius: 12,
   },
-  button: {
-    padding: spacing.md,
-    width: "45%",
-    paddingHorizontal: spacing.xl + spacing.xl,
-    backgroundColor: colors.main,
-    borderRadius: 20,
+  inputPassword: {
+    borderWidth: 1,
+    width: "80%",
+    padding: spacing.sm,
+    borderColor: colors.details,
+    borderRadius: 12,
+  },
+  labelContainer: {
+    alignSelf: "flex-start",
+    marginLeft: "10%",
+    marginTop: spacing.xs
   },
   label: {
     textAlign: "left",
-
     color: colors.main,
-    fontWeight: "700",
+
     fontSize: typography.subtitle,
     fontFamily: "Shafarik",
+  },
+  button: {
+    padding: spacing.md,
+    paddingHorizontal: spacing.xl * 2.5,
+    backgroundColor: colors.main,
+    borderRadius: 24,
+  },
+  buttonContainer: {
+    marginTop: spacing.md
   },
   btnText: {
     textAlign: "center",
@@ -91,4 +140,20 @@ const stylesheet = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "Shafarik",
   },
+  forgotPasswordContainer: {
+    marginTop: 3,
+    alignSelf: "flex-start",
+    marginLeft: "13%"
+  },
+  forgotPasswordText: {
+    color: colors.main,
+    textDecorationLine: "underline"
+  },
+  passwordContainer: {
+
+    marginTop: spacing.xs,
+    flexDirection: "row",
+    alignItems: "center",
+
+  }
 });
