@@ -1,5 +1,5 @@
 import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, where } from "firebase/firestore";
-import db from "../firebase/firebaseConfig";
+import { db } from "../firebase/firebaseConfig";
 
 export const userRepo = {
     createUser: async function (name: string, email: string) {

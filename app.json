@@ -1,14 +1,15 @@
 {
   "expo": {
     "name": "AppConfeitaria",
-    "slug": "AppConfeitaria",
+    "slug": "appconfeitaria",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "appconfeitaria",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.gean73.appconfeitaria"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,6 +18,7 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "package": "com.gean73.appconfeitaria",
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -27,9 +29,7 @@
       [
         "expo-font",
         {
-          "fonts": [
-            "./assets/fonts/Shafarik-Regular.ttf"
-          ]
+          "fonts": ["./assets/fonts/Shafarik-Regular.ttf"]
         }
       ],
       "expo-router",
@@ -47,6 +47,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ac26d591-dd84-4eeb-b70e-100f9176a752"
+      }
+    },
+    "owner": "gean73"
   }
 }

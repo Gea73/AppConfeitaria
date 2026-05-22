@@ -1,5 +1,5 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
-import db from "../firebase/firebaseConfig";
+import { db } from "../firebase/firebaseConfig";
 
 export const orderRepo = {
     createOrder: async function (customerId: string, items: object) {
