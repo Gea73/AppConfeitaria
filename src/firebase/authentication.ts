@@ -13,12 +13,12 @@ async function createUser(email: string, password: string) {
 
         return user
     } catch (error) {
-        console.error(error)
+        throw error
     }
 
 
 }
-async function signInUser(email: string, password: string) {
+export async function signInUser(email: string, password: string) {
 
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
@@ -26,7 +26,7 @@ async function signInUser(email: string, password: string) {
 
         return user
     } catch (error) {
-        console.error(error)
+        throw error
     }
 }
 
@@ -39,7 +39,7 @@ async function validateUserPassword(password: string) {
 
         }
     } catch (error) {
-        console.error(error)
+        throw error
     }
 }
 
@@ -50,7 +50,7 @@ async function signOutUser() {
 
         await signOutUser()
     } catch (error) {
-        console.error(error)
+        throw error
     }
 }
 
@@ -69,7 +69,7 @@ async function signInGoogle() {
 
         return user;
     } catch (error) {
-        console.error(error)
+        throw error
     }
 }
     */
