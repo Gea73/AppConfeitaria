@@ -1,3 +1,4 @@
+
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import { GoogleAuthProvider, signInWithCredential, UserCredential } from "firebase/auth";
@@ -9,7 +10,7 @@ WebBrowser.maybeCompleteAuthSession();
 const GOOGLE_CONFIG = {
     webClientId: '175660946385-dscvgf6ajdmqtu0i0igdf772jco29jot.apps.googleusercontent.com',
   androidClientId: '175660946385-9h3bebt5o3n8u5996nsketkvt8mgl19h.apps.googleusercontent.com',
-  iosClientId: '175660946385-sbf19hmphkn54cvo7mkino1eqki8hsgn.apps.googleusercontent.com',
+  iosClientId: '175660946385-sbf19hmphkn54cvo7mkino1eqki8hsgn.apps.googleusercontent.com', scopes:["profile","email"]
 }
 
 

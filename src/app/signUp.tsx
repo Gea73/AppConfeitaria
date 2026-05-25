@@ -1,6 +1,4 @@
 import { Button } from "@/components/button";
-import { ButtonGoogle } from "@/components/buttonGoogle";
-import { ButtonSquare } from "@/components/buttonSquare";
 import { EmailInput } from "@/components/emailInput";
 import ErrorBar from "@/components/errorBar";
 import { FormLabel } from "@/components/formLabel";
@@ -17,13 +15,12 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   View
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 
-export default function Login() {
+export default function SignUp() {
   const [isPasswordVisible, setPasswordVisible] = useState(false)
   const { signInWithGoogle, isReady } = useGoogleSignIn()
   const [password, setPassword] = useState("")
@@ -69,22 +66,11 @@ export default function Login() {
                 <FormLabel text="Senha"></FormLabel>
                 <PasswordInput onChangeText={setPassword} placeHolder="Digite sua senha"></PasswordInput>
 
-                <View style={stylesheet.forgotPasswordContainer}>
-                  <Text style={stylesheet.forgotPasswordText}>Esqueceu sua senha?</Text>
-                </View>
 
                 <View style={stylesheet.buttonContainer}>
-                  <Button onPress={handleLogin} text="Entrar"></Button>
+                  <Button onPress={handleLogin} text="Cadastre-se"></Button>
                 </View>
 
-                <View style={stylesheet.signUpContainer}>
-                  <Text style={stylesheet.signUpText}>Não tem uma conta?</Text>
-                </View>
-              </View>
-
-              <View style={stylesheet.twoButtonsContainer} >
-                <ButtonSquare onPress={() => { }} text="Cadastre-se"></ButtonSquare>
-                <ButtonGoogle onPress={handleGoogleLogin} isReady={isReady}></ButtonGoogle>
               </View>
 
             </ScrollView>
