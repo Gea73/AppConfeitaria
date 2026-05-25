@@ -1,4 +1,5 @@
 import { Image, StyleSheet, View } from "react-native"
+
 export function TopLogo() {
     return (<View style={stylesheet.logoContainer}>
         <Image

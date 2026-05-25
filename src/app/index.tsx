@@ -11,7 +11,7 @@ import { signInUser } from "@/firebase/authentication";
 import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { useGoogleSignIn } from "@/firebase/googleAuthentication";
 import { colors, spacing } from "@/styles/global";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -60,8 +60,9 @@ export default function Login() {
           <KeyboardAvoidingView keyboardVerticalOffset={15} style={{ flex: 1 }}
             behavior={Platform.OS === "ios" ? "padding" : "height"}>
             <ScrollView>
-
-              <TopLogo></TopLogo>
+              <Link href={"/(user)/home"}>
+                <TopLogo></TopLogo>
+              </Link>
               <Title text="Patisserie"></Title>
               <View style={stylesheet.formContainer}>
 
@@ -71,7 +72,7 @@ export default function Login() {
                 <PasswordInput onChangeText={setPassword} placeHolder="Digite sua senha"></PasswordInput>
 
                 <View style={stylesheet.forgotPasswordContainer}>
-                  <Text style={stylesheet.forgotPasswordText}>Esqueceu sua senha?</Text>
+                  <Link href={"/forgotPassword"}> <Text style={stylesheet.forgotPasswordText}>Esqueceu sua senha?</Text></Link>
                 </View>
 
                 <View style={stylesheet.buttonContainer}>

@@ -1,11 +1,12 @@
-import { Button } from "@/components/button";
+import { ButtonGoogle } from "@/components/buttonGoogle";
+import { ButtonSquare } from "@/components/buttonSquare";
 import { EmailInput } from "@/components/emailInput";
 import ErrorBar from "@/components/errorBar";
 import { FormLabel } from "@/components/formLabel";
+import { Input } from "@/components/input";
 import { PasswordInput } from "@/components/passwordInput";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
-import { signInUser } from "@/firebase/authentication";
 import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { useGoogleSignIn } from "@/firebase/googleAuthentication";
 import { colors, spacing } from "@/styles/global";
@@ -25,6 +26,7 @@ export default function SignUp() {
   const { signInWithGoogle, isReady } = useGoogleSignIn()
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("")
   const [errorBar, setErrorBar] = useState('')
 
   const showErrorBar = (message: string) => {
@@ -32,9 +34,9 @@ export default function SignUp() {
     setTimeout(() => setErrorBar(''), 3000);
   }
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     try {
-      await signInUser(email, password)
+
     } catch (e: any) {
 
       showErrorBar(firebaseErrorMessage(e.code));
@@ -60,16 +62,21 @@ export default function SignUp() {
               <TopLogo></TopLogo>
               <Title text="Patisserie"></Title>
               <View style={stylesheet.formContainer}>
-
+                <FormLabel text="Nome"></FormLabel>
+                <Input onChangeText={setName} placeHolder="Digite seu nome"></Input>
                 <FormLabel text="Email"></FormLabel>
                 <EmailInput onChangeText={setEmail} placeHolder="Digite seu email"></EmailInput>
                 <FormLabel text="Senha"></FormLabel>
                 <PasswordInput onChangeText={setPassword} placeHolder="Digite sua senha"></PasswordInput>
+                <FormLabel text="Confirme sua Senha"></FormLabel>
+                <PasswordInput onChangeText={() => { }} placeHolder="Confirme sua senha"></PasswordInput>
 
-
-                <View style={stylesheet.buttonContainer}>
-                  <Button onPress={handleLogin} text="Cadastre-se"></Button>
+                <View style={stylesheet.twoButtonsContainer} >
+                  <ButtonSquare onPress={handleSignUp} text="Cadastre-se"></ButtonSquare>
+                  <ButtonGoogle onPress={handleGoogleLogin} isReady={isReady}></ButtonGoogle>
                 </View>
+
+
 
               </View>
 
@@ -85,7 +92,7 @@ const stylesheet = StyleSheet.create({
 
   formContainer: {
     alignItems: "center",
-    marginTop: spacing.lg
+
 
   },
 
@@ -102,24 +109,6 @@ const stylesheet = StyleSheet.create({
     justifyContent: "center",
     gap: "10%"
   },
-
-  forgotPasswordContainer: {
-    marginTop: 3,
-    alignSelf: "flex-start",
-    marginLeft: "13%"
-  },
-  forgotPasswordText: {
-    color: colors.main,
-    textDecorationLine: "underline"
-  },
-
-  signUpContainer: {
-    marginTop: spacing.md
-  },
-  signUpText: {
-    color: colors.main,
-  },
-
 
 
 });

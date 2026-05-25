@@ -8,10 +8,10 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           height: 110,
-          backgroundColor: colors.primary,
+          backgroundColor: colors.main,
           borderTopColor: colors.secondary,
         },
-        tabBarActiveTintColor: colors.active,
+        tabBarActiveTintColor: colors.mid,
         tabBarInactiveTintColor: colors.secondary,
       }}
     >
@@ -42,6 +42,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      
     </Tabs>
   );
 }
