@@ -7,9 +7,12 @@ import { Input } from "@/components/input";
 import { PasswordInput } from "@/components/passwordInput";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
+import { signUpUser } from "@/firebase/authentication";
 import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { useGoogleSignIn } from "@/firebase/googleAuthentication";
+import { userService } from "@/services/userService";
 import { colors, spacing } from "@/styles/global";
+import { router } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -22,7 +25,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function SignUp() {
-  const [isPasswordVisible, setPasswordVisible] = useState(false)
+
   const { signInWithGoogle, isReady } = useGoogleSignIn()
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("");
@@ -36,6 +39,18 @@ export default function SignUp() {
 
   const handleSignUp = async () => {
     try {
+      const result = await signUpUser(email, password)
+      if (!result.email) {
+        showErrorBar("Email Invalido")
+        return;
+      }
+      if (!result) {
+        showErrorBar("Não foi possivel criar o usuário")
+      }
+
+      await userService.createUser(result.uid, name, result.email)
+      console.log(result)
+      router.replace("/")
 
     } catch (e: any) {
 

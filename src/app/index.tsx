@@ -38,7 +38,11 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      await signInUser(email, password)
+      const result = await signInUser(email, password)
+      console.log(result)
+      if (result) {
+        router.replace("/home")
+      }
     } catch (e: any) {
 
       showErrorBar(firebaseErrorMessage(e.code));
@@ -60,9 +64,9 @@ export default function Login() {
           <KeyboardAvoidingView keyboardVerticalOffset={15} style={{ flex: 1 }}
             behavior={Platform.OS === "ios" ? "padding" : "height"}>
             <ScrollView>
-              <Link href={"/(user)/home"}>
-                <TopLogo></TopLogo>
-              </Link>
+
+              <TopLogo></TopLogo>
+
               <Title text="Patisserie"></Title>
               <View style={stylesheet.formContainer}>
 

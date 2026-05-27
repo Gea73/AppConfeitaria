@@ -1,9 +1,9 @@
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, validatePassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, validatePassword } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 
 
 
-async function createUser(email: string, password: string) {
+export async function signUpUser(email: string, password: string) {
 
     try {
 
@@ -54,6 +54,16 @@ async function signOutUser() {
     }
 }
 
+export async function resetPassword(email: string) {
+    try {
+        await sendPasswordResetEmail(auth, email)
+        return true
+    } catch (error) {
+        throw error
+    }
+
+
+}
 /*
 const provider = new GoogleAuthProvider()
 

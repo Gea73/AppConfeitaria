@@ -1,9 +1,11 @@
 import { Button } from "@/components/button";
+import { EmailInput } from "@/components/emailInput";
 import ErrorBar from "@/components/errorBar";
 import { FormLabel } from "@/components/formLabel";
-import { PasswordInput } from "@/components/passwordInput";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
+import { resetPassword } from "@/firebase/authentication";
+import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { colors, spacing } from "@/styles/global";
 import { useState } from "react";
 import {
@@ -18,8 +20,21 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function ForgotPassword() {
 
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("")
     const [errorBar, setErrorBar] = useState('')
+    const handleResetPassword = async () => {
+        try {
+            if(!email){
+                showErrorBar("Email invalido")
+                return
+            }
+            await resetPassword(email)
+
+        } catch (e: any) {
+            showErrorBar(firebaseErrorMessage(e.code));
+        }
+
+    }
 
     const showErrorBar = (message: string) => {
         setErrorBar(message);
@@ -40,12 +55,12 @@ export default function ForgotPassword() {
                             <Title text="Patisserie"></Title>
                             <View style={stylesheet.formContainer}>
 
-                                <FormLabel text="Senha"></FormLabel>
-                                <PasswordInput onChangeText={setPassword} placeHolder="Digite sua senha"></PasswordInput>
-                                <FormLabel text="Confirme sua Senha"></FormLabel>
-                                <PasswordInput onChangeText={() => { }} placeHolder="Confirme sua senha"></PasswordInput>
+                                <FormLabel text="Email"></FormLabel>
+                                <EmailInput onChangeText={setEmail} placeHolder="Digite o email para recuperação"></EmailInput>
+
+
                                 <View style={stylesheet.buttonContainer}>
-                                    <Button onPress={() => { }} text="Redefinir Senha"></Button>
+                                    <Button onPress={handleResetPassword} text="Redefinir Senha"></Button>
                                 </View>
 
                             </View>

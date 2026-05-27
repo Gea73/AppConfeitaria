@@ -1,18 +1,19 @@
-import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
 export const userRepo = {
-    createUser: async function (name: string, email: string) {
+    createUser: async function (uid: string, name: string, email: string) {
         try {
             const timeStamp = serverTimestamp()
-
-            const docRef = await addDoc(collection(db, "users"), {
+            const docRef = await setDoc(doc(db, "users", uid), {
                 name: name,
                 email: email,
                 createdAt: timeStamp
             })
 
-            return { id: docRef.id, createdAt: timeStamp }
+
+
+            return { uid: uid, createdAt: timeStamp }
         } catch (error) {
             throw error
         }

@@ -2,12 +2,12 @@ import { User } from "../models/user";
 import { userRepo } from "../repositories/userRepo";
 
 export const userService = {
-    createUser: async function name(name: string, email: string) {
+    createUser: async function name(uid: string, name: string, email: string) {
         try {
 
-            const data = await userRepo.createUser(name, email)
+            const data = await userRepo.createUser(uid, name, email)
 
-            const user = new User(data.id, name, email, data.createdAt)
+            const user = new User(data.uid, name, email, data.createdAt)
             return user
 
         } catch (error) {

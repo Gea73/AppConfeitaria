@@ -1,6 +1,8 @@
 import { colors, spacing } from "@/styles/global";
 import { StyleSheet, Text, View } from "react-native";
 
+
+
 export default function ErrorBar({ message }: { message: string }) {
     if (!message) return null;
     return (
