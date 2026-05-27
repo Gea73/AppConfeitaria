@@ -1,29 +1,28 @@
 {
   "expo": {
-    "name": "AppConfeitaria",
+    "name": "Patisserie",
     "slug": "appconfeitaria",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/images/logo1024.png",
     "scheme": "com.gean73.appconfeitaria",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/logo1024.png",
       "bundleIdentifier": "com.gean73.appconfeitaria"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/logo.png",
-        "backgroundImage": "./assets/images/logo.png",
-        "monochromeImage": "./assets/images/logo.png"
+        "backgroundColor": "#fdfdfd",
+        "foregroundImage": "./assets/images/logo1024.png",
+        "monochromeImage": "./assets/images/logo1024.png"
       },
       "package": "com.gean73.appconfeitaria",
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/logo.png"
+      "favicon": "./assets/images/logo1024.png"
     },
     "plugins": [
       [
@@ -36,11 +35,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "android": {
-            "image": "./assets/images/logo.png",
-            "imageWidth": 76
-          }
+          "backgroundColor": "#fdfdfd",
+          "image": "./assets/images/logo1024.png",
+          "resizeMode": "contain"
         }
       ]
     ],
