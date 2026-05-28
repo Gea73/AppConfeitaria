@@ -25,7 +25,6 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function Login() {
-  const [isPasswordVisible, setPasswordVisible] = useState(false)
   const { signInWithGoogle, isReady } = useGoogleSignIn()
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("");
