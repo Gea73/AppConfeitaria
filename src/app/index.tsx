@@ -19,63 +19,71 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-
 export default function Login() {
-  const { signInWithGoogle, isReady } = useGoogleSignIn()
-  const [password, setPassword] = useState("")
+  const { signInWithGoogle, isReady } = useGoogleSignIn();
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [errorBar, setErrorBar] = useState('')
+  const [errorBar, setErrorBar] = useState("");
 
   const showErrorBar = (message: string) => {
     setErrorBar(message);
-    setTimeout(() => setErrorBar(''), 3000);
-  }
+    setTimeout(() => setErrorBar(""), 3000);
+  };
 
   const handleLogin = async () => {
     try {
-      const result = await signInUser(email, password)
-      console.log(result)
+      const result = await signInUser(email, password);
       if (result) {
-        router.replace("/home")
+        router.replace("/home");
       }
     } catch (e: any) {
-
       showErrorBar(firebaseErrorMessage(e.code));
     }
-  }
+  };
   const handleGoogleLogin = async () => {
     try {
-      const user = await signInWithGoogle()
-      console.log(user?.user)
+      const user = await signInWithGoogle();
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
-  }
+  };
   return (
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
           <ErrorBar message={errorBar}></ErrorBar>
-          <KeyboardAvoidingView keyboardVerticalOffset={15} style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}>
+          <KeyboardAvoidingView
+            keyboardVerticalOffset={15}
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
             <ScrollView>
-
               <TopLogo></TopLogo>
 
               <Title text="Patisserie"></Title>
               <View style={stylesheet.formContainer}>
-
                 <FormLabel text="Email"></FormLabel>
-                <EmailInput onChangeText={setEmail} placeHolder="Digite seu email"></EmailInput>
+                <EmailInput
+                  onChangeText={setEmail}
+                  placeHolder="Digite seu email"
+                ></EmailInput>
                 <FormLabel text="Senha"></FormLabel>
-                <PasswordInput onChangeText={setPassword} placeHolder="Digite sua senha"></PasswordInput>
+                <PasswordInput
+                  onChangeText={setPassword}
+                  placeHolder="Digite sua senha"
+                ></PasswordInput>
 
                 <View style={stylesheet.forgotPasswordContainer}>
-                  <Link href={"/forgotPassword"}> <Text style={stylesheet.forgotPasswordText}>Esqueceu sua senha?</Text></Link>
+                  <Link href={"/forgotPassword"}>
+                    {" "}
+                    <Text style={stylesheet.forgotPasswordText}>
+                      Esqueceu sua senha?
+                    </Text>
+                  </Link>
                 </View>
 
                 <View style={stylesheet.buttonContainer}>
@@ -87,11 +95,16 @@ export default function Login() {
                 </View>
               </View>
 
-              <View style={stylesheet.twoButtonsContainer} >
-                <ButtonSquare onPress={() => router.push("/signUp")} text="Cadastre-se"></ButtonSquare>
-                <ButtonGoogle onPress={handleGoogleLogin} isReady={isReady}></ButtonGoogle>
+              <View style={stylesheet.twoButtonsContainer}>
+                <ButtonSquare
+                  onPress={() => router.push("/signUp")}
+                  text="Cadastre-se"
+                ></ButtonSquare>
+                <ButtonGoogle
+                  onPress={handleGoogleLogin}
+                  isReady={isReady}
+                ></ButtonGoogle>
               </View>
-
             </ScrollView>
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -101,15 +114,13 @@ export default function Login() {
 }
 
 const stylesheet = StyleSheet.create({
-
   formContainer: {
     alignItems: "center",
-    marginTop: spacing.lg
-
+    marginTop: spacing.lg,
   },
 
   buttonContainer: {
-    marginTop: spacing.md
+    marginTop: spacing.md,
   },
 
   twoButtonsContainer: {
@@ -119,26 +130,23 @@ const stylesheet = StyleSheet.create({
     paddingTop: spacing.md,
     flexDirection: "row",
     justifyContent: "center",
-    gap: "10%"
+    gap: "10%",
   },
 
   forgotPasswordContainer: {
     marginTop: 3,
     alignSelf: "flex-start",
-    marginLeft: "13%"
+    marginLeft: "13%",
   },
   forgotPasswordText: {
     color: colors.main,
-    textDecorationLine: "underline"
+    textDecorationLine: "underline",
   },
 
   signUpContainer: {
-    marginTop: spacing.md
+    marginTop: spacing.md,
   },
   signUpText: {
     color: colors.main,
   },
-
-
-
 });

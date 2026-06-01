@@ -1,10 +1,10 @@
 import { Button } from "@/components/button";
 import ErrorBar from "@/components/errorBar";
 import FoodMenuItem from "@/components/FoodMenuItem";
+import { useCart } from "@/hooks/Cart";
 import { colors, typography } from "@/styles/global";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -15,6 +15,9 @@ export default function MakeOrder() {
     setTimeout(() => setErrorBar(""), 3000);
   };
 
+  const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCart();
+
+  /*
   type OrderItem = {
     uid: string;
     name: string;
@@ -99,12 +102,11 @@ export default function MakeOrder() {
         price: 1,
         quantity: 0,
       });
-      console.log(currentCart);
-      console.log(await getOrderCart());
+     
     }
     loadCart();
   }, []);
-
+*/
   const menu = [
     {
       uid: "uid1",
@@ -150,7 +152,6 @@ export default function MakeOrder() {
     },
   ];
 
-  console;
   return (
     <>
       <View style={stylesheet.header}>
@@ -169,16 +170,10 @@ export default function MakeOrder() {
                 name={item.name}
                 description={item.description}
                 price={item.price}
-                quantity={
-                  currentCart.find((i) => i.uid === item.uid)?.quantity || 0
-                }
-                onIncrease={async () =>
-                  await AddToCart({ ...item, quantity: 1 })
-                }
-                onDecrease={async () =>
-                  await RemoveFromCart(
-                    currentCart.find((i) => i.uid === item.uid),
-                  )
+                quantity={cart.find((i) => i.uid === item.uid)?.quantity || 0}
+                onIncrease={() => AddItem({ ...item, quantity: 1 })}
+                onDecrease={() =>
+                  RemoveItem(cart.find((i) => i.uid === item.uid))
                 }
               />
             )}
