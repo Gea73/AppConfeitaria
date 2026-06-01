@@ -28,7 +28,7 @@ export default function MakeOrder() {
       const orderCart = await AsyncStorage.getItem("cart");
       return orderCart ? JSON.parse(orderCart) : [];
     } catch (e: any) {
-      showErrorBar(e);
+      showErrorBar(String(e));
       return [];
     }
   };
@@ -37,7 +37,7 @@ export default function MakeOrder() {
     try {
       await AsyncStorage.setItem("cart", JSON.stringify(orderCart));
     } catch (e: any) {
-      showErrorBar(e);
+      showErrorBar(String(e));
     }
   };
 
@@ -49,14 +49,21 @@ export default function MakeOrder() {
       const cart = await getOrderCart();
       const existingItem = cart.find((item) => item.uid === newItem.uid);
       if (existingItem) {
+        const updatedCart = cart.map((item) =>
+          item.uid === newItem.uid
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        );
         existingItem.quantity++;
+        await setOrderCart(updatedCart);
+        setCurrentCart(updatedCart);
       } else {
         cart.push({ ...newItem, quantity: 1 });
         await setOrderCart(cart);
         setCurrentCart(cart);
       }
     } catch (e: any) {
-      showErrorBar(e);
+      showErrorBar(String(e));
     }
   }
   async function RemoveFromCart(newItem: OrderItem | undefined) {
@@ -73,7 +80,7 @@ export default function MakeOrder() {
         )
         .filter((item) => item.quantity > 0);
       await setOrderCart(updatedCart);
-      setCurrentCart(cart);
+      setCurrentCart(updatedCart);
     } catch (e: any) {
       showErrorBar(e);
     }
@@ -85,10 +92,16 @@ export default function MakeOrder() {
     async function loadCart() {
       const items = await getOrderCart();
       setCurrentCart(items);
+      await AddToCart({
+        uid: "string",
+        name: "string",
+        description: "string",
+        price: 1,
+        quantity: 0,
+      });
       console.log(currentCart);
-      console.log(getOrderCart());
+      console.log(await getOrderCart());
     }
-
     loadCart();
   }, []);
 
@@ -137,6 +150,7 @@ export default function MakeOrder() {
     },
   ];
 
+  console;
   return (
     <>
       <View style={stylesheet.header}>
@@ -159,7 +173,7 @@ export default function MakeOrder() {
                   currentCart.find((i) => i.uid === item.uid)?.quantity || 0
                 }
                 onIncrease={async () =>
-                  await AddToCart(currentCart.find((i) => i.uid === item.uid))
+                  await AddToCart({ ...item, quantity: 1 })
                 }
                 onDecrease={async () =>
                   await RemoveFromCart(

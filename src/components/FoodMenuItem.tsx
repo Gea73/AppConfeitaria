@@ -1,6 +1,5 @@
 import { colors, typography } from "@/styles/global";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type ItemProps = {
@@ -14,7 +13,6 @@ type ItemProps = {
 };
 
 export default function FoodMenuItem(props: ItemProps) {
-  const [quantity, setQuantity] = useState(0);
   return (
     <View style={stylesheet.container}>
       <Image source={require("@/assets/images/cake.png")}></Image>
@@ -30,7 +28,7 @@ export default function FoodMenuItem(props: ItemProps) {
               color={colors.details}
             ></Ionicons>
           </TouchableOpacity>
-          <Text style={stylesheet.quantityText}>{quantity}</Text>
+          <Text style={stylesheet.quantityText}>{props.quantity}</Text>
           <TouchableOpacity onPress={props.onDecrease}>
             <Ionicons
               name="remove-outline"
