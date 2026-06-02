@@ -41,6 +41,7 @@ export function useCart() {
     }
     function ClearCart() {
         setCart([])
+        
     }
 
     function GetTotal() {

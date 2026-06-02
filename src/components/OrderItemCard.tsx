@@ -12,10 +12,12 @@ type ItemProps = {
   onDecrease: () => void;
 };
 
-export default function FoodMenuItem(props: ItemProps) {
+export default function OrderItemCard(props: ItemProps) {
   return (
     <View style={stylesheet.container}>
-      <Image source={require("@/assets/images/cake.png")}></Image>
+      <View style={stylesheet.imageContainer}>
+      <Image style={stylesheet.itemPhoto} source={require("@/assets/images/cake.png")}></Image>
+      </View>
       <View style={stylesheet.textContainer}>
         <Text style={stylesheet.nameText}>{props.name}</Text>
         <Text>{props.description}</Text>
@@ -44,10 +46,16 @@ export default function FoodMenuItem(props: ItemProps) {
 
 const stylesheet = StyleSheet.create({
   container: {
-    paddingVertical: "4%",
+    paddingVertical: "2%",
     borderWidth: 0.7,
     borderColor: colors.details,
     flexDirection: "row",
+  },
+  imageContainer:{
+    alignItems:"center",
+  },
+  itemPhoto:{
+    flex:1
   },
   textContainer: {
     paddingHorizontal: "5%",
@@ -68,8 +76,7 @@ const stylesheet = StyleSheet.create({
     borderColor: colors.details,
     borderRadius: 5,
     textAlign: "center",
-    paddingTop: "0.5%",
-    paddingLeft: "2.5%",
-    paddingRight: "2.5%",
+    textAlignVertical:"center",
+    width:"19%"
   },
 });

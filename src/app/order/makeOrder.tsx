@@ -1,7 +1,7 @@
 import { Button } from "@/components/button";
 import ErrorBar from "@/components/errorBar";
-import FoodMenuItem from "@/components/FoodMenuItem";
-import { useCart } from "@/hooks/Cart";
+import OrderItemCard from "@/components/OrderItemCard";
+import { useCartContext } from "@/context/cartContext";
 import { colors, typography } from "@/styles/global";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -15,98 +15,8 @@ export default function MakeOrder() {
     setTimeout(() => setErrorBar(""), 3000);
   };
 
-  const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCart();
+  const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCartContext();
 
-  /*
-  type OrderItem = {
-    uid: string;
-    name: string;
-    description: string;
-    price: number;
-    quantity: number;
-  };
-
-  const getOrderCart = async (): Promise<OrderItem[]> => {
-    try {
-      const orderCart = await AsyncStorage.getItem("cart");
-      return orderCart ? JSON.parse(orderCart) : [];
-    } catch (e: any) {
-      showErrorBar(String(e));
-      return [];
-    }
-  };
-
-  const setOrderCart = async (orderCart: OrderItem[]) => {
-    try {
-      await AsyncStorage.setItem("cart", JSON.stringify(orderCart));
-    } catch (e: any) {
-      showErrorBar(String(e));
-    }
-  };
-
-  async function AddToCart(newItem: OrderItem | undefined) {
-    try {
-      if (!newItem) {
-        return;
-      }
-      const cart = await getOrderCart();
-      const existingItem = cart.find((item) => item.uid === newItem.uid);
-      if (existingItem) {
-        const updatedCart = cart.map((item) =>
-          item.uid === newItem.uid
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        );
-        existingItem.quantity++;
-        await setOrderCart(updatedCart);
-        setCurrentCart(updatedCart);
-      } else {
-        cart.push({ ...newItem, quantity: 1 });
-        await setOrderCart(cart);
-        setCurrentCart(cart);
-      }
-    } catch (e: any) {
-      showErrorBar(String(e));
-    }
-  }
-  async function RemoveFromCart(newItem: OrderItem | undefined) {
-    try {
-      if (!newItem) {
-        return;
-      }
-      const cart = await getOrderCart();
-      const updatedCart = cart
-        .map((item) =>
-          item.uid === newItem.uid
-            ? { ...item, quantity: item.quantity - 1 }
-            : item,
-        )
-        .filter((item) => item.quantity > 0);
-      await setOrderCart(updatedCart);
-      setCurrentCart(updatedCart);
-    } catch (e: any) {
-      showErrorBar(e);
-    }
-  }
-
-  const [currentCart, setCurrentCart] = useState<OrderItem[]>([]);
-
-  useEffect(() => {
-    async function loadCart() {
-      const items = await getOrderCart();
-      setCurrentCart(items);
-      await AddToCart({
-        uid: "string",
-        name: "string",
-        description: "string",
-        price: 1,
-        quantity: 0,
-      });
-     
-    }
-    loadCart();
-  }, []);
-*/
   const menu = [
     {
       uid: "uid1",
@@ -165,7 +75,7 @@ export default function MakeOrder() {
           <FlatList
             data={menu}
             renderItem={({ item }) => (
-              <FoodMenuItem
+              <OrderItemCard
                 uid={item.uid}
                 name={item.name}
                 description={item.description}
