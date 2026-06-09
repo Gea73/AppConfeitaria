@@ -5,12 +5,12 @@ import { getReactNativePersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCvprWH4kS_tNCoAtnUtiwhY5t33vUIT5M",
-    authDomain: "appconfeitariagean.firebaseapp.com",
-    projectId: "appconfeitariagean",
-    storageBucket: "appconfeitariagean.firebasestorage.app",
-    messagingSenderId: "175660946385",
-    appId: "1:175660946385:web:5c2ed2fa7fb04a640c86f0",
+    apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.EXPO_PUBLIC_FIREBASE_API_AUTH_DOMAIN,
+    projectId: process.env.EXPO_PUBLIC_FIREBASE_API_PROJECT_ID,
+    storageBucket: process.env.EXPO_PUBLIC_FIREBASE_API_STORAGE_BUCKET,
+    messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_API_MESSAGING_SENDER_ID,
+    appId: process.env.EXPO_PUBLIC_FIREBASE_API_APP_ID,
 
 };
 

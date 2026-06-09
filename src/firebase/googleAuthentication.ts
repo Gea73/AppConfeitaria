@@ -8,31 +8,31 @@ import { auth } from "./firebaseConfig";
 WebBrowser.maybeCompleteAuthSession();
 
 const GOOGLE_CONFIG = {
-    webClientId: '175660946385-dscvgf6ajdmqtu0i0igdf772jco29jot.apps.googleusercontent.com',
-  androidClientId: '175660946385-9h3bebt5o3n8u5996nsketkvt8mgl19h.apps.googleusercontent.com',
-  iosClientId: '175660946385-sbf19hmphkn54cvo7mkino1eqki8hsgn.apps.googleusercontent.com', scopes:["profile","email"]
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_AUTH_WEB_CLIENT_ID,
+    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_AUTH_ANDROID_CLIENT_ID,
+    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_AUTH_IOS_CLIENT_ID, scopes: ["profile", "email"]
 }
 
 
 
 
-export function useGoogleSignIn(){
-const[request,response,promptAsync]= Google.useAuthRequest(GOOGLE_CONFIG)
+export function useGoogleSignIn() {
+    const [request, response, promptAsync] = Google.useAuthRequest(GOOGLE_CONFIG)
 
-const signInWithGoogle = async(): Promise<UserCredential | null> => {
-    console.log(request?.redirectUri)
-    const result = await promptAsync()
+    const signInWithGoogle = async (): Promise<UserCredential | null> => {
+        console.log(request?.redirectUri)
+        const result = await promptAsync()
 
-    if(result.type !== "success"){
-        return null
+        if (result.type !== "success") {
+            return null
+        }
+
+        const { id_token } = result.params
+        const credential = GoogleAuthProvider.credential(id_token)
+        return signInWithCredential(auth, credential)
     }
-
-    const {id_token} = result.params
-    const credential = GoogleAuthProvider.credential(id_token)
-    return signInWithCredential(auth,credential)
-}
-return {
-    signInWithGoogle,
-    isReady:!!request
-}
+    return {
+        signInWithGoogle,
+        isReady: !!request
+    }
 }
