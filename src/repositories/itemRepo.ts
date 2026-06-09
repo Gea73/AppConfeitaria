@@ -43,7 +43,22 @@ export const itemRepo = {
         }
     },
 
+    getItems: async function () {
+        try {
+            const q = query(collection(db, "items"))
+            const querySnapshot = await getDocs(q)
+            if (querySnapshot) {
+                const items = querySnapshot.docs.map((result) => {
+                    const data = result.data()
+                    return { uid: result.id, name: data.name, description: data.description, price: data.price, imageUrl: data.imageUrl, createdAt: data.createdAt }
+                })
+                return items
+            }
 
+        } catch (error) {
+            throw error
+        }
+    },
     updateItem: async function (id: string, description: string | null, price: number | null, imageUrl: string | null) {
         try {
             const docRef = doc(db, "items", id)
