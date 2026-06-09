@@ -1,34 +1,33 @@
+import { Button } from "@/components/button";
 import { ButtonGoogle } from "@/components/buttonGoogle";
 import { ButtonSquare } from "@/components/buttonSquare";
 import { EmailInput } from "@/components/emailInput";
 import ErrorBar from "@/components/errorBar";
 import { FormLabel } from "@/components/formLabel";
-import { Input } from "@/components/input";
 import { PasswordInput } from "@/components/passwordInput";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
-import { signUpUser } from "@/firebase/authentication";
+import { signInUser } from "@/firebase/authentication";
 import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { useGoogleSignIn } from "@/firebase/googleAuthentication";
 import { userService } from "@/services/userService";
 import { colors, spacing } from "@/styles/global";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-export default function SignUp() {
+export default function signIn() {
   const { signInWithGoogle, isReady } = useGoogleSignIn();
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
   const [errorBar, setErrorBar] = useState("");
 
   const showErrorBar = (message: string) => {
@@ -36,38 +35,28 @@ export default function SignUp() {
     setTimeout(() => setErrorBar(""), 3000);
   };
 
-  const handleSignUp = async () => {
+  const handleLogin = async () => {
     try {
-      if (password !== confirmPassword) {
-        showErrorBar("Senhas não coincidem")
-        return;
-      }
-      const result = await signUpUser(email, password);
-      if (!result) {
-        showErrorBar("Não foi possivel criar o usuário");
-        return;
-      }
+      const result = await signInUser(email, password);
 
-      if (!result.email) {
-        showErrorBar("Email Invalido");
-        return;
+      if (result) {
+        const admin = await userService.getUser(result.uid, null);
+        console.log(admin);
+        console.log(admin?.getRole());
+        if (admin?.getRole() === "admin") {
+          router.replace("/admin/home");
+          return;
+        }
+        router.replace("/user/home");
       }
-
-      await userService.createUser(result.uid, name, result.email);
-      router.replace("/");
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
   };
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithGoogle();
-      if (result) {
-        const admin = await userService.getUser(result.user.uid, null)
-        if (admin?.getRole() === "admin") {
-          router.replace("/admin/home");
-          return
-        }
+      const user = await signInWithGoogle();
+      if (user) {
         router.replace("/user/home");
       }
     } catch (e: any) {
@@ -89,11 +78,6 @@ export default function SignUp() {
 
               <Title text="Patisserie"></Title>
               <View style={stylesheet.formContainer}>
-                <FormLabel text="Nome"></FormLabel>
-                <Input
-                  onChangeText={setName}
-                  placeHolder="Digite seu nome"
-                ></Input>
                 <FormLabel text="Email"></FormLabel>
                 <EmailInput
                   onChangeText={setEmail}
@@ -104,15 +88,27 @@ export default function SignUp() {
                   onChangeText={setPassword}
                   placeHolder="Digite sua senha"
                 ></PasswordInput>
-                <FormLabel text="Confirme sua Senha"></FormLabel>
-                <PasswordInput
-                  onChangeText={setConfirmPassword}
-                  placeHolder="Confirme sua senha"
-                ></PasswordInput>
+
+                <View style={stylesheet.forgotPasswordContainer}>
+                  <Link href={"/auth/forgotPassword"}>
+                    <Text style={stylesheet.forgotPasswordText}>
+                      Esqueceu sua senha?
+                    </Text>
+                  </Link>
+                </View>
+
+                <View style={stylesheet.buttonContainer}>
+                  <Button onPress={handleLogin} text="Entrar"></Button>
+                </View>
+
+                <View style={stylesheet.signUpContainer}>
+                  <Text style={stylesheet.signUpText}>Não tem uma conta?</Text>
+                </View>
               </View>
+
               <View style={stylesheet.twoButtonsContainer}>
                 <ButtonSquare
-                  onPress={handleSignUp}
+                  onPress={() => router.push("/auth/signUp")}
                   text="Cadastre-se"
                 ></ButtonSquare>
                 <ButtonGoogle
@@ -120,7 +116,6 @@ export default function SignUp() {
                   isReady={isReady}
                 ></ButtonGoogle>
               </View>
-
             </ScrollView>
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -132,6 +127,11 @@ export default function SignUp() {
 const stylesheet = StyleSheet.create({
   formContainer: {
     alignItems: "center",
+    marginTop: spacing.lg,
+  },
+
+  buttonContainer: {
+    marginTop: spacing.md,
   },
 
   twoButtonsContainer: {
@@ -142,5 +142,22 @@ const stylesheet = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     gap: "10%",
+  },
+
+  forgotPasswordContainer: {
+    marginTop: 3,
+    alignSelf: "flex-start",
+    marginLeft: "13%",
+  },
+  forgotPasswordText: {
+    color: colors.main,
+    textDecorationLine: "underline",
+  },
+
+  signUpContainer: {
+    marginTop: spacing.md,
+  },
+  signUpText: {
+    color: colors.main,
   },
 });
