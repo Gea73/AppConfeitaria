@@ -3,10 +3,12 @@ import ErrorBar from "@/components/errorBar";
 import OrderItemCard from "@/components/OrderItemCard";
 import { Title } from "@/components/title";
 import { useCartContext } from "@/context/cartContext";
+import { auth } from "@/firebase/firebaseConfig";
+import { orderService } from "@/services/orderService";
 import { colors, typography } from "@/styles/global";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -22,6 +24,26 @@ export default function Checkout() {
     ClearCart()
     router.back()
   }
+
+  async function HandleMakeOrder() {
+    try {
+      const uid = auth.currentUser?.uid
+      if (!uid) {
+        throw new Error("Invalid user")
+      }
+      const newOrder = await orderService.createOrder(uid, cart)
+      ClearCart()
+      router.replace("/user/orders")
+    } catch (e: any) {
+      showErrorBar(String(e))
+    }
+  }
+
+  useEffect(() => {
+    if (cart.length <= 0) {
+      router.push("/order/makeOrder")
+    }
+  }, [cart])
   return (
     <>
 
@@ -52,17 +74,16 @@ export default function Checkout() {
             </FlatList>
           </View>
           <View style={stylesheet.smallButtonContainer}>
-            <Button text="Editar Pedido" onPress={() => { }}></Button>
+            <Button text="Editar Pedido" onPress={() => router.push("/order/makeOrder")}></Button>
           </View>
           <View style={stylesheet.orderContainer}>
             <Text style={stylesheet.orderText}>Valor Total</Text>
             <Text style={stylesheet.orderText}>R$ {GetTotal()}</Text>
             <Text style={stylesheet.orderText}>Endereço de Entrega</Text>
-            <Text style={stylesheet.orderText}>Rua Gurarape 185 ,Vila Vintem
-            </Text>
+            <Text style={stylesheet.orderText}>Rua Gurarape 185 ,Vila Vintem</Text>
           </View>
           <View style={stylesheet.buttonContainer}>
-            <Button text="Fazer Pedido " onPress={() => { }}></Button>
+            <Button text="Fazer Pedido " onPress={() => HandleMakeOrder()}></Button>
           </View>
         </SafeAreaView>
       </SafeAreaProvider>

@@ -1,9 +1,38 @@
+import { signOutUser } from "@/firebase/authentication";
+import { auth } from "@/firebase/firebaseConfig";
+import { User } from "@/models/user";
+import { userService } from "@/services/userService";
 import { colors, spacing, typography } from "@/styles/global";
 import { Ionicons } from "@expo/vector-icons";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function Account() {
-    const username = "Nomezinho"
+
+    const [user, setUser] = useState<User | null>(null)
+
+
+    useEffect(() => {
+        async function getUser(): Promise<void> {
+            const uid = auth.currentUser?.uid
+            if (uid) {
+                const user = await userService.getUser(uid, null)
+                setUser(user)
+            }
+
+        }
+        getUser()
+    }, [])
+
+
+
+
+
+
+
+
+
     return (<>
 
         <SafeAreaProvider style={{ backgroundColor: "white" }}>
@@ -14,7 +43,7 @@ export default function Account() {
 
                 <View style={stylesheet.usernameContainer}>
                     <Image source={require("@/assets/images/userImage.png")} />
-                    <Text style={stylesheet.usernameText}>{username}</Text>
+                    <Text style={stylesheet.usernameText}>{(user?.getName())}</Text>
                 </View>
                 <View style={stylesheet.cardContainer}>
                     <Text numberOfLines={1} style={stylesheet.cardText}>Alterar dados</Text>
@@ -24,10 +53,12 @@ export default function Account() {
                     <Text numberOfLines={1} style={stylesheet.cardText}>Endereços</Text>
                     <Ionicons name="location" size={30} color={colors.main} style={stylesheet.cardIcon}></Ionicons>
                 </View>
-                <View style={stylesheet.cardContainer}>
-                    <Text numberOfLines={1} style={stylesheet.cardText}>Sair</Text>
-                    <Ionicons name="exit-outline" size={30} color={colors.main} style={stylesheet.cardIcon}></Ionicons>
-                </View>
+                <TouchableOpacity onPress={() => { signOutUser(); router.replace("/") }}>
+                    <View style={stylesheet.cardContainer}>
+                        <Text numberOfLines={1} style={stylesheet.cardText}>Sair</Text>
+                        <Ionicons name="exit-outline" size={30} color={colors.main} style={stylesheet.cardIcon}></Ionicons>
+                    </View>
+                </TouchableOpacity>
             </SafeAreaView>
         </SafeAreaProvider>
     </>)
@@ -80,7 +111,7 @@ const stylesheet = StyleSheet.create({
     },
     cardIcon: {
         flex: 2,
-        position:"absolute",
-        left:"95%"
+        position: "absolute",
+        left: "95%"
     }
 })

@@ -1,13 +1,28 @@
+import { CartOverlay } from "@/components/cartOverlay";
+import { useCartContext } from "@/context/cartContext";
 import { colors } from "@/styles/global";
 import { Ionicons } from "@expo/vector-icons";
+import { BottomTabBar } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
+
+
 export default function TabLayout() {
+  const { cart, GetTotal } = useCartContext()
   return (
+
+
     <Tabs
+      tabBar={(props) => (
+        <>
+          <CartOverlay cart={cart} getTotal={GetTotal} />
+          <BottomTabBar {...props} />
+        </>
+      )}
+        
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          height: 110,
+          height: 120,
           backgroundColor: colors.main,
           borderTopColor: colors.secondary,
         },
@@ -15,6 +30,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: colors.secondary,
       }}
     >
+
       <Tabs.Screen
         name="orders"
         options={{
@@ -42,7 +58,9 @@ export default function TabLayout() {
           ),
         }}
       />
-      
+
     </Tabs>
+
+
   );
 }

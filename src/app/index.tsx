@@ -10,6 +10,7 @@ import { TopLogo } from "@/components/topLogo";
 import { signInUser } from "@/firebase/authentication";
 import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { useGoogleSignIn } from "@/firebase/googleAuthentication";
+import { userService } from "@/services/userService";
 import { colors, spacing } from "@/styles/global";
 import { Link, router } from "expo-router";
 import { useState } from "react";
@@ -37,8 +38,16 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const result = await signInUser(email, password);
+
       if (result) {
-        router.replace("/home");
+        const admin = await userService.getUser(result.uid, null)
+        console.log(admin)
+        console.log(admin?.getRole())
+        if (admin?.getRole() === "admin") {
+          router.replace("/admin/home");
+          return
+        }
+        router.replace("/user/home");
       }
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
@@ -47,6 +56,9 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     try {
       const user = await signInWithGoogle();
+      if (user) {
+        router.replace("/user/home");
+      }
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }

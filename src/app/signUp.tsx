@@ -26,6 +26,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function SignUp() {
   const { signInWithGoogle, isReady } = useGoogleSignIn();
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [errorBar, setErrorBar] = useState("");
@@ -37,13 +38,19 @@ export default function SignUp() {
 
   const handleSignUp = async () => {
     try {
+      if (password !== confirmPassword) {
+        showErrorBar("Senhas não coincidem")
+        return;
+      }
       const result = await signUpUser(email, password);
+      if (!result) {
+        showErrorBar("Não foi possivel criar o usuário");
+        return;
+      }
+
       if (!result.email) {
         showErrorBar("Email Invalido");
         return;
-      }
-      if (!result) {
-        showErrorBar("Não foi possivel criar o usuário");
       }
 
       await userService.createUser(result.uid, name, result.email);
@@ -54,7 +61,15 @@ export default function SignUp() {
   };
   const handleGoogleLogin = async () => {
     try {
-      const user = await signInWithGoogle();
+      const result = await signInWithGoogle();
+      if (result) {
+        const admin = await userService.getUser(result.user.uid, null)
+        if (admin?.getRole() === "admin") {
+          router.replace("/admin/home");
+          return
+        }
+        router.replace("/user/home");
+      }
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
@@ -71,6 +86,7 @@ export default function SignUp() {
           >
             <ScrollView>
               <TopLogo></TopLogo>
+
               <Title text="Patisserie"></Title>
               <View style={stylesheet.formContainer}>
                 <FormLabel text="Nome"></FormLabel>
@@ -90,21 +106,21 @@ export default function SignUp() {
                 ></PasswordInput>
                 <FormLabel text="Confirme sua Senha"></FormLabel>
                 <PasswordInput
-                  onChangeText={() => {}}
+                  onChangeText={setConfirmPassword}
                   placeHolder="Confirme sua senha"
                 ></PasswordInput>
-
-                <View style={stylesheet.twoButtonsContainer}>
-                  <ButtonSquare
-                    onPress={handleSignUp}
-                    text="Cadastre-se"
-                  ></ButtonSquare>
-                  <ButtonGoogle
-                    onPress={handleGoogleLogin}
-                    isReady={isReady}
-                  ></ButtonGoogle>
-                </View>
               </View>
+              <View style={stylesheet.twoButtonsContainer}>
+                <ButtonSquare
+                  onPress={handleSignUp}
+                  text="Cadastre-se"
+                ></ButtonSquare>
+                <ButtonGoogle
+                  onPress={handleGoogleLogin}
+                  isReady={isReady}
+                ></ButtonGoogle>
+              </View>
+
             </ScrollView>
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -116,10 +132,6 @@ export default function SignUp() {
 const stylesheet = StyleSheet.create({
   formContainer: {
     alignItems: "center",
-  },
-
-  buttonContainer: {
-    marginTop: spacing.md,
   },
 
   twoButtonsContainer: {

@@ -2,9 +2,11 @@ import { Button } from "@/components/button";
 import ErrorBar from "@/components/errorBar";
 import OrderItemCard from "@/components/OrderItemCard";
 import { useCartContext } from "@/context/cartContext";
+import { Item } from "@/models/item";
+import { itemService } from "@/services/itemService";
 import { colors, typography } from "@/styles/global";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,51 +16,61 @@ export default function MakeOrder() {
     setErrorBar(message);
     setTimeout(() => setErrorBar(""), 3000);
   };
-
+  const [menu, setMenu] = useState<Item[]>([])
   const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCartContext();
 
-  const menu = [
+  useEffect(() => {
+    async function getItems() {
+      const result = await itemService.getItems()
+      if (result) {
+        setMenu(result ?? [])
+      }
+
+    } getItems()
+  }, [])
+
+  const menu1 = [
     {
       uid: "uid1",
       name: "Item 1",
       description: "Description",
-      price: 1.5,
+      price: 1.50,
     },
     {
       uid: "uid2",
       name: "Item 2",
       description: "Description",
-      price: 2.5,
+      price: 2.50,
     },
     {
       uid: "uid3",
       name: "Item 3",
       description: "Description Descript",
-      price: 3,
+      price: 3.00,
     },
     {
       uid: "uid4",
-      name: "Item 3",
+      name: "Item 4",
       description: "Description Descript",
-      price: 3,
+      price: 3.00,
     },
     {
       uid: "uid5",
-      name: "Item 3",
+      name: "Item 5",
       description: "Description Descript",
-      price: 3,
+      price: 3.00,
     },
     {
       uid: "uid6",
-      name: "Item 3",
+      name: "Item 6",
       description: "Description Descript",
-      price: 3,
+      price: 3.00,
     },
     {
       uid: "uid7",
-      name: "Item 3",
+      name: "Item 7",
       description: "Description Descript",
-      price: 3,
+      price: 3.00,
     },
   ];
 
@@ -76,18 +88,18 @@ export default function MakeOrder() {
             data={menu}
             renderItem={({ item }) => (
               <OrderItemCard
-                uid={item.uid}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                quantity={cart.find((i) => i.uid === item.uid)?.quantity || 0}
-                onIncrease={() => AddItem({ ...item, quantity: 1 })}
+                uid={item.getId()}
+                name={item.getName()}
+                description={item.getDescription()}
+                price={item.getPrice()}
+                quantity={cart.find((i) => i.uid === item.getId())?.quantity || 0}
+                onIncrease={() => AddItem({ uid: item.getId(), name: item.getName(), price: item.getPrice(), description: item.getDescription(), quantity: 1 })}
                 onDecrease={() =>
-                  RemoveItem(cart.find((i) => i.uid === item.uid))
+                  RemoveItem(cart.find((i) => i.uid === item.getId()))
                 }
               />
             )}
-            keyExtractor={(item) => item.uid}
+            keyExtractor={(item) => item.getId()}
           ></FlatList>
           <View style={stylesheet.buttonContainer}>
             <Button
