@@ -5,25 +5,29 @@ export const userRepo = {
     createUser: async function (uid: string, name: string, email: string) {
         try {
             const timeStamp = serverTimestamp()
-            const docRef = await setDoc(doc(db, "users", uid), {
+            await setDoc(doc(db, "users", uid), {
                 name: name,
                 email: email,
-                createdAt: timeStamp
+                createdAt: timeStamp,
+                role: "user"
             })
 
+            return { createdAt: timeStamp }
 
-
-            return { uid: uid, createdAt: timeStamp }
         } catch (error) {
             throw error
         }
     },
 
 
-    getUserById: async function (id: string) {
+    getUserById: async function (uid: string) {
         try {
-            const docRef = doc(db, "users", id)
-            return await getDoc(docRef);
+            const docRef = doc(db, "users", uid)
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data()
+                return { uid: uid, name: data.name, email: data.email, createdAt: data.createdAt, role: data.role }
+            }
         } catch (error) {
             throw error
         }
@@ -34,7 +38,12 @@ export const userRepo = {
         try {
             const q = query(collection(db, "users"), where("email", "==", email));
             const querySnapshot = await getDocs(q);
-            return querySnapshot;
+            if (querySnapshot) {
+                const result = querySnapshot.docs[0]
+                const data = result.data()
+                return { uid: result.id, name: data.name, email: data.email, createdAt: data.createdAt,role: data.role }
+            }
+
         } catch (error) {
             throw error
         }
