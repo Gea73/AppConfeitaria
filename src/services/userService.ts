@@ -2,12 +2,12 @@ import { User } from "../models/user";
 import { userRepo } from "../repositories/userRepo";
 
 export const userService = {
-    createUser: async function name(uid: string, name: string, email: string) {
+    createUser: async function (uid: string, name: string, email: string) {
         try {
 
             const data = await userRepo.createUser(uid, name, email)
 
-            const user = new User(data.uid, name, email, data.createdAt)
+            const user = new User(uid, name, email, data.createdAt, "user")
             return user
 
         } catch (error) {
@@ -18,13 +18,20 @@ export const userService = {
         }
     },
 
-    getUser: async function name(id: string | null, email: string | null) {
-        if (id) {
-            return await userRepo.getUserById(id)
+    getUser: async function (uid: string | null, email: string | null): Promise<User | null> {
+        let data = null;
+        if (uid) {
+            data = await userRepo.getUserById(uid)
         }
         if (email) {
-            return await userRepo.getUserByEmail(email)
+            data = await userRepo.getUserByEmail(email)
         }
+
+        if (data) {
+            const user = new User(data?.uid, data?.name, data?.email, data?.createdAt, data?.role)
+            return user
+        }
+        return null
 
     },
 
