@@ -20,8 +20,8 @@ export default function OrderItemCard(props: ItemProps) {
       </View>
       <View style={stylesheet.textContainer}>
         <Text style={stylesheet.nameText}>{props.name}</Text>
-        <Text>{props.description}</Text>
-        <Text>{props.price}</Text>
+        <Text style={stylesheet.descriptionText}>{props.description}</Text>
+       
         <View style={stylesheet.buttonsContainer}>
           <TouchableOpacity onPress={props.onIncrease}>
             <Ionicons
@@ -38,6 +38,7 @@ export default function OrderItemCard(props: ItemProps) {
               color={colors.details}
             ></Ionicons>
           </TouchableOpacity>
+           <Text style={stylesheet.priceText}>R$ {props.price.toFixed(2).replace(".",",")}</Text>
         </View>
       </View>
     </View>
@@ -65,8 +66,16 @@ const stylesheet = StyleSheet.create({
     fontSize: typography.subtitle,
     fontWeight: "bold",
   },
+  descriptionText:{
+    marginTop:"5%"
+  },
+  priceText:{
+     fontSize: typography.subtitle,
+    fontWeight: "bold",
+    marginLeft:"5%"
+  },
   buttonsContainer: {
-    marginTop: "25%",
+    marginTop:"10%",
     flexDirection: "row",
     gap: "5%",
   },
@@ -77,6 +86,6 @@ const stylesheet = StyleSheet.create({
     borderRadius: 5,
     textAlign: "center",
     textAlignVertical:"center",
-    width:"19%"
+    width:"15%"
   },
 });

@@ -1,12 +1,7 @@
+import { OrderItem } from "@/types/ordemItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-type OrderItem = {
-    uid: string;
-    name: string;
-    description: string;
-    price: number;
-    quantity: number;
-};
+
 
 export function useCart() {
     const [cart, setCart] = useState<OrderItem[]>([])
