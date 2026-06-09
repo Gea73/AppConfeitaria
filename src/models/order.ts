@@ -1,14 +1,18 @@
+import { OrderItem } from "@/types/ordemItem";
 import { FieldValue, Timestamp } from "firebase/firestore";
 
 type orderStatus = "pending" | "preparing" | "delivered";
 
+
+
+
 export class Order {
     private _id: string
     private _customerId: string
-    private _items: object
+    private _items: OrderItem[]
     private _status: orderStatus
     private _createdAt: Timestamp | FieldValue
-    constructor(id: string, customerId: string, items: object, createdAt: Timestamp | FieldValue) {
+    constructor(id: string, customerId: string, items: OrderItem[], createdAt: Timestamp | FieldValue) {
         this._id = this.setId(id)
         this._customerId = this.setCustomerId(customerId)
         this._items = this.setItems(items)
@@ -39,7 +43,7 @@ export class Order {
         return this._customerId
     }
 
-    setItems(items: object) {
+    setItems(items: OrderItem[]) {
         if (!items) {
             throw new Error("Items are null")
         }
