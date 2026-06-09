@@ -42,6 +42,16 @@ export const itemService = {
 
     },
 
+    getItems: async function () {
+        const data = await itemRepo.getItems();
+        const items = data?.map((i) => { return new Item(i.uid, i.name, i.description, i.price, i.imageUrl, i.createdAt) })
+        if (items) {
+            return items
+        }
+        return []
+
+    },
+
     deleteItem: async function (id: string) {
         await itemRepo.deleteItem(id);
     }
