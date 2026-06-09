@@ -28,7 +28,7 @@ export const orderRepo = {
                 dataToUpdate = { ...dataToUpdate, status: status }
             }
             if (items != null) {
-                dataToUpdate = { ...dataToUpdate, items: status }
+                dataToUpdate = { ...dataToUpdate, items: items }
             }
             await updateDoc(docRef, dataToUpdate)
         } catch (error) {
@@ -38,10 +38,14 @@ export const orderRepo = {
     }
 
     ,
-    getOrderById: async function (id: string) {
+    getOrderById: async function (uid: string) {
         try {
-            const docRef = doc(db, "orders", id)
-            return await getDoc(docRef);
+            const docRef = doc(db, "orders", uid)
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data()
+                return { uid: uid, customerId: data.customerId, items: data.items, status: data.status, createdAt: data.createdAt }
+            }
         } catch (error) {
             throw error
         }
@@ -51,7 +55,14 @@ export const orderRepo = {
         try {
             const q = query(collection(db, "orders"), where("customerId", "==", customerId));
             const querySnapshot = await getDocs(q);
-            return querySnapshot;
+            if (querySnapshot) {
+                const orders = querySnapshot.docs.map((result) => {
+                    const data = result.data()
+                    return { uid: result.id, customerId: data.customerId, items: data.items, status: data.status, createdAt: data.createdAt }
+                })
+                return orders
+            }
+            return null;
         } catch (error) {
             throw error
         }
