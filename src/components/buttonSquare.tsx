@@ -26,7 +26,7 @@ const stylesheet = StyleSheet.create({
         fontSize: typography.smallText,
         color: colors.text,
         fontWeight: "bold",
-        fontFamily: "Shafarik",
+        fontFamily: "Shafarik-Regular",
     },
 
 })

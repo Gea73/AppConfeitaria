@@ -24,6 +24,6 @@ const stylesheet = StyleSheet.create({
         color: colors.main,
 
         fontSize: typography.subtitle,
-        fontFamily: "Shafarik",
+        fontFamily: "Shafarik-Regular",
     }
 })
