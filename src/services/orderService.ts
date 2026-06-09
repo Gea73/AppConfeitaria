@@ -1,6 +1,6 @@
 import { Order } from "@/models/order";
 import { orderRepo } from "@/repositories/orderRepo";
-import { OrderItem } from "@/types/ordemItem";
+import { OrderItem } from "@/types/orderItem";
 
 export const orderService = {
 

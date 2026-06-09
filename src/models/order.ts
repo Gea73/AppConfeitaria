@@ -1,4 +1,4 @@
-import { OrderItem } from "@/types/ordemItem";
+import { OrderItem } from "@/types/orderItem";
 import { FieldValue, Timestamp } from "firebase/firestore";
 
 type orderStatus = "pending" | "preparing" | "delivered";
