@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, validatePassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, validatePassword } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 
 
@@ -23,32 +23,27 @@ export async function signInUser(email: string, password: string) {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
         const user = userCredential.user
-
+        
         return user
     } catch (error) {
         throw error
     }
 }
 
-async function validateUserPassword(password: string) {
+export async function validateUserPassword(password: string) {
     try {
-
-
         const status = await validatePassword(getAuth(), password)
         if (!status.isValid) {
-
+            throw new Error("Senha deve conter 8 caracteres com letras,números e caracteres especiais")
         }
     } catch (error) {
         throw error
     }
 }
 
-async function signOutUser() {
-
+export async function signOutUser() {
     try {
-
-
-        await signOutUser()
+        await signOut(auth)
     } catch (error) {
         throw error
     }
