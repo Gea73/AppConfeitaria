@@ -1,6 +1,6 @@
 import { Button } from "@/components/button";
 import ErrorBar from "@/components/errorBar";
-import OrderItemCard from "@/components/OrderItemCard";
+import OrderItemCardNoButton from "@/components/OrderItemCardNoButton";
 import { Title } from "@/components/title";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   FlatList,
   StyleSheet,
   Text,
@@ -37,8 +38,17 @@ export default function OrderDetails() {
 
   async function HandleCancelOrder() {
     try {
-      await orderService.deleteOrder(String(orderId));
-      router.back();
+      Alert.alert("Cancelar Pedido", "Desejo mesmo cancelar o pedido?", [
+        { text: "Não", style: "cancel" },
+        {
+          text: "Sim",
+          style: "destructive",
+          onPress: async () => {
+            await orderService.deleteOrder(String(orderId));
+            router.back();
+          },
+        },
+      ]);
     } catch (e: any) {
       showErrorBar(String(e));
     }
@@ -63,14 +73,12 @@ export default function OrderDetails() {
             <FlatList
               data={order?.getItems()}
               renderItem={({ item }) => (
-                <OrderItemCard
+                <OrderItemCardNoButton
                   uid={item.uid}
                   name={item.name}
                   description={item.description}
                   price={item.price}
                   quantity={item.quantity}
-                  onIncrease={() => {}}
-                  onDecrease={() => {}}
                 />
               )}
               keyExtractor={(item) => item.uid}
@@ -79,7 +87,12 @@ export default function OrderDetails() {
           <View style={stylesheet.smallButtonContainer}>
             <Button
               text="Editar Pedido"
-              onPress={() => router.push("/order/makeOrder")}
+              onPress={() =>
+                router.push({
+                  pathname: "/order/editOrder",
+                  params: { orderId: orderId },
+                })
+              }
             ></Button>
           </View>
           <View style={stylesheet.orderContainer}>
