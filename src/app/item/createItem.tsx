@@ -6,6 +6,7 @@ import ItemCardNoButton from "@/components/ItemCardNoButton";
 import { Title } from "@/components/title";
 import { itemService } from "@/services/itemService";
 import { colors, spacing } from "@/styles/global";
+import { router } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -31,6 +32,7 @@ export default function CreateItem() {
         imageUrl,
       );
       console.log(result);
+      router.back();
     } catch (e: any) {
       showErrorBar(String(e));
     }

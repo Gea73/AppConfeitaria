@@ -7,7 +7,7 @@ import { Title } from "@/components/title";
 import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";
 import { colors, spacing } from "@/styles/global";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -33,7 +33,7 @@ export default function AlterItem() {
         setItem(item);
         setName(item.getName());
         setDescription(item.getDescription());
-        setPrice(item.getPrice().toFixed(2).replace(".", ","));
+        setPrice(item.getPrice().toFixed(2));
         setImageUrl(item.getImageUrl());
       }
     }
@@ -43,13 +43,14 @@ export default function AlterItem() {
   async function HandleAlterItem() {
     try {
       const result = await itemService.updateItem(
-        name,
         String(itemId),
+        name,
         description,
         Number(price),
         imageUrl,
       );
       console.log(result);
+      router.back();
     } catch (e: any) {
       showErrorBar(String(e));
     }
@@ -83,7 +84,10 @@ export default function AlterItem() {
                 placeHolder={description}
               ></Input>
               <FormLabel text="Preço"></FormLabel>
-              <Input onChangeText={setPrice} placeHolder={price}></Input>
+              <Input
+                onChangeText={setPrice}
+                placeHolder={price.replace(".", ",")}
+              ></Input>
               <FormLabel text="Imagem"></FormLabel>
               <Input onChangeText={setImageUrl} placeHolder={imageUrl}></Input>
 
