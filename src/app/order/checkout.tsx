@@ -9,7 +9,14 @@ import { colors, typography } from "@/styles/global";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Checkout() {
@@ -18,32 +25,41 @@ export default function Checkout() {
     setErrorBar(message);
     setTimeout(() => setErrorBar(""), 3000);
   };
-  const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCartContext()
+  const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCartContext();
 
   function HandleCancelOrder() {
-    ClearCart()
-    router.back()
+    Alert.alert("Cancelar Pedido", "Deseja mesmo cancelar?", [
+      { text: "Não", style: "cancel" },
+      {
+        text: "Sim",
+        style: "destructive",
+        onPress: () => {
+          ClearCart();
+          router.back();
+        },
+      },
+    ]);
   }
 
   async function HandleMakeOrder() {
     try {
-      const uid = auth.currentUser?.uid
+      const uid = auth.currentUser?.uid;
       if (!uid) {
-        throw new Error("Invalid user")
+        throw new Error("Invalid user");
       }
-      const newOrder = await orderService.createOrder(uid, cart)
-      ClearCart()
-      router.replace("/user/orders")
+      const newOrder = await orderService.createOrder(uid, cart);
+      ClearCart();
+      router.replace("/user/orders");
     } catch (e: any) {
-      showErrorBar(String(e))
+      showErrorBar(String(e));
     }
   }
 
   useEffect(() => {
     if (cart.length <= 0) {
-      router.push("/order/makeOrder")
+      router.push("/order/makeOrder");
     }
-  }, [cart])
+  }, [cart]);
   return (
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
@@ -51,37 +67,52 @@ export default function Checkout() {
           <ErrorBar message={errorBar}></ErrorBar>
           <Title text="Resumo do Pedido"></Title>
 
-          <TouchableOpacity style={stylesheet.cancelOrder} onPress={() => HandleCancelOrder()}>
+          <TouchableOpacity
+            style={stylesheet.cancelOrder}
+            onPress={() => HandleCancelOrder()}
+          >
             <Text style={stylesheet.cancelText}>Cancelar</Text>
             <Ionicons name="trash" size={28} color={colors.main}></Ionicons>
           </TouchableOpacity>
 
           <View style={stylesheet.itemsContainer}>
-            <FlatList data={cart} renderItem={({ item }) => (
-              <OrderItemCard uid={item.uid}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                quantity={cart.find((i) => i.uid === item.uid)?.quantity || 0}
-                onIncrease={() => AddItem({ ...item, quantity: 1 })}
-                onDecrease={() =>
-                  RemoveItem(cart.find((i) => i.uid === item.uid))
-                } />
-            )} keyExtractor={(item) => item.uid}>
-
-            </FlatList>
+            <FlatList
+              data={cart}
+              renderItem={({ item }) => (
+                <OrderItemCard
+                  uid={item.uid}
+                  name={item.name}
+                  description={item.description}
+                  price={item.price}
+                  quantity={cart.find((i) => i.uid === item.uid)?.quantity || 0}
+                  onIncrease={() => AddItem({ ...item, quantity: 1 })}
+                  onDecrease={() =>
+                    RemoveItem(cart.find((i) => i.uid === item.uid))
+                  }
+                />
+              )}
+              keyExtractor={(item) => item.uid}
+            ></FlatList>
           </View>
           <View style={stylesheet.smallButtonContainer}>
-            <Button text="Editar Pedido" onPress={() => router.push("/order/makeOrder")}></Button>
+            <Button
+              text="Editar Pedido"
+              onPress={() => router.push("/order/makeOrder")}
+            ></Button>
           </View>
           <View style={stylesheet.orderContainer}>
             <Text style={stylesheet.orderText}>Valor Total</Text>
-            <Text style={stylesheet.orderText}>R$ {GetTotal().toFixed(2).replace(".", ",")}</Text>
+            <Text style={stylesheet.orderText}>
+              R$ {GetTotal().toFixed(2).replace(".", ",")}
+            </Text>
             <Text style={stylesheet.orderText}>Endereço de Entrega</Text>
             <Text style={stylesheet.orderText}>A adicionar</Text>
           </View>
           <View style={stylesheet.buttonContainer}>
-            <Button text="Fazer Pedido " onPress={() => HandleMakeOrder()}></Button>
+            <Button
+              text="Fazer Pedido "
+              onPress={() => HandleMakeOrder()}
+            ></Button>
           </View>
         </SafeAreaView>
       </SafeAreaProvider>
@@ -103,37 +134,33 @@ const stylesheet = StyleSheet.create({
   cancelOrder: {
     flexDirection: "row",
     alignItems: "center",
-    margin: "3%"
-
+    margin: "3%",
   },
   cancelText: {
     color: colors.main,
     fontWeight: "bold",
-    fontSize: typography.text
+    fontSize: typography.text,
   },
   itemsContainer: {
     flex: 5,
-
   },
   orderContainer: {
     borderTopWidth: 1,
     borderTopColor: colors.details,
     flex: 2,
     marginTop: "5%",
-    padding: "5%"
-
+    padding: "5%",
   },
   orderText: {
     fontSize: typography.subtitle,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   smallButtonContainer: {
     margin: "auto",
-    width: "60%"
+    width: "60%",
   },
   buttonContainer: {
     margin: "auto",
-    width: "70%"
-  }
-
+    width: "70%",
+  },
 });
