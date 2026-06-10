@@ -1,3 +1,4 @@
+import { useCartContext } from "@/context/cartContext";
 import { signOutUser } from "@/firebase/authentication";
 import { auth } from "@/firebase/firebaseConfig";
 import { User } from "@/models/user";
@@ -10,7 +11,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function Account() {
   const [user, setUser] = useState<User | null>(null);
-
+  const { ClearCart } = useCartContext();
   useEffect(() => {
     async function getUser(): Promise<void> {
       const uid = auth.currentUser?.uid;
@@ -34,30 +35,35 @@ export default function Account() {
             <Image source={require("@/assets/images/userImage.png")} />
             <Text style={stylesheet.usernameText}>{user?.getName()}</Text>
           </View>
-          <View style={stylesheet.cardContainer}>
-            <Text numberOfLines={1} style={stylesheet.cardText}>
-              Alterar dados
-            </Text>
-            <Ionicons
-              name="information-circle-outline"
-              size={30}
-              color={colors.main}
-              style={stylesheet.cardIcon}
-            ></Ionicons>
-          </View>
-          <View style={stylesheet.cardContainer}>
-            <Text numberOfLines={1} style={stylesheet.cardText}>
-              Endereços
-            </Text>
-            <Ionicons
-              name="location"
-              size={30}
-              color={colors.main}
-              style={stylesheet.cardIcon}
-            ></Ionicons>
-          </View>
+          <TouchableOpacity>
+            <View style={stylesheet.cardContainer}>
+              <Text numberOfLines={1} style={stylesheet.cardText}>
+                Alterar dados
+              </Text>
+              <Ionicons
+                name="information-circle-outline"
+                size={30}
+                color={colors.main}
+                style={stylesheet.cardIcon}
+              ></Ionicons>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={stylesheet.cardContainer}>
+              <Text numberOfLines={1} style={stylesheet.cardText}>
+                Endereços
+              </Text>
+              <Ionicons
+                name="location"
+                size={30}
+                color={colors.main}
+                style={stylesheet.cardIcon}
+              ></Ionicons>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
+              ClearCart();
               signOutUser();
               router.replace("/auth/signIn");
             }}
