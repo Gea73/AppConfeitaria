@@ -33,11 +33,14 @@ export const itemRepo = {
         }
     },
 
-    getItemById: async function (id: string) {
+    getItemById: async function (uid: string) {
         try {
-            const docRef = doc(db, "items", id)
-            return await getDoc(docRef);
-
+            const docRef = doc(db, "items", uid)
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data()
+                return { uid: uid, name: data.name, description: data.description, price: data.price, imageUrl: data.imageUrl, createdAt: data.createdAt }
+            }
         } catch (error) {
             throw error
         }
@@ -59,10 +62,13 @@ export const itemRepo = {
             throw error
         }
     },
-    updateItem: async function (id: string, description: string | null, price: number | null, imageUrl: string | null) {
+    updateItem: async function (uid: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null) {
         try {
-            const docRef = doc(db, "items", id)
+            const docRef = doc(db, "items", uid)
             let dataToUpdate = {}
+            if (name != null) {
+                dataToUpdate = { ...dataToUpdate, name: name }
+            }
             if (description != null) {
                 dataToUpdate = { ...dataToUpdate, description: description }
             }

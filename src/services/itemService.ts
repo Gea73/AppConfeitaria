@@ -18,10 +18,10 @@ export const itemService = {
 
     },
 
-    updateItem: async function (id: string, description: string | null, price: number | null, imageUrl: string | null) {
+    updateItem: async function (uid: string,name:string | null, description: string | null, price: number | null, imageUrl: string | null) {
         try {
 
-            await itemRepo.updateItem(id, description, price, imageUrl)
+            await itemRepo.updateItem(uid,name, description, price, imageUrl)
 
 
         } catch (error) {
@@ -32,13 +32,14 @@ export const itemService = {
 
     },
 
-    getItem: async function (id: string | null, name: string | null) {
-        if (id) {
-            return await itemRepo.getItemById(id);
+    getItem: async function (uid: string) {
+        if (uid) {
+            const data = await itemRepo.getItemById(uid);
+            const item = new Item(uid, data?.name, data?.description, data?.price, data?.imageUrl, data?.createdAt)
+            return item
+
         }
-        if (name) {
-            return await itemRepo.getItemByName(name);
-        }
+
 
     },
 
