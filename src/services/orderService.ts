@@ -44,7 +44,7 @@ export const orderService = {
     getOrders: async function (customerId: string | null): Promise<Order[] | null> {
 
         if (customerId) {
-           const data = await orderRepo.getOrdersByCustomer(customerId);
+            const data = await orderRepo.getOrdersByCustomer(customerId);
             const orders = data?.map((o) => { return new Order(o.uid, o.customerId, o.items, o.createdAt) })
             if (orders) {
                 return orders
@@ -52,6 +52,13 @@ export const orderService = {
 
         }
         return null
+    },
+    getAllOrders: async function () {
+        const data = await orderRepo.getOrders()
+        const orders = data?.map((o) => { return new Order(o.uid, o.customerId, o.items, o.createdAt) })
+        if (orders) {
+            return orders
+        }
     },
     deleteOrder: async function (orderId: string) {
         await orderRepo.deleteOrder(orderId)

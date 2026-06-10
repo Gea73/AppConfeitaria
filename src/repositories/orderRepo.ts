@@ -68,6 +68,23 @@ export const orderRepo = {
         }
     },
 
+
+    getOrders: async function () {
+        try {
+            const q = query(collection(db, "orders"))
+            const querySnapshot = await getDocs(q)
+            if (querySnapshot) {
+                const orders = querySnapshot.docs.map((result) => {
+                    const data = result.data()
+                    return { uid: result.id, customerId: data.customerId, items: data.items, status: data.status, createdAt: data.createdAt }
+                })
+                return orders
+            }
+        } catch (error) {
+
+        }
+    },
+
     deleteOrder: async function (id: string) {
         try {
             const docRef = doc(db, "orders", id)
