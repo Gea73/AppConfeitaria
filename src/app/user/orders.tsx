@@ -12,7 +12,6 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function Orders() {
   const [user, setUser] = useState<User | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [noOrders, setNoOrders] = useState<boolean>(false);
 
   useEffect(() => {
     async function getUser(): Promise<void> {
@@ -28,10 +27,8 @@ export default function Orders() {
   useEffect(() => {
     async function getOrders() {
       const result = await orderService.getOrders(user?.getId() ?? null);
-      const data = result ?? []
+      const data = result ?? [];
       setOrders(data);
-      setNoOrders(data.length === 0);
-
     }
 
     if (user) {
@@ -43,20 +40,23 @@ export default function Orders() {
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
-          <NoOrders isVisible={noOrders}></NoOrders>
-          <FlatList
-            data={orders}
-            renderItem={({ item }) => (
-              <OrderCard
-                uid={item.getId()}
-                items={item.getItems()}
-                total={item
-                  .getItems()
-                  .reduce((sum, i) => sum + i.price * i.quantity, 0)}
-              />
-            )}
-            keyExtractor={(item) => item.getId()}
-          ></FlatList>
+          {orders.length === 0 ? (
+            <NoOrders isVisible={true}></NoOrders>
+          ) : (
+            <FlatList
+              data={orders}
+              renderItem={({ item }) => (
+                <OrderCard
+                  uid={item.getId()}
+                  items={item.getItems()}
+                  total={item
+                    .getItems()
+                    .reduce((sum, i) => sum + i.price * i.quantity, 0)}
+                />
+              )}
+              keyExtractor={(item) => item.getId()}
+            ></FlatList>
+          )}
         </SafeAreaView>
       </SafeAreaProvider>
     </>

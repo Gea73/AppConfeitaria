@@ -1,7 +1,6 @@
 import { colors } from "@/styles/global";
 import { OrderItem } from "@/types/orderItem";
 import { router } from "expo-router";
-import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "./button";
 
@@ -17,17 +16,25 @@ function getItems(items: OrderItem[]) {
     itemString += `${e.name} x${e.quantity} Preço R$${e.price}`;
   });
 
-  return itemString
+  return itemString;
 }
 
 export default function OrderCard(props: OrderCardProps) {
-  const [items, setItems] = useState(getItems(props.items));
+  const items = getItems(props.items);
 
   return (
     <View style={stylesheet.container}>
       <Text>{items}</Text>
       <Text>Total: R${props.total.toFixed(2).replace(".", ",")}</Text>
-      <Button text="Ver Pedido" onPress={() => router.push({ pathname: "/order/orderDetails", params: { orderId: props.uid } })}></Button>
+      <Button
+        text="Ver Pedido"
+        onPress={() =>
+          router.push({
+            pathname: "/order/orderDetails",
+            params: { orderId: props.uid },
+          })
+        }
+      ></Button>
     </View>
   );
 }
