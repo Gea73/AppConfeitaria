@@ -81,7 +81,7 @@ export const orderRepo = {
                 return orders
             }
         } catch (error) {
-
+            throw error
         }
     },
 
