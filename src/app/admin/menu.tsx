@@ -2,32 +2,28 @@ import ItemCard from "@/components/ItemCard";
 import NoItems from "@/components/noItems";
 import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Menu() {
-
   const [items, setItems] = useState<Item[]>([]);
   const [noItems, setNoItems] = useState<boolean>(false);
-
-
 
   useEffect(() => {
     async function getItems() {
       const result = await itemService.getItems();
-      const data = result ?? []
+      const data = result ?? [];
       setItems(data);
       setNoItems(data.length === 0);
-
     }
 
     getItems();
-
   }, []);
 
-  function HandleEditItem() {
-
+  function HandleEditItem(itemId: string) {
+    router.push({ pathname: "/item/alterItem", params: { itemId: itemId } });
   }
 
   return (
@@ -44,7 +40,7 @@ export default function Menu() {
                 name={item.getName()}
                 description={item.getDescription()}
                 imageUrl={item.getImageUrl()}
-                onEdit={() => HandleEditItem()}
+                onEdit={() => HandleEditItem(item.getId())}
               />
             )}
             keyExtractor={(item) => item.getId()}
@@ -53,5 +49,4 @@ export default function Menu() {
       </SafeAreaProvider>
     </>
   );
-
 }
