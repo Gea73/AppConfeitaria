@@ -54,7 +54,16 @@ export default function SignIn() {
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithGoogle();
-      const user = result?.user
+      const user = result?.user;
+      if (!user || !user.displayName || !user.email) {
+        throw new Error("Login com Google não retornou dados");
+      }
+
+      const userExists = await userService.getUser(user.uid, null);
+      if (!userExists) {
+        await userService.createUser(user?.uid, user?.displayName, user?.email);
+      }
+
       if (user) {
         const admin = await userService.getUser(user.uid, null);
         if (admin?.getRole() === "admin") {
@@ -63,7 +72,6 @@ export default function SignIn() {
         }
         router.replace("/user/home");
       }
-
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }

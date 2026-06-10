@@ -9,8 +9,6 @@ export default function Layout() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (dbUser) => {
       try {
-
-
         if (dbUser) {
           const user = await userService.getUser(dbUser.uid, null);
           router.replace(
@@ -24,24 +22,6 @@ export default function Layout() {
       }
     });
     return () => unsubscribe();
-
-    /*
-    async function handleUser() {
-
-      if (auth.currentUser !== null) {
-        const user = await userService.getUser(auth.currentUser.uid, null);
-
-        if (user?.getRole() === "admin") {
-          router.replace("/admin/home");
-          return;
-        }
-        router.replace("/user/home");
-      } else {
-        router.replace("/auth/signIn");
-      }
-    }
-    handleUser();
-    */
   }, []);
 
   return (
