@@ -46,8 +46,6 @@ export default function Checkout() {
   }, [cart])
   return (
     <>
-
-
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
           <ErrorBar message={errorBar}></ErrorBar>
@@ -78,9 +76,9 @@ export default function Checkout() {
           </View>
           <View style={stylesheet.orderContainer}>
             <Text style={stylesheet.orderText}>Valor Total</Text>
-            <Text style={stylesheet.orderText}>R$ {GetTotal()}</Text>
+            <Text style={stylesheet.orderText}>R$ {GetTotal().toFixed(2).replace(".", ",")}</Text>
             <Text style={stylesheet.orderText}>Endereço de Entrega</Text>
-            <Text style={stylesheet.orderText}>Rua Gurarape 185 ,Vila Vintem</Text>
+            <Text style={stylesheet.orderText}>A adicionar</Text>
           </View>
           <View style={stylesheet.buttonContainer}>
             <Button text="Fazer Pedido " onPress={() => HandleMakeOrder()}></Button>

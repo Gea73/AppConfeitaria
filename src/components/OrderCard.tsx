@@ -1,7 +1,9 @@
 import { colors } from "@/styles/global";
 import { OrderItem } from "@/types/orderItem";
+import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Button } from "./button";
 
 type OrderCardProps = {
   uid: string;
@@ -12,10 +14,10 @@ type OrderCardProps = {
 function getItems(items: OrderItem[]) {
   let itemString = "";
   items.forEach((e) => {
-    itemString += `Item ${e.name} X ${e.quantity} Preço ${e.price}`;
+    itemString += `${e.name} x${e.quantity} Preço R$${e.price}`;
   });
 
-  return itemString;
+  return itemString
 }
 
 export default function OrderCard(props: OrderCardProps) {
@@ -24,6 +26,8 @@ export default function OrderCard(props: OrderCardProps) {
   return (
     <View style={stylesheet.container}>
       <Text>{items}</Text>
+      <Text>Total: R${props.total.toFixed(2).replace(".", ",")}</Text>
+      <Button text="Ver Pedido" onPress={() => router.push({ pathname: "/order/orderDetails", params: { orderId: props.uid } })}></Button>
     </View>
   );
 }

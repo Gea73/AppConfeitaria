@@ -10,7 +10,7 @@ type CartOverlayProps = {
 
 export function CartOverlay(props: CartOverlayProps) {
   if (props.cart.length <= 0) {
-    return;
+    return null;
   }
   return (
     <>

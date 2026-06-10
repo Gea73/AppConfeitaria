@@ -62,8 +62,14 @@ export default function SignUp() {
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithGoogle();
-      if (result) {
-        const admin = await userService.getUser(result.user.uid, null);
+      const user = result?.user
+      if (!user || !user.displayName || !user.email) {
+        throw new Error("Login com Google não retornou dados")
+      }
+      await userService.createUser(user?.uid, user?.displayName, user?.email)
+
+      if (user) {
+        const admin = await userService.getUser(user.uid, null);
         if (admin?.getRole() === "admin") {
           router.replace("/admin/home");
           return;

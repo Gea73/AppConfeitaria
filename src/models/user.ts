@@ -11,7 +11,7 @@ export class User {
         this._name = this.setName(name)
         this._email = this.setEmail(email)
         this._createdAt = this.setCreatedAt(createdAt)
-        this._role = this._role = this.setRole(role)
+        this._role = this.setRole(role)
     }
 
     setId(id: string) {

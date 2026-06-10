@@ -7,7 +7,7 @@ import { itemService } from "@/services/itemService";
 import { colors, typography } from "@/styles/global";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function MakeOrder() {
@@ -18,62 +18,35 @@ export default function MakeOrder() {
   };
   const [menu, setMenu] = useState<Item[]>([])
   const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCartContext();
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     async function getItems() {
       const result = await itemService.getItems()
       if (result) {
         setMenu(result ?? [])
+        setLoading(false)
       }
 
     } getItems()
   }, [])
+  if (loading) {
+    return (<>
+      <ActivityIndicator size={"large"} color={colors.main}></ActivityIndicator>
+    </>)
+  }
 
-  const menu1 = [
-    {
-      uid: "uid1",
-      name: "Item 1",
-      description: "Description",
-      price: 1.50,
-    },
-    {
-      uid: "uid2",
-      name: "Item 2",
-      description: "Description",
-      price: 2.50,
-    },
-    {
-      uid: "uid3",
-      name: "Item 3",
-      description: "Description Descript",
-      price: 3.00,
-    },
-    {
-      uid: "uid4",
-      name: "Item 4",
-      description: "Description Descript",
-      price: 3.00,
-    },
-    {
-      uid: "uid5",
-      name: "Item 5",
-      description: "Description Descript",
-      price: 3.00,
-    },
-    {
-      uid: "uid6",
-      name: "Item 6",
-      description: "Description Descript",
-      price: 3.00,
-    },
-    {
-      uid: "uid7",
-      name: "Item 7",
-      description: "Description Descript",
-      price: 3.00,
-    },
-  ];
+  function handleMakeOrder() {
+    try {
+      if (cart.length === 0) {
+        throw new Error("Seu pedido está vazio")
+      }
+      router.push("/order/checkout")
 
+    } catch (e: any) {
+      showErrorBar(String(e))
+    }
+  }
   return (
     <>
       <View style={stylesheet.header}>
@@ -104,7 +77,7 @@ export default function MakeOrder() {
           <View style={stylesheet.buttonContainer}>
             <Button
               text="Finalizar Pedido"
-              onPress={() => router.push("/order/checkout")}
+              onPress={() => handleMakeOrder()}
             ></Button>
           </View>
         </SafeAreaView>

@@ -24,7 +24,7 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-export default function signIn() {
+export default function SignIn() {
   const { signInWithGoogle, isReady } = useGoogleSignIn();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -41,8 +41,6 @@ export default function signIn() {
 
       if (result) {
         const admin = await userService.getUser(result.uid, null);
-        console.log(admin);
-        console.log(admin?.getRole());
         if (admin?.getRole() === "admin") {
           router.replace("/admin/home");
           return;
@@ -55,10 +53,17 @@ export default function signIn() {
   };
   const handleGoogleLogin = async () => {
     try {
-      const user = await signInWithGoogle();
+      const result = await signInWithGoogle();
+      const user = result?.user
       if (user) {
+        const admin = await userService.getUser(user.uid, null);
+        if (admin?.getRole() === "admin") {
+          router.replace("/admin/home");
+          return;
+        }
         router.replace("/user/home");
       }
+
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }

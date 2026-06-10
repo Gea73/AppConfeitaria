@@ -26,13 +26,6 @@ export default function Account() {
     }, [])
 
 
-
-
-
-
-
-
-
     return (<>
 
         <SafeAreaProvider style={{ backgroundColor: "white" }}>
@@ -45,15 +38,19 @@ export default function Account() {
                     <Image source={require("@/assets/images/userImage.png")} />
                     <Text style={stylesheet.usernameText}>{(user?.getName())}</Text>
                 </View>
-                <View style={stylesheet.cardContainer}>
-                    <Text numberOfLines={1} style={stylesheet.cardText}>Alterar dados</Text>
-                    <Ionicons name="information-circle-outline" size={30} color={colors.main} style={stylesheet.cardIcon}></Ionicons>
-                </View>
-                <View style={stylesheet.cardContainer}>
-                    <Text numberOfLines={1} style={stylesheet.cardText}>Endereços</Text>
-                    <Ionicons name="location" size={30} color={colors.main} style={stylesheet.cardIcon}></Ionicons>
-                </View>
-                <TouchableOpacity onPress={() => { signOutUser(); router.replace("/") }}>
+                <TouchableOpacity onPress={() => { }}>
+                    <View style={stylesheet.cardContainer}>
+                        <Text numberOfLines={1} style={stylesheet.cardText}>Alterar dados</Text>
+                        <Ionicons name="information-circle-outline" size={30} color={colors.main} style={stylesheet.cardIcon}></Ionicons>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { }}>
+                    <View style={stylesheet.cardContainer}>
+                        <Text numberOfLines={1} style={stylesheet.cardText}>Endereços</Text>
+                        <Ionicons name="location" size={30} color={colors.main} style={stylesheet.cardIcon}></Ionicons>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { signOutUser(); router.replace("/auth/signIn") }}>
                     <View style={stylesheet.cardContainer}>
                         <Text numberOfLines={1} style={stylesheet.cardText}>Sair</Text>
                         <Ionicons name="exit-outline" size={30} color={colors.main} style={stylesheet.cardIcon}></Ionicons>

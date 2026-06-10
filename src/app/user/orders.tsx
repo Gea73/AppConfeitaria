@@ -28,14 +28,10 @@ export default function Orders() {
   useEffect(() => {
     async function getOrders() {
       const result = await orderService.getOrders(user?.getId() ?? null);
-      setOrders(result ?? []);
+      const data = result ?? []
+      setOrders(data);
+      setNoOrders(data.length === 0);
 
-      if (orders.length <= 0) {
-        setNoOrders(true);
-        return;
-      }
-      setNoOrders(false);
-      return;
     }
 
     if (user) {
