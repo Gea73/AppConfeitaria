@@ -92,8 +92,10 @@ export const itemRepo = {
 
     deleteItem: async function (id: string) {
         try {
+            
             const docRef = doc(db, "items", id)
             await deleteDoc(docRef)
+
         } catch (error) {
             throw error
         }

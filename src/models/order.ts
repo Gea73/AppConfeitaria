@@ -62,6 +62,18 @@ export class Order {
         return status
     }
     getStatus() {
+        if (this._status === "pending") {
+            return "Aguardando confirmação"
+        }
+
+        if (this._status === "preparing") {
+            return "Em Preparação"
+        }
+
+
+        if (this._status === "delivered") {
+            return "Entregue"
+        }
         return this._status
     }
 

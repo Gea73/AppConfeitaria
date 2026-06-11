@@ -4,15 +4,16 @@ import { db } from "../firebase/firebaseConfig";
 export const orderRepo = {
     createOrder: async function (customerId: string, items: object) {
         try {
+            
             const timeStamp = serverTimestamp()
-
+            
             const docRef = await addDoc(collection(db, "orders"), {
                 customerId: customerId,
                 items: items,
                 status: "pending",
                 createdAt: timeStamp
             })
-
+           
             return { id: docRef.id, createdAt: timeStamp }
         } catch (error) {
             throw error
