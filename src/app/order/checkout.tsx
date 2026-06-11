@@ -47,9 +47,9 @@ export default function Checkout() {
       if (!uid) {
         throw new Error("Invalid user");
       }
-      const newOrder = await orderService.createOrder(uid, cart);
+      await orderService.createOrder(uid, cart);
+      router.replace("/user/home")
       ClearCart();
-      router.replace("/user/orders");
     } catch (e: any) {
       showErrorBar(String(e));
     }
