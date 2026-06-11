@@ -1,7 +1,7 @@
 import { OrderItem } from "@/types/orderItem";
+import { orderStatus } from "@/types/orderStatus";
 import { FieldValue, Timestamp } from "firebase/firestore";
 
-type orderStatus = "pending" | "preparing" | "delivered";
 
 
 
@@ -12,11 +12,11 @@ export class Order {
     private _items: OrderItem[]
     private _status: orderStatus
     private _createdAt: Timestamp | FieldValue
-    constructor(id: string, customerId: string, items: OrderItem[], createdAt: Timestamp | FieldValue) {
+    constructor(id: string, customerId: string, items: OrderItem[], createdAt: Timestamp | FieldValue, status: orderStatus) {
         this._id = this.setId(id)
         this._customerId = this.setCustomerId(customerId)
         this._items = this.setItems(items)
-        this._status = "pending"
+        this._status = this.setStatus(status)
         this._createdAt = this.setCreatedAt(createdAt)
     }
 
