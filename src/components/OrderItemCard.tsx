@@ -77,7 +77,7 @@ const stylesheet = StyleSheet.create({
   buttonsContainer: {
     marginTop:"10%",
     flexDirection: "row",
-    gap: "5%",
+    gap: "3%",
   },
   quantityText: {
     fontSize: typography.text,

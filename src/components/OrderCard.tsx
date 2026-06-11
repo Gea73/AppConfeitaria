@@ -8,6 +8,7 @@ type OrderCardProps = {
   uid: string;
   items: OrderItem[];
   total: number;
+  status: string
 };
 
 function getItems(items: OrderItem[]) {
@@ -24,17 +25,20 @@ export default function OrderCard(props: OrderCardProps) {
 
   return (
     <View style={stylesheet.container}>
+      <Text>Seu pedido está {props.status}</Text>
       <Text>{items}</Text>
       <Text>Total: R${props.total.toFixed(2).replace(".", ",")}</Text>
-      <Button
-        text="Ver Pedido"
-        onPress={() =>
-          router.push({
-            pathname: "/order/orderDetails",
-            params: { orderId: props.uid },
-          })
-        }
-      ></Button>
+      <View style={stylesheet.buttonContainer}>
+        <Button
+          text="Ver Pedido"
+          onPress={() =>
+            router.push({
+              pathname: "/order/orderDetails",
+              params: { orderId: props.uid },
+            })
+          }
+        ></Button>
+      </View>
     </View>
   );
 }
@@ -44,6 +48,9 @@ const stylesheet = StyleSheet.create({
     paddingVertical: "2%",
     borderWidth: 0.7,
     borderColor: colors.details,
-    flexDirection: "row",
+
   },
+  buttonContainer:{
+    alignItems:"center"
+  }
 });

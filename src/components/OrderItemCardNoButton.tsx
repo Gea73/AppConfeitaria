@@ -20,11 +20,17 @@ export default function OrderItemCardNoButton(props: ItemProps) {
       </View>
       <View style={stylesheet.textContainer}>
         <Text style={stylesheet.nameText}>{props.name}</Text>
+        <View style={stylesheet.quantityContainer}>
+          <Text style={stylesheet.quantityText}>X {props.quantity}</Text>
+        </View>
+
         <Text style={stylesheet.descriptionText}>{props.description}</Text>
+
 
         <Text style={stylesheet.priceText}>
           R$ {props.price.toFixed(2).replace(".", ",")}
         </Text>
+
       </View>
     </View>
   );
@@ -59,18 +65,16 @@ const stylesheet = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: "5%",
   },
-  buttonsContainer: {
-    marginTop: "10%",
-    flexDirection: "row",
-    gap: "5%",
+  quantityContainer:{
+    position:"absolute",
+    top:"3%",
+    left:"100%"
   },
   quantityText: {
     fontSize: typography.text,
-    borderWidth: 1,
-    borderColor: colors.details,
-    borderRadius: 5,
-    textAlign: "center",
+    textAlign: "right",
     textAlignVertical: "center",
-    width: "15%",
+
   },
+
 });
