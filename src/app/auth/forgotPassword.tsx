@@ -10,11 +10,11 @@ import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { colors, spacing } from "@/styles/global";
 import { useState } from "react";
 import {
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -40,8 +40,8 @@ export default function ForgotPassword() {
     setTimeout(() => setErrorBar(""), 3000);
   };
   const showSuccessBar = (message: string) => {
-    setErrorBar(message);
-    setTimeout(() => setErrorBar(""), 3000);
+    setSuccessBar(message);
+    setTimeout(() => setSuccessBar(""), 3000);
   };
 
   return (

@@ -22,10 +22,12 @@ export default function ItemCard(props: ItemProps) {
         <Text style={stylesheet.nameText}>{props.name}</Text>
         <Text style={stylesheet.descriptionText}>{props.description}</Text>
 
-        <View style={stylesheet.buttonsContainer}>
+       
+        <Text style={stylesheet.priceText}>R$ {props.price.toFixed(2).replace(".", ",")}</Text>
+         <View style={stylesheet.buttonsContainer}>
           <Button text="Editar" onPress={props.onEdit}></Button>
 
-          <Text style={stylesheet.priceText}>R$ {props.price.toFixed(2).replace(".", ",")}</Text>
+          
         </View>
       </View>
     </View>
