@@ -1,5 +1,6 @@
+import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function AdminHome() {
@@ -7,7 +8,7 @@ export default function AdminHome() {
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
-          <Text>Admin</Text>
+          <Title text="Admin"></Title>
           <TopLogo></TopLogo>
         </SafeAreaView>
       </SafeAreaProvider>
