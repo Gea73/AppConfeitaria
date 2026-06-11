@@ -26,38 +26,62 @@ export default function EditOrder() {
   const [modifiedItems, setModifiedItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { orderId } = useLocalSearchParams();
+
+
   useEffect(() => {
+
+
+
     async function getOrder() {
-      const order = await orderService.getOrder(String(orderId));
-      if (order) {
-        setOrder(order);
+      try {
+        const order = await orderService.getOrder(String(orderId));
+        if (order) {
+          setOrder(order);
+
+        }
+
+      } catch (e: any) {
+        showErrorBar(String(e))
+      }
+      finally {
         setLoading(false);
       }
+
     }
     getOrder();
   }, [orderId]);
-  if (loading) {
+
+  useEffect(() => {
+    if (order) {
+      setModifiedItems(order.getItems())
+    }
+  }, [order])
+
+    if (loading) {
     return (
-      <>
+      <View style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
         <ActivityIndicator
           size={"large"}
           color={colors.main}
         ></ActivityIndicator>
-      </>
+      </View>
     );
   }
 
   function IncreaseItem(uid: string) {
-    const item = order?.getItems().find((i) => i.uid === uid);
+    const item = modifiedItems.find((i) => i.uid === uid);
 
     if (item) {
-      const newItem = { ...item, quantity: item.quantity + 1 };
-      setModifiedItems(modifiedItems.map((i) => (i.uid === uid ? newItem : i)));
+      setModifiedItems(prev => prev.map((i) => (i.uid === uid ? { ...i, quantity: i.quantity + 1 } : i)));
     }
   }
 
   function RemoveItem(uid: string) {
-    const item = order?.getItems().find((i) => i.uid === uid);
+    const item = modifiedItems.find((i) => i.uid === uid);
     if (item) {
       const newItem = { ...item, quantity: item.quantity - 1 };
       setModifiedItems(
@@ -68,8 +92,9 @@ export default function EditOrder() {
     }
   }
 
-  function HandleEditOrder() {
+  async function HandleEditOrder() {
     try {
+      await orderService.updateOrder(String(orderId), modifiedItems, null)
       router.back();
     } catch (e: any) {
       showErrorBar(String(e));
@@ -86,7 +111,7 @@ export default function EditOrder() {
           <ErrorBar message={errorBar}></ErrorBar>
 
           <FlatList
-            data={order?.getItems()}
+            data={modifiedItems}
             renderItem={({ item }) => (
               <OrderItemCard
                 uid={item.uid}
