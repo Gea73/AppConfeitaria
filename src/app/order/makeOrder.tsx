@@ -21,19 +21,25 @@ export default function MakeOrder() {
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    async function getItems() {
-      const result = await itemService.getItems()
-      if (result) {
-        setMenu(result ?? [])
-        setLoading(false)
-      }
-
-    } getItems()
+    const unsubscribe = itemService.subscribeToItems((items) => {
+      setMenu(items);
+      setLoading(false)
+    })
+    return()=> unsubscribe()
   }, [])
   if (loading) {
-    return (<>
-      <ActivityIndicator size={"large"} color={colors.main}></ActivityIndicator>
-    </>)
+    return (
+      <View style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+        <ActivityIndicator
+          size={"large"}
+          color={colors.main}
+        ></ActivityIndicator>
+      </View>
+    );
   }
 
   function handleMakeOrder() {

@@ -1,27 +1,43 @@
+import { Button } from "@/components/button";
 import ItemCard from "@/components/ItemCard";
 import NoItems from "@/components/noItems";
 import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";
+import { colors } from "@/styles/global";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Menu() {
   const [items, setItems] = useState<Item[]>([]);
-
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
-    async function getItems() {
-      const result = await itemService.getItems();
-      const data = result ?? [];
-      setItems(data);
-    }
 
-    getItems();
+    const unsubscribe = itemService.subscribeToItems((items) => {
+      setItems(items);
+      setLoading(false)
+    })
+    return () => unsubscribe()
   }, []);
 
   function HandleEditItem(itemId: string) {
     router.push({ pathname: "/item/alterItem", params: { itemId: itemId } });
+  }
+
+  if (loading) {
+    return (
+      <View style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+        <ActivityIndicator
+          size={"large"}
+          color={colors.main}
+        ></ActivityIndicator>
+      </View>
+    );
   }
 
   return (
@@ -46,8 +62,17 @@ export default function Menu() {
               keyExtractor={(item) => item.getId()}
             ></FlatList>
           )}
+          <View style={stylesheet.buttonContainer}>
+            <Button text="Criar Item" onPress={() => { router.push("/item/createItem") }}></Button>
+          </View>
         </SafeAreaView>
       </SafeAreaProvider>
     </>
   );
 }
+const stylesheet = StyleSheet.create({
+  buttonContainer: {
+    alignItems: "center",
+
+  }
+})
