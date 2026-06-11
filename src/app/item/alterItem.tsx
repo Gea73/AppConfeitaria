@@ -6,12 +6,12 @@ import ItemCardNoButton from "@/components/ItemCardNoButton";
 import { Title } from "@/components/title";
 import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";
-import { colors, spacing } from "@/styles/global";
+import { colors, spacing, typography } from "@/styles/global";
+import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-
 export default function AlterItem() {
   const [item, setItem] = useState<Item>();
   const { itemId } = useLocalSearchParams();
@@ -49,8 +49,31 @@ export default function AlterItem() {
         Number(price),
         imageUrl,
       );
-      console.log(result);
+      
       router.back();
+    } catch (e: any) {
+      showErrorBar(String(e));
+    }
+  }
+
+  async function HandleDeleteItem() {
+    try {
+      Alert.alert("Deletar Item", "Deseja mesmo excluir?", [
+        { text: "Não", style: "cancel" },
+        {
+          text: "Sim",
+          style: "destructive",
+          onPress: async () => {
+            
+              await itemService.deleteItem(
+                String(itemId),
+              );
+              router.back();
+      
+          },
+        },
+      ]);
+
     } catch (e: any) {
       showErrorBar(String(e));
     }
@@ -75,6 +98,15 @@ export default function AlterItem() {
               ></ItemCardNoButton>
             </View>
             <Title text="Editando Item"></Title>
+
+            <TouchableOpacity
+              style={stylesheet.cancelOrder}
+              onPress={() => HandleDeleteItem()}
+            >
+              <Text style={stylesheet.cancelText}>Excluir</Text>
+              <Ionicons name="trash" size={28} color={colors.main}></Ionicons>
+            </TouchableOpacity>
+
             <View style={stylesheet.formContainer}>
               <FormLabel text="Nome"></FormLabel>
               <Input onChangeText={setName} placeHolder={name}></Input>
@@ -142,7 +174,19 @@ const stylesheet = StyleSheet.create({
     color: colors.main,
   },
   itemPreviewContainer: {
-    margin: "auto",
-    maxWidth: "90%",
+    alignItems:"center"
+    
+  },
+
+  cancelOrder: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop:"3%",
+    marginLeft: "70%",
+  },
+  cancelText: {
+    color: colors.main,
+    fontWeight: "bold",
+    fontSize: typography.text,
   },
 });
