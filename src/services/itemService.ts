@@ -1,3 +1,5 @@
+import { db } from "@/firebase/firebaseConfig";
+import { collection, onSnapshot } from "firebase/firestore";
 import { Item } from "../models/item";
 import { itemRepo } from "../repositories/itemRepo";
 
@@ -6,7 +8,7 @@ export const itemService = {
         try {
             const data = await itemRepo.createItem(name, description, price, imageUrl);
 
-            const item = new Item(data.id, name, description, price, imageUrl, data.createdAt,);
+            const item = new Item(data.id, name, description, price, imageUrl, data.createdAt);
             return item;
 
         } catch (error) {
@@ -18,10 +20,10 @@ export const itemService = {
 
     },
 
-    updateItem: async function (uid: string,name:string | null, description: string | null, price: number | null, imageUrl: string | null) {
+    updateItem: async function (uid: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null) {
         try {
 
-            await itemRepo.updateItem(uid,name, description, price, imageUrl)
+            await itemRepo.updateItem(uid, name, description, price, imageUrl)
 
 
         } catch (error) {
@@ -55,6 +57,15 @@ export const itemService = {
 
     deleteItem: async function (id: string) {
         await itemRepo.deleteItem(id);
-    }
+    },
+    subscribeToItems: function (callback: (items: Item[]) => void) {
+        return onSnapshot(collection(db, "items"), (snapshot) => {
+            const items = snapshot.docs.map((doc) => {
+                const data = doc.data()
+                return new Item(doc.id, data.name, data.description, data.price, data.imageUrl, data.createdAt)
+            })
+            callback(items)
+        })
 
+    }
 }
