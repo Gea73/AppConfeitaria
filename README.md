@@ -75,10 +75,12 @@ O sistema permite que clientes visualizem produtos e realizem pedidos, enquanto 
 
 ```txt
 src/
-├── screens/
+├── app/
 │   ├── auth/
-│   ├── cliente/
+│   ├── user/
 │   └── admin/
+│   └── item/
+│   └── order/
 │
 ├── components/
 │
@@ -108,10 +110,10 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| id | number |
-| nome | string |
-| senha | string |
-| funcao | string |
+| uid | string |
+| name | string |
+| email | string |
+| role | string |
 
 ---
 
@@ -119,10 +121,11 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| clienteId | number |
+| uid | string |
+| customerId | string |
 | status | string |
-| valorTotal | number |
-| criadoEm | timestamp |
+| total | number |
+| createdAt | timestamp |
 
 ---
 
@@ -130,17 +133,11 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| nome | string |
-| descricao | string |
-| valor | number |
+| uid | string |
+| name | string |
+| description | string |
+| price | number |
 | imagemUrl | string |
 
 ---
 
-## Pedidos-Itens
-
-| Campo | Tipo |
-|---|---|
-| pedidoId | number |
-| itemId | number |
-| quantidade | number |
