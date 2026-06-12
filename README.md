@@ -108,10 +108,11 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| id | number |
-| nome | string |
-| senha | string |
-| funcao | string |
+| uid | varchar |
+| name | varchar |
+| password_hash | varchar |
+| role | varchar |
+| createdAt | dateTime |
 
 ---
 
@@ -119,10 +120,11 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| clienteId | number |
-| status | string |
-| valorTotal | number |
-| criadoEm | timestamp |
+| uid | varchar |
+| customerId | varchar |
+| status | varchar |
+| total | decimal |
+| createdAt | dateTime |
 
 ---
 
@@ -130,10 +132,12 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| nome | string |
-| descricao | string |
-| valor | number |
-| imagemUrl | string |
+| uid | varchar |
+| name | varchar |
+| description | varchar |
+| price | number |
+| imageUrl | varchar |
+| createdAt | dateTime |
 
 ---
 
@@ -141,6 +145,7 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| pedidoId | number |
-| itemId | number |
-| quantidade | number |
+| uid | varchar |
+| orderId | varchar |
+| itemId | varchar |
+| quantity | int |
