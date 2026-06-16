@@ -47,7 +47,7 @@ export default function Checkout() {
       if (!uid) {
         throw new Error("Invalid user");
       }
-      await orderService.createOrder(uid, cart);
+      await orderService.createOrder(uid, cart,"pending");
       router.replace("/user/home")
       ClearCart();
     } catch (e: any) {
