@@ -1,14 +1,14 @@
 import { FieldValue, Timestamp } from "firebase/firestore"
 
 export class Item {
-    private _id: string
+    private _uid: string | null
     private _name: string
     private _description: string
     private _price: number
     private _imageUrl: string
-    private _createdAt: Timestamp | FieldValue
-    constructor( id: string,name: string, description: string, price: number, imageUrl: string, createdAt: Timestamp | FieldValue) {
-        this._id = this.setId(id)
+    private _createdAt: Timestamp | FieldValue | null
+    constructor(name: string, description: string, price: number, imageUrl: string, uid?: string, createdAt?: Timestamp | FieldValue) {
+        this._uid = this.setUid(uid)
         this._name = this.setName(name)
         this._description = this.setDescription(description)
         this._price = this.setPrice(price)
@@ -16,15 +16,18 @@ export class Item {
         this._createdAt = this.setCreatedAt(createdAt)
     }
 
-    setId(id: string) {
-        if (!id || id.trim().length === 0) {
-            throw new Error("Id is empty")
+    setUid(uid: string | undefined) {
+        if (!uid) {
+            return null
         }
-        return id
+        if (uid && uid.trim().length === 0) {
+            throw new Error("Uid is empty")
+        }
+        return uid
     }
 
-    getId() {
-        return this._id
+    getUid() {
+        return this._uid
     }
 
 
@@ -45,8 +48,8 @@ export class Item {
         if (!description || description.trim().length === 0) {
             throw new Error("Description empty")
         }
-        if (description.length > 500) {
-            throw new Error("Description is too long (500 characters)")
+        if (description.length > 300) {
+            throw new Error("Description is too long (300 characters)")
         }
         return description
     }
@@ -59,7 +62,7 @@ export class Item {
             throw new Error("Price is null")
         }
         if (price <= 0) {
-            throw new Error("Price is less than zero")
+            throw new Error("Price is less or equal to zero")
         }
         return price
     }
@@ -80,9 +83,9 @@ export class Item {
         return this._imageUrl
     }
 
-    setCreatedAt(createdAt: Timestamp | FieldValue) {
+    setCreatedAt(createdAt: Timestamp | FieldValue | undefined) {
         if (!createdAt) {
-            throw new Error("CreatedAt is null")
+            return null
         }
 
         return createdAt

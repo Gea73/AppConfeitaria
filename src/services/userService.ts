@@ -5,9 +5,11 @@ export const userService = {
     createUser: async function (uid: string, name: string, email: string) {
         try {
 
-            const data = await userRepo.createUser(uid, name, email)
 
-            const user = new User(uid, name, email, data.createdAt, "user")
+            const user = new User(uid, name, email, "user")
+            const data = await userRepo.createUser(user)
+            user.setCreatedAt(data.createdAt)
+
             return user
 
         } catch (error) {
@@ -28,7 +30,7 @@ export const userService = {
         }
 
         if (data) {
-            const user = new User(data?.uid, data?.name, data?.email, data?.createdAt, data?.role)
+            const user = new User(data?.uid, data?.name, data?.email, data?.role, data?.createdAt)
             return user
         }
         return null

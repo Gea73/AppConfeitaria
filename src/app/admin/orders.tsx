@@ -43,16 +43,16 @@ export default function Orders() {
             data={orders}
             renderItem={({ item }) => (
               <OrderCardAdmin
-                uid={item.getId()}
+                uid={item.getUid() || String(Date.now())}
                 items={item.getItems()}
                 status={item.getStatus()}
                 total={item
                   .getItems()
                   .reduce((sum, i) => sum + i.price * i.quantity, 0)}
-                customer={item.getCustomerId()}
+                customer={item.getCustomerUid()}
               />
             )}
-            keyExtractor={(item) => item.getId()}
+            keyExtractor={(item) => item.getUid() ?? String(Date.now())}
           ></FlatList>
         </SafeAreaView>
       </SafeAreaProvider>

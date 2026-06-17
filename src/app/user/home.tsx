@@ -35,7 +35,7 @@ export default function Home() {
         if (!user) {
             return
         }
-        const unsubscribe = orderService.subscribeToOrders(user?.getId(), (lastOrder) => {
+        const unsubscribe = orderService.subscribeToOrders(user?.getUid(), (lastOrder) => {
             setLastOrder(lastOrder.at(-1));
             setLoading(false)
         })
@@ -69,7 +69,7 @@ export default function Home() {
 
                     <OrderCard
 
-                        uid={lastOrder.getId()}
+                        uid={lastOrder.getUid() || String(Date.now())}
                         items={lastOrder.getItems()}
                         status={lastOrder.getStatus()}
                         total={lastOrder

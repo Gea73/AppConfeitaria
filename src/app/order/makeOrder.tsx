@@ -25,7 +25,7 @@ export default function MakeOrder() {
       setMenu(items);
       setLoading(false)
     })
-    return()=> unsubscribe()
+    return () => unsubscribe()
   }, [])
   if (loading) {
     return (
@@ -67,18 +67,18 @@ export default function MakeOrder() {
             data={menu}
             renderItem={({ item }) => (
               <OrderItemCard
-                uid={item.getId()}
+                uid={item.getUid() || String(Date.now())}
                 name={item.getName()}
                 description={item.getDescription()}
                 price={item.getPrice()}
-                quantity={cart.find((i) => i.uid === item.getId())?.quantity || 0}
-                onIncrease={() => AddItem({ uid: item.getId(), name: item.getName(), price: item.getPrice(), description: item.getDescription(), quantity: 1 })}
+                quantity={cart.find((i) => i.uid === item.getUid())?.quantity || 0}
+                onIncrease={() => AddItem({ uid: item.getUid() || String(Date.now()), name: item.getName(), price: item.getPrice(), description: item.getDescription(), quantity: 1 })}
                 onDecrease={() =>
-                  RemoveItem(cart.find((i) => i.uid === item.getId()))
+                  RemoveItem(cart.find((i) => i.uid === item.getUid()))
                 }
               />
             )}
-            keyExtractor={(item) => item.getId()}
+            keyExtractor={(item) => item.getUid() ?? String(Date.now())}
           ></FlatList>
           <View style={stylesheet.buttonContainer}>
             <Button

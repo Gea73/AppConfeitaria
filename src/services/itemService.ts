@@ -6,9 +6,13 @@ import { itemRepo } from "../repositories/itemRepo";
 export const itemService = {
     createItem: async function (name: string, description: string, price: number, imageUrl: string) {
         try {
-            const data = await itemRepo.createItem(name, description, price, imageUrl);
 
-            const item = new Item(data.id, name, description, price, imageUrl, data.createdAt);
+
+            const item = new Item(name, description, price, imageUrl);
+            const data = await itemRepo.createItem(item);
+            item.setUid(data.uid)
+            item.setCreatedAt(data.createdAt)
+
             return item;
 
         } catch (error) {
@@ -37,7 +41,7 @@ export const itemService = {
     getItem: async function (uid: string) {
         if (uid) {
             const data = await itemRepo.getItemById(uid);
-            const item = new Item(uid, data?.name, data?.description, data?.price, data?.imageUrl, data?.createdAt)
+            const item = new Item(data?.name, data?.description, data?.price, data?.imageUrl, uid, data?.createdAt)
             return item
 
         }
@@ -47,7 +51,7 @@ export const itemService = {
 
     getItems: async function () {
         const data = await itemRepo.getItems();
-        const items = data?.map((i) => { return new Item(i.uid, i.name, i.description, i.price, i.imageUrl, i.createdAt) })
+        const items = data?.map((i) => { return new Item(i.name, i.description, i.price, i.imageUrl, i.uid, i.createdAt) })
         if (items) {
             return items
         }
@@ -55,14 +59,14 @@ export const itemService = {
 
     },
 
-    deleteItem: async function (id: string) {
-        await itemRepo.deleteItem(id);
+    deleteItem: async function (uid: string) {
+        await itemRepo.deleteItem(uid);
     },
     subscribeToItems: function (callback: (items: Item[]) => void) {
         return onSnapshot(collection(db, "items"), (snapshot) => {
             const items = snapshot.docs.map((doc) => {
                 const data = doc.data()
-                return new Item(doc.id, data.name, data.description, data.price, data.imageUrl, data.createdAt)
+                return new Item(data.name, data.description, data.price, data.imageUrl, doc.id, data.createdAt)
             })
             callback(items)
         })

@@ -1,27 +1,30 @@
+import { Order } from "@/models/order";
+import { OrderItem } from "@/types/orderItem";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
 export const orderRepo = {
-    createOrder: async function (customerId: string, items: object,status:string) {
+    createOrder: async function (order:Order) {
         try {
             
             const timeStamp = serverTimestamp()
             
             const docRef = await addDoc(collection(db, "orders"), {
-                customerId: customerId,
-                items: items,
-                status: status,
-                createdAt: timeStamp
+                customerId: order.getCustomerUid(),
+                items: order.getItems(),
+                status: order.getStatus(),
+                createdAt: timeStamp,
+                total:order.getTotal()
             })
            
-            return { id: docRef.id, createdAt: timeStamp }
+            return { uid: docRef.id, createdAt: timeStamp }
         } catch (error) {
             throw error
         }
     },
 
 
-    updateOrder: async function (orderId: string, status: string | null, items: object | null) {
+    updateOrder: async function (orderId: string, status: string | null, items: OrderItem[] | null) {
         try {
             const docRef = doc(db, "orders", orderId)
             let dataToUpdate = {}
@@ -86,9 +89,9 @@ export const orderRepo = {
         }
     },
 
-    deleteOrder: async function (id: string) {
+    deleteOrder: async function (uid: string) {
         try {
-            const docRef = doc(db, "orders", id)
+            const docRef = doc(db, "orders", uid)
             await deleteDoc(docRef)
         } catch (error) {
             throw error

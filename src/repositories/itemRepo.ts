@@ -1,21 +1,22 @@
+import { Item } from "@/models/item";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
 export const itemRepo = {
 
-    createItem: async function (name: string, description: string, price: number, imageUrl: string) {
+    createItem: async function (item: Item) {
         try {
             const timeStamp = serverTimestamp();
 
             const docRef = await addDoc(collection(db, "items"), {
-                name: name,
-                description: description,
-                price: price,
-                imageUrl: imageUrl,
+                name: item.getName(),
+                description: item.getDescription(),
+                price: item.getPrice(),
+                imageUrl: item.getImageUrl(),
                 createdAt: timeStamp
             })
 
-            return { id: docRef.id, createdAt: timeStamp }
+            return { uid: docRef.id, createdAt: timeStamp }
 
         } catch (error) {
             throw error
@@ -90,10 +91,10 @@ export const itemRepo = {
     },
 
 
-    deleteItem: async function (id: string) {
+    deleteItem: async function (uid: string) {
         try {
-            
-            const docRef = doc(db, "items", id)
+
+            const docRef = doc(db, "items", uid)
             await deleteDoc(docRef)
 
         } catch (error) {

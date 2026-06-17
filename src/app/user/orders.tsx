@@ -30,28 +30,28 @@ export default function Orders() {
     if (!user) {
       return
     }
-    const unsubscribe = orderService.subscribeToOrders(user?.getId(), (orders) => {
+    const unsubscribe = orderService.subscribeToOrders(user?.getUid(), (orders) => {
       setOrders(orders);
       setLoading(false)
     })
-    return ()=> unsubscribe()
+    return () => unsubscribe()
 
   }, [user]);
 
-   if (loading) {
-     return (
-       <View style={{
-         flex: 1,
-         justifyContent: "center",
-         alignItems: "center"
-       }}>
-         <ActivityIndicator
-           size={"large"}
-           color={colors.main}
-         ></ActivityIndicator>
-       </View>
-     );
-   }
+  if (loading) {
+    return (
+      <View style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+        <ActivityIndicator
+          size={"large"}
+          color={colors.main}
+        ></ActivityIndicator>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -64,16 +64,16 @@ export default function Orders() {
               data={orders}
               renderItem={({ item }) => (
                 <OrderCard
-               
-                  uid={item.getId()}
+
+                  uid={item.getUid() || String(Date.now())}
                   items={item.getItems()}
-                   status={item.getStatus()}
+                  status={item.getStatus()}
                   total={item
                     .getItems()
                     .reduce((sum, i) => sum + i.price * i.quantity, 0)}
                 />
               )}
-              keyExtractor={(item) => item.getId()}
+              keyExtractor={(item) => item.getUid() ?? String(Date.now())}
             ></FlatList>
           )}
         </SafeAreaView>

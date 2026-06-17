@@ -1,13 +1,14 @@
+import { User } from "@/models/user";
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
 export const userRepo = {
-    createUser: async function (uid: string, name: string, email: string) {
+    createUser: async function (user: User) {
         try {
             const timeStamp = serverTimestamp()
-            await setDoc(doc(db, "users", uid), {
-                name: name,
-                email: email,
+            await setDoc(doc(db, "users", user.getUid()), {
+                name: user.getName(),
+                email: user.getEmail(),
                 createdAt: timeStamp,
                 role: "user"
             })
@@ -41,7 +42,7 @@ export const userRepo = {
             if (querySnapshot) {
                 const result = querySnapshot.docs[0]
                 const data = result.data()
-                return { uid: result.id, name: data.name, email: data.email, createdAt: data.createdAt,role: data.role }
+                return { uid: result.id, name: data.name, email: data.email, createdAt: data.createdAt, role: data.role }
             }
 
         } catch (error) {

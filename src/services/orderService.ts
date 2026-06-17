@@ -7,13 +7,13 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 export const orderService = {
 
-    createOrder: async function (customerId: string, items: OrderItem[],status:orderStatus) {
+    createOrder: async function (customerId: string, items: OrderItem[], status: orderStatus) {
         try {
-          
-            const data = await orderRepo.createOrder(customerId, items,status);
-          
-            const order = new Order(data.id, customerId, items, data.createdAt,status);
-            
+            const order = new Order(customerId, items, status);
+            const data = await orderRepo.createOrder(order);
+            order.setUid(data.uid)
+            order.setCreatedAt(data.createdAt)
+
             return order;
 
         } catch (error) {
@@ -22,7 +22,8 @@ export const orderService = {
             })
         }
     },
-    updateOrder: async function (orderId: string, items: object | null, status: string | null) {
+
+    updateOrder: async function (orderId: string, items: OrderItem[] | null, status: string | null) {
         try {
 
             await orderRepo.updateOrder(orderId, status, items)
@@ -38,7 +39,7 @@ export const orderService = {
         let data = null;
         if (orderId) {
             data = await orderRepo.getOrderById(orderId);
-            const order = new Order(orderId, data?.customerId, data?.items, data?.createdAt,data?.status)
+            const order = new Order(data?.customerId, data?.items, data?.status, orderId, data?.createdAt)
             return order
         }
 
@@ -49,7 +50,7 @@ export const orderService = {
 
         if (customerId) {
             const data = await orderRepo.getOrdersByCustomer(customerId);
-            const orders = data?.map((o) => { return new Order(o.uid, o.customerId, o.items, o.createdAt,o.status) })
+            const orders = data?.map((o) => { return new Order(o.customerId, o.items, o.status, o.uid, o.createdAt) })
             if (orders) {
                 return orders
             }
@@ -59,7 +60,7 @@ export const orderService = {
     },
     getAllOrders: async function () {
         const data = await orderRepo.getOrders()
-        const orders = data?.map((o) => { return new Order(o.uid, o.customerId, o.items, o.createdAt,o.status) })
+        const orders = data?.map((o) => { return new Order(o.customerId, o.items, o.status, o.uid, o.createdAt) })
         if (orders) {
             return orders
         }
@@ -71,7 +72,7 @@ export const orderService = {
         return onSnapshot(collection(db, "orders"), (snapshot) => {
             const items = snapshot.docs.map((doc) => {
                 const data = doc.data()
-                return new Order(doc.id, data.customerId, data.items, data.createdAt,data.status)
+                return new Order(data.customerId, data.items, data.status, doc.id, data.createdAt)
             })
             callback(items)
         })
@@ -85,7 +86,7 @@ export const orderService = {
         return onSnapshot(q, (snapshot) => {
             const orders = snapshot.docs.map((doc) => {
                 const data = doc.data()
-                return new Order(doc.id, data.customerId, data.items, data.createdAt,data.status)
+                return new Order(data.customerId, data.items, data.status, doc.id, data.createdAt)
             })
             callback(orders)
         })

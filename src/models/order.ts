@@ -7,40 +7,44 @@ import { FieldValue, Timestamp } from "firebase/firestore";
 
 
 export class Order {
-    private _id: string
-    private _customerId: string
+    private _uid: string | null
+    private _customerUid: string
     private _items: OrderItem[]
     private _status: orderStatus
-    private _createdAt: Timestamp | FieldValue
-    constructor(id: string, customerId: string, items: OrderItem[], createdAt: Timestamp | FieldValue, status: orderStatus) {
-        this._id = this.setId(id)
-        this._customerId = this.setCustomerId(customerId)
+    private _total: number
+    private _createdAt: Timestamp | FieldValue | null
+    constructor(customerUid: string, items: OrderItem[], status: orderStatus, uid?: string, createdAt?: Timestamp | FieldValue) {
+        this._uid = this.setUid(uid)
+        this._customerUid = this.setCustomerUid(customerUid)
         this._items = this.setItems(items)
         this._status = this.setStatus(status)
+        this._total = this.setTotal()
         this._createdAt = this.setCreatedAt(createdAt)
     }
 
-    setId(id: string) {
-
-        if (!id || id.trim().length === 0) {
-            throw new Error("Id is empty")
+    setUid(uid: string | undefined) {
+        if (!uid) {
+            return null
         }
-        return id
+        if (uid && uid.trim().length === 0) {
+            throw new Error("uid is empty")
+        }
+        return uid
     }
 
-    getId() {
-        return this._id
+    getUid() {
+        return this._uid
     }
 
 
-    setCustomerId(customerId: string) {
+    setCustomerUid(customerId: string) {
         if (!customerId || customerId.trim().length === 0) {
-            throw new Error("Customer Id is empty")
+            throw new Error("Customer uid is empty")
         }
         return customerId
     }
-    getCustomerId() {
-        return this._customerId
+    getCustomerUid() {
+        return this._customerUid
     }
 
     setItems(items: OrderItem[]) {
@@ -78,9 +82,9 @@ export class Order {
     }
 
 
-    setCreatedAt(createdAt: Timestamp | FieldValue) {
+    setCreatedAt(createdAt: Timestamp | FieldValue | undefined) {
         if (!createdAt) {
-            throw new Error("CreatedAt is null")
+            return null
         }
 
         return createdAt
@@ -89,6 +93,18 @@ export class Order {
         return this._createdAt
     }
 
+    setTotal() {
+        if (this._total) {
+            return this._total;
+        }
+        return this._items.reduce((sum, item) => sum + item.quantity * item.price, 0)
+    }
 
+
+
+
+    getTotal() {
+        return this._total
+    }
 
 }

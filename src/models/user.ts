@@ -1,30 +1,30 @@
 import { FieldValue, Timestamp } from "firebase/firestore";
 type roles = "user" | "admin";
 export class User {
-    private _id: string
+    private _uid: string
     private _name: string
     private _email: string
-    private _createdAt: Timestamp | FieldValue
+    private _createdAt: Timestamp | FieldValue | null
     private _role: roles
-    constructor(id: string, name: string, email: string, createdAt: Timestamp | FieldValue, role: roles) {
-        this._id = this.setId(id)
+    constructor(uid: string, name: string, email: string, role: roles, createdAt?: Timestamp | FieldValue) {
+        this._uid = this.setUid(uid)
         this._name = this.setName(name)
         this._email = this.setEmail(email)
         this._createdAt = this.setCreatedAt(createdAt)
         this._role = this.setRole(role)
     }
 
-    setId(id: string) {
+    setUid(uid: string) {
 
-        if (!id || id.trim().length === 0) {
-            throw new Error("Id is empty")
+        if (!uid || uid.trim().length === 0) {
+            throw new Error("UId is empty")
         }
-        return id;
+        return uid;
     }
 
-    getId() {
+    getUid() {
 
-        return this._id
+        return this._uid
     }
 
 
@@ -57,9 +57,9 @@ export class User {
         return this._email
     }
 
-    setCreatedAt(createdAt: Timestamp | FieldValue) {
+    setCreatedAt(createdAt: Timestamp | FieldValue | undefined) {
         if (!createdAt) {
-            throw new Error("CreatedAt is null")
+            return null
         }
 
         return createdAt

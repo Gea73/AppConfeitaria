@@ -62,15 +62,15 @@ export default function Menu() {
               data={items}
               renderItem={({ item }) => (
                 <ItemCard
-                  uid={item.getId()}
+                  uid={item.getUid() || String(Date.now())}
                   price={item.getPrice()}
                   name={item.getName()}
                   description={item.getDescription()}
                   imageUrl={item.getImageUrl()}
-                  onEdit={() => HandleEditItem(item.getId())}
+                  onEdit={() => HandleEditItem(item.getUid() || String(Date.now()))}
                 />
               )}
-              keyExtractor={(item) => item.getId()}
+              keyExtractor={(item) => item.getUid() ?? String(Date.now())}
             ></FlatList>
           )}
           <View style={stylesheet.buttonContainer}>
