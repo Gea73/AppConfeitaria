@@ -13,7 +13,7 @@ export default function TabLayout() {
         router.replace("/auth/signIn")
         return
       }
-      const user = await userService.getUser(uid, null)
+      const user = await userService.getUser(uid)
       if (user?.getRole() !== "admin") router.replace("/user/home");
     }
 

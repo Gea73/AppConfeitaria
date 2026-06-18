@@ -7,16 +7,17 @@ import { useEffect } from "react";
 
 export default function Layout() {
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (dbUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (userSignIn) => {
       try {
-        if (dbUser) {
-          const user = await userService.getUser(dbUser.uid, null);
+        if (userSignIn) {
+          const user = await userService.getUser(userSignIn.uid);
           router.replace(
             user?.getRole() === "admin" ? "/admin/home" : "/user/home",
           );
-        } else {
-          router.replace("/auth/signIn");
+          return;
         }
+
+          router.replace("/auth/signIn");
       } catch (error) {
         router.replace("/auth/signIn");
       }
