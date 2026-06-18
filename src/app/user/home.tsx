@@ -1,4 +1,5 @@
 import { Button } from "@/components/button";
+import LoadingWheel from "@/components/loadingWheel";
 import NoOrders from "@/components/noOrders";
 import OrderCard from "@/components/OrderCard";
 import { TopLogo } from "@/components/topLogo";
@@ -10,7 +11,7 @@ import { userService } from "@/services/userService";
 import { colors, spacing } from "@/styles/global";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
@@ -24,7 +25,7 @@ export default function Home() {
         async function getUser(): Promise<void> {
             const uid = auth.currentUser?.uid;
             if (uid) {
-                const user = await userService.getUser(uid, null);
+                const user = await userService.getUser(uid);
                 setUser(user);
             }
         }
@@ -45,16 +46,7 @@ export default function Home() {
 
     if (loading) {
         return (
-            <View style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center"
-            }}>
-                <ActivityIndicator
-                    size={"large"}
-                    color={colors.main}
-                ></ActivityIndicator>
-            </View>
+            <LoadingWheel></LoadingWheel>
         );
     }
 

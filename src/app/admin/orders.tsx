@@ -1,9 +1,9 @@
+import LoadingWheel from "@/components/loadingWheel";
 import OrderCardAdmin from "@/components/OrderCardAdmin";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
-import { colors } from "@/styles/global";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Orders() {
@@ -20,18 +20,7 @@ export default function Orders() {
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ActivityIndicator
-          size={"large"}
-          color={colors.main}
-        ></ActivityIndicator>
-      </View>
+      <LoadingWheel></LoadingWheel>
     );
   }
 

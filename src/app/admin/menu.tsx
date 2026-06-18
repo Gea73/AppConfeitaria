@@ -1,5 +1,6 @@
 import { Button } from "@/components/button";
 import ItemCard from "@/components/ItemCard";
+import LoadingWheel from "@/components/loadingWheel";
 import NoItems from "@/components/noItems";
 import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";
@@ -7,11 +8,10 @@ import { colors, typography } from "@/styles/global";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -32,18 +32,7 @@ export default function Menu() {
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ActivityIndicator
-          size={"large"}
-          color={colors.main}
-        ></ActivityIndicator>
-      </View>
+      <LoadingWheel></LoadingWheel>
     );
   }
 
