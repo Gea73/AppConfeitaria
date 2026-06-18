@@ -17,7 +17,7 @@ export default function Account() {
     async function getUser(): Promise<void> {
       const uid = auth.currentUser?.uid;
       if (uid) {
-        const user = await userService.getUser(uid, null);
+        const user = await userService.getUser(uid);
         setUser(user);
       }
     }

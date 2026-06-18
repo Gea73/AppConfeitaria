@@ -40,7 +40,7 @@ export default function SignIn() {
       const result = await signInUser(email, password);
 
       if (result) {
-        const admin = await userService.getUser(result.uid, null);
+        const admin = await userService.getUser(result.uid);
         if (admin?.getRole() === "admin") {
           router.replace("/admin/home");
           return;
@@ -59,13 +59,13 @@ export default function SignIn() {
         throw new Error("Login com Google não retornou dados");
       }
 
-      const userExists = await userService.getUser(user.uid, null);
+      const userExists = await userService.getUser(user.uid);
       if (!userExists) {
         await userService.createUser(user?.uid, user?.displayName, user?.email);
       }
 
       if (user) {
-        const admin = await userService.getUser(user.uid, null);
+        const admin = await userService.getUser(user.uid);
         if (admin?.getRole() === "admin") {
           router.replace("/admin/home");
           return;

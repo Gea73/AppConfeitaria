@@ -1,5 +1,6 @@
 import { Button } from "@/components/button";
 import ErrorBar from "@/components/errorBar";
+import LoadingWheel from "@/components/loadingWheel";
 import OrderItemCard from "@/components/OrderItemCard";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
@@ -8,11 +9,10 @@ import { OrderItem } from "@/types/orderItem";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -57,18 +57,9 @@ export default function EditOrder() {
     }
   }, [order])
 
-    if (loading) {
+  if (loading) {
     return (
-      <View style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-      }}>
-        <ActivityIndicator
-          size={"large"}
-          color={colors.main}
-        ></ActivityIndicator>
-      </View>
+      <LoadingWheel></LoadingWheel>
     );
   }
 

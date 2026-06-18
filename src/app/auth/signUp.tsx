@@ -66,13 +66,13 @@ export default function SignUp() {
       if (!user || !user.displayName || !user.email) {
         throw new Error("Login com Google não retornou dados");
       }
-      const userExists = await userService.getUser(user.uid, null);
+      const userExists = await userService.getUser(user.uid);
       if (!userExists) {
         await userService.createUser(user?.uid, user?.displayName, user?.email);
       }
 
       if (user) {
-        const admin = await userService.getUser(user.uid, null);
+        const admin = await userService.getUser(user.uid);
         if (admin?.getRole() === "admin") {
           router.replace("/admin/home");
           return;
