@@ -20,20 +20,19 @@ export const userService = {
         }
     },
 
-    getUser: async function (uid: string | null, email: string | null): Promise<User | null> {
-        let data = null;
-        if (uid) {
-            data = await userRepo.getUserById(uid)
-        }
-        if (email) {
-            data = await userRepo.getUserByEmail(email)
+    getUser: async function (uid: string): Promise<User | null> {
+        if (!uid) {
+            return null;
         }
 
-        if (data) {
-            const user = new User(data?.uid, data?.name, data?.email, data?.role, data?.createdAt)
-            return user
+        const data = await userRepo.getUserById(uid)
+
+        if (!data) {
+            return null
         }
-        return null
+
+        return new User(data?.uid, data?.name, data?.email, data?.role, data?.createdAt)
+
 
     },
 
