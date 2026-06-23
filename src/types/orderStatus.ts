@@ -1,1 +1,1 @@
-export type orderStatus = "pending" | "preparing" | "delivered";
+export type OrderStatus = "pending" | "preparing" | "delivered";

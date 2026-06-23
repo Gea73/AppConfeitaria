@@ -8,8 +8,12 @@ export const userService = {
 
             const user = new User(uid, name, email, "user")
             const data = await userRepo.createUser(user)
-            user.setCreatedAt(data.createdAt)
 
+            if (!data) {
+                throw new Error("User couldn't be created")
+            }
+
+            user.setCreatedAt(data.createdAt)
             return user
 
         } catch (error) {
@@ -21,18 +25,23 @@ export const userService = {
     },
 
     getUser: async function (uid: string): Promise<User | null> {
-        if (!uid) {
-            return null;
+        try {
+            if (!uid) {
+                return null;
+            }
+
+            const data = await userRepo.getUserById(uid)
+
+            if (!data) {
+                return null
+            }
+
+            return new User(data?.uid, data?.name, data?.email, data?.role, data?.createdAt)
+        } catch (error) {
+            throw new Error("User couldn't be fetched", {
+                cause: error
+            })
         }
-
-        const data = await userRepo.getUserById(uid)
-
-        if (!data) {
-            return null
-        }
-
-        return new User(data?.uid, data?.name, data?.email, data?.role, data?.createdAt)
-
 
     },
 
