@@ -1,5 +1,5 @@
-import { Button } from "@/components/button";
-import ItemCard from "@/components/ItemCard";
+import { Button } from "@/components/buttons/button";
+import ItemCard from "@/components/cards/ItemCard";
 import LoadingWheel from "@/components/loadingWheel";
 import NoItems from "@/components/noItems";
 import { Item } from "@/models/item";

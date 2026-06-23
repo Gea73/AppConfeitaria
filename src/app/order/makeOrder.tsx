@@ -1,7 +1,7 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/buttons/button";
+import OrderItemCard from "@/components/cards/OrderItemCard";
 import ErrorBar from "@/components/errorBar";
 import LoadingWheel from "@/components/loadingWheel";
-import OrderItemCard from "@/components/OrderItemCard";
 import { useCartContext } from "@/context/cartContext";
 import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";

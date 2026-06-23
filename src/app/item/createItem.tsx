@@ -1,9 +1,9 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/buttons/button";
+import ItemCardNoButton from "@/components/cards/ItemCardNoButton";
 import ErrorBar from "@/components/errorBar";
-import { FormLabel } from "@/components/formLabel";
-import { Input } from "@/components/input";
-import ItemCardNoButton from "@/components/ItemCardNoButton";
-import { NumberInput } from "@/components/numberInput";
+import { FormLabel } from "@/components/forms/formLabel";
+import { Input } from "@/components/forms/input";
+import { NumberInput } from "@/components/forms/numberInput";
 import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { itemService } from "@/services/itemService";

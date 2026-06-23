@@ -1,8 +1,8 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/buttons/button";
+import ItemCardNoButton from "@/components/cards/ItemCardNoButton";
 import ErrorBar from "@/components/errorBar";
-import { FormLabel } from "@/components/formLabel";
-import { Input } from "@/components/input";
-import ItemCardNoButton from "@/components/ItemCardNoButton";
+import { FormLabel } from "@/components/forms/formLabel";
+import { Input } from "@/components/forms/input";
 import { Title } from "@/components/title";
 import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";

@@ -1,6 +1,6 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/buttons/button";
+import OrderItemCardNoButton from "@/components/cards/OrderItemCardNoButton";
 import ErrorBar from "@/components/errorBar";
-import OrderItemCardNoButton from "@/components/OrderItemCardNoButton";
 import { Title } from "@/components/title";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";

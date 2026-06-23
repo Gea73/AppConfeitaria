@@ -1,11 +1,10 @@
+import OrderCard from "@/components/cards/OrderCard";
 import LoadingWheel from "@/components/loadingWheel";
 import NoOrders from "@/components/noOrders";
-import OrderCard from "@/components/OrderCard";
-import { auth } from "@/firebase/firebaseConfig";
+import useGetUser from "@/hooks/getUser";
 import { Order } from "@/models/order";
 import { User } from "@/models/user";
 import { orderService } from "@/services/orderService";
-import { userService } from "@/services/userService";
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -15,22 +14,13 @@ export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    async function getUser(): Promise<void> {
-      const uid = auth.currentUser?.uid;
-      if (uid) {
-        const user = await userService.getUser(uid);
-        setUser(user);
-      }
-    }
-    getUser();
-  }, []);
+  setUser(useGetUser());
 
   useEffect(() => {
     if (!user) {
       return
     }
-    const unsubscribe = orderService.subscribeToOrders(user?.getUid(), (orders) => {
+    const unsubscribe = orderService.subscribeToCustomerOrders(user?.getUid(), (orders) => {
       setOrders(orders);
       setLoading(false)
     })

@@ -1,5 +1,5 @@
+import OrderCardAdmin from "@/components/cards/OrderCardAdmin";
 import LoadingWheel from "@/components/loadingWheel";
-import OrderCardAdmin from "@/components/OrderCardAdmin";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
 import { useEffect, useState } from "react";

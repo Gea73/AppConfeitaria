@@ -1,7 +1,7 @@
-import { Button } from "@/components/button";
-import { EmailInput } from "@/components/emailInput";
+import { Button } from "@/components/buttons/button";
 import ErrorBar from "@/components/errorBar";
-import { FormLabel } from "@/components/formLabel";
+import { EmailInput } from "@/components/forms/emailInput";
+import { FormLabel } from "@/components/forms/formLabel";
 import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
@@ -10,11 +10,11 @@ import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { colors, spacing } from "@/styles/global";
 import { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 

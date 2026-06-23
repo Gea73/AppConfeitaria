@@ -1,10 +1,11 @@
-import { Button } from "@/components/button";
-import { ButtonGoogle } from "@/components/buttonGoogle";
-import { ButtonSquare } from "@/components/buttonSquare";
-import { EmailInput } from "@/components/emailInput";
+import { Button } from "@/components/buttons/button";
+import { ButtonGoogle } from "@/components/buttons/buttonGoogle";
+import { ButtonSquare } from "@/components/buttons/buttonSquare";
 import ErrorBar from "@/components/errorBar";
-import { FormLabel } from "@/components/formLabel";
-import { PasswordInput } from "@/components/passwordInput";
+import { EmailInput } from "@/components/forms/emailInput";
+import { FormLabel } from "@/components/forms/formLabel";
+import { PasswordInput } from "@/components/forms/passwordInput";
+import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
 import { signInUser } from "@/firebase/authentication";
@@ -29,24 +30,40 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [errorBar, setErrorBar] = useState("");
+  const [successBar, setSuccessBar] = useState("");
 
   const showErrorBar = (message: string) => {
     setErrorBar(message);
     setTimeout(() => setErrorBar(""), 3000);
   };
+  const showSuccessBar = (message: string) => {
+    setSuccessBar(message);
+    setTimeout(() => setSuccessBar(""), 3000);
+  };
+
 
   const handleLogin = async () => {
     try {
       const result = await signInUser(email, password);
-
-      if (result) {
-        const admin = await userService.getUser(result.uid);
-        if (admin?.getRole() === "admin") {
-          router.replace("/admin/home");
-          return;
-        }
-        router.replace("/user/home");
+      if (!result) {
+        throw new Error("Não foi possivel logar")
       }
+
+      const admin = await userService.getUser(result.uid);
+      if (admin?.getRole() === "admin") {
+        showSuccessBar("Usuário logado com sucesso")
+        setTimeout(() => {
+          router.replace("/admin/home");
+        }, 1000);
+
+        return;
+      }
+      showSuccessBar("Usuário logado com sucesso")
+      setTimeout(() => {
+        router.replace("/user/home");
+      }, 1000);
+
+
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
@@ -64,14 +81,20 @@ export default function SignIn() {
         await userService.createUser(user?.uid, user?.displayName, user?.email);
       }
 
-      if (user) {
-        const admin = await userService.getUser(user.uid);
-        if (admin?.getRole() === "admin") {
+      const admin = await userService.getUser(user.uid);
+      if (admin?.getRole() === "admin") {
+        showSuccessBar("Usuário logado com sucesso")
+        setTimeout(() => {
           router.replace("/admin/home");
-          return;
-        }
-        router.replace("/user/home");
+        }, 1000);
+        return;
       }
+      showSuccessBar("Usuário logado com sucesso")
+      setTimeout(() => {
+        router.replace("/user/home");
+      }, 1000);
+
+
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
@@ -81,6 +104,7 @@ export default function SignIn() {
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
           <ErrorBar message={errorBar}></ErrorBar>
+          <SuccessBar message={successBar}></SuccessBar>
           <KeyboardAvoidingView
             keyboardVerticalOffset={15}
             style={{ flex: 1 }}

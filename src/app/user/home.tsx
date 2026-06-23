@@ -1,13 +1,12 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/buttons/button";
+import OrderCard from "@/components/cards/OrderCard";
 import LoadingWheel from "@/components/loadingWheel";
 import NoOrders from "@/components/noOrders";
-import OrderCard from "@/components/OrderCard";
 import { TopLogo } from "@/components/topLogo";
-import { auth } from "@/firebase/firebaseConfig";
+import useGetUser from "@/hooks/getUser";
 import { Order } from "@/models/order";
 import { User } from "@/models/user";
 import { orderService } from "@/services/orderService";
-import { userService } from "@/services/userService";
 import { colors, spacing } from "@/styles/global";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -19,24 +18,13 @@ export default function Home() {
     const [lastOrder, setLastOrder] = useState<Order>();
     const [loading, setLoading] = useState<boolean>(true);
 
-
-
-    useEffect(() => {
-        async function getUser(): Promise<void> {
-            const uid = auth.currentUser?.uid;
-            if (uid) {
-                const user = await userService.getUser(uid);
-                setUser(user);
-            }
-        }
-        getUser();
-    }, []);
+    setUser(useGetUser());
 
     useEffect(() => {
         if (!user) {
             return
         }
-        const unsubscribe = orderService.subscribeToOrders(user?.getUid(), (lastOrder) => {
+        const unsubscribe = orderService.subscribeToCustomerOrders(user?.getUid(), (lastOrder) => {
             setLastOrder(lastOrder.at(-1));
             setLoading(false)
         })

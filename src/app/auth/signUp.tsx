@@ -1,10 +1,11 @@
-import { ButtonGoogle } from "@/components/buttonGoogle";
-import { ButtonSquare } from "@/components/buttonSquare";
-import { EmailInput } from "@/components/emailInput";
+import { ButtonGoogle } from "@/components/buttons/buttonGoogle";
+import { ButtonSquare } from "@/components/buttons/buttonSquare";
 import ErrorBar from "@/components/errorBar";
-import { FormLabel } from "@/components/formLabel";
-import { Input } from "@/components/input";
-import { PasswordInput } from "@/components/passwordInput";
+import { EmailInput } from "@/components/forms/emailInput";
+import { FormLabel } from "@/components/forms/formLabel";
+import { Input } from "@/components/forms/input";
+import { PasswordInput } from "@/components/forms/passwordInput";
+import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
 import { signUpUser } from "@/firebase/authentication";
@@ -30,11 +31,17 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [errorBar, setErrorBar] = useState("");
+  const [successBar, setSuccessBar] = useState("");
 
   const showErrorBar = (message: string) => {
     setErrorBar(message);
     setTimeout(() => setErrorBar(""), 3000);
   };
+  const showSuccessBar = (message: string) => {
+    setSuccessBar(message);
+    setTimeout(() => setSuccessBar(""), 3000);
+  };
+
 
   const handleSignUp = async () => {
     try {
@@ -54,7 +61,9 @@ export default function SignUp() {
       }
 
       await userService.createUser(result.uid, name, result.email);
-      router.replace("/auth/signIn");
+      showSuccessBar("Usuário criado com sucesso")
+      setTimeout(() => { router.replace("/auth/signIn"); }, 1000)
+
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
@@ -66,19 +75,26 @@ export default function SignUp() {
       if (!user || !user.displayName || !user.email) {
         throw new Error("Login com Google não retornou dados");
       }
+
       const userExists = await userService.getUser(user.uid);
       if (!userExists) {
         await userService.createUser(user?.uid, user?.displayName, user?.email);
       }
 
-      if (user) {
-        const admin = await userService.getUser(user.uid);
-        if (admin?.getRole() === "admin") {
+      const admin = await userService.getUser(user.uid);
+      if (admin?.getRole() === "admin") {
+        showSuccessBar("Usuário Logado com sucesso")
+        setTimeout(() => {
           router.replace("/admin/home");
-          return;
-        }
-        router.replace("/user/home");
+        }, 1000);
+
+        return;
       }
+      setTimeout(() => {
+        router.replace("/user/home");
+      }, 1000);
+
+
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
@@ -88,6 +104,7 @@ export default function SignUp() {
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
           <ErrorBar message={errorBar}></ErrorBar>
+          <SuccessBar message={successBar}></SuccessBar>
           <KeyboardAvoidingView
             keyboardVerticalOffset={15}
             style={{ flex: 1 }}

@@ -1,7 +1,7 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/buttons/button";
+import OrderItemCard from "@/components/cards/OrderItemCard";
 import ErrorBar from "@/components/errorBar";
 import LoadingWheel from "@/components/loadingWheel";
-import OrderItemCard from "@/components/OrderItemCard";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
 import { colors, typography } from "@/styles/global";

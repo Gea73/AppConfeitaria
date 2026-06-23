@@ -1,6 +1,7 @@
-import { Button } from "@/components/button";
+import { Button } from "@/components/buttons/button";
+import OrderItemCard from "@/components/cards/OrderItemCard";
 import ErrorBar from "@/components/errorBar";
-import OrderItemCard from "@/components/OrderItemCard";
+import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { useCartContext } from "@/context/cartContext";
 import { auth } from "@/firebase/firebaseConfig";
@@ -21,10 +22,16 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Checkout() {
   const [errorBar, setErrorBar] = useState("");
+  const [successBar, setSuccessBar] = useState("");
   const showErrorBar = (message: string) => {
     setErrorBar(message);
     setTimeout(() => setErrorBar(""), 3000);
   };
+  const showSuccessBar = (message: string) => {
+    setSuccessBar(message);
+    setTimeout(() => setSuccessBar(""), 3000);
+  };
+
   const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCartContext();
 
   function HandleCancelOrder() {
@@ -47,9 +54,14 @@ export default function Checkout() {
       if (!uid) {
         throw new Error("Invalid user");
       }
-      await orderService.createOrder(uid, cart,"pending");
-      router.replace("/user/home")
-      ClearCart();
+      await orderService.createOrder(uid, cart, "pending");
+      showSuccessBar("Pedido realizado com sucesso")
+      setTimeout(() => {
+        ClearCart();
+        router.replace("/user/home")
+
+      }, 1000);
+
     } catch (e: any) {
       showErrorBar(String(e));
     }
@@ -65,6 +77,7 @@ export default function Checkout() {
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
           <ErrorBar message={errorBar}></ErrorBar>
+          <SuccessBar message={successBar}></SuccessBar>
           <Title text="Resumo do Pedido"></Title>
 
           <TouchableOpacity
