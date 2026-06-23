@@ -135,7 +135,7 @@ src/
 | uid | varchar |
 | name | varchar |
 | description | varchar |
-| price | number |
+| price | decimal |
 | imageUrl | varchar |
 | createdAt | dateTime |
 
@@ -149,3 +149,4 @@ src/
 | orderId | varchar |
 | itemId | varchar |
 | quantity | int |
+| price | decimal |
