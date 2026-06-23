@@ -1,5 +1,5 @@
 import { OrderItem } from "@/types/orderItem";
-import { orderStatus } from "@/types/orderStatus";
+import { OrderStatus } from "@/types/orderStatus";
 import { FieldValue, Timestamp } from "firebase/firestore";
 
 
@@ -10,10 +10,10 @@ export class Order {
     private _uid: string | null
     private _customerUid: string
     private _items: OrderItem[]
-    private _status: orderStatus
+    private _status: OrderStatus
     private _total: number
     private _createdAt: Timestamp | FieldValue | null
-    constructor(customerUid: string, items: OrderItem[], status: orderStatus, uid?: string, createdAt?: Timestamp | FieldValue) {
+    constructor(customerUid: string, items: OrderItem[], status: OrderStatus, uid?: string, createdAt?: Timestamp | FieldValue) {
         this._uid = this.setUid(uid)
         this._customerUid = this.setCustomerUid(customerUid)
         this._items = this.setItems(items)
@@ -58,7 +58,7 @@ export class Order {
         return this._items
     }
 
-    setStatus(status: orderStatus) {
+    setStatus(status: OrderStatus) {
         if (!status || status.trim().length === 0) {
             throw new Error("Status is empty")
         }
