@@ -2,7 +2,7 @@ import { colors } from "@/styles/global";
 import { OrderItem } from "@/types/orderItem";
 import { router } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
-import { Button } from "./button";
+import { Button } from "../buttons/button";
 
 type OrderCardProps = {
   uid: string;

@@ -1,6 +1,6 @@
 import { colors, typography } from "@/styles/global";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Button } from "./button";
+import { Button } from "../buttons/button";
 
 type ItemProps = {
   uid: string;

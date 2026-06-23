@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { Image, StyleSheet, View } from "react-native";
-import { Button } from "./button";
+import { Button } from "./buttons/button";
 import { TopLogo } from "./topLogo";
 
 type NoItemsProps = {
