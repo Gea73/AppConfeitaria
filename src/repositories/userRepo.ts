@@ -1,6 +1,8 @@
 import { User } from "@/models/user";
+import { UserRecord } from "@/types/userRecord";
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+
 
 export const userRepo = {
     createUser: async function (user: User) {
@@ -13,7 +15,6 @@ export const userRepo = {
                 role: "user"
             })
 
-            return { createdAt: timeStamp }
 
         } catch (error) {
             throw error
@@ -21,29 +22,44 @@ export const userRepo = {
     },
 
 
-    getUserById: async function (uid: string) {
+    getUserById: async function (uid: string): Promise<UserRecord | null> {
         try {
             const docRef = doc(db, "users", uid)
             const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const data = docSnap.data()
-                return { uid: uid, name: data.name, email: data.email, createdAt: data.createdAt, role: data.role }
+
+            if (!docSnap.exists()) {
+                return null
             }
+            const data = docSnap.data()
+            if (!data) {
+                return null
+            }
+
+            return { uid: docSnap.id, name: data.name, email: data.email, role: data.role, createdAt: data.createdAt }
+
         } catch (error) {
             throw error
         }
     },
 
 
-    getUserByEmail: async function (email: string) {
+    getUserByEmail: async function (email: string): Promise<UserRecord | null> {
         try {
             const q = query(collection(db, "users"), where("email", "==", email));
             const querySnapshot = await getDocs(q);
-            if (querySnapshot) {
-                const result = querySnapshot.docs[0]
-                const data = result.data()
-                return { uid: result.id, name: data.name, email: data.email, createdAt: data.createdAt, role: data.role }
+
+            if (!querySnapshot || !querySnapshot.docs) {
+                return null
             }
+            const result = querySnapshot.docs[0]
+            const data = result.data()
+
+            if (!data) {
+                return null
+            }
+
+            return { uid: result.id, name: data.name, email: data.email, role: data.role, createdAt: data.createdAt }
+
 
         } catch (error) {
             throw error

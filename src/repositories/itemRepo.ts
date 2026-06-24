@@ -1,14 +1,15 @@
 import { Item } from "@/models/item";
+import { ItemRecord } from "@/types/itemRecord";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
 export const itemRepo = {
 
-    createItem: async function (item: Item) {
+    createItem: async function (item: Item): Promise<void> {
         try {
             const timeStamp = serverTimestamp();
 
-            const docRef = await addDoc(collection(db, "items"), {
+            await addDoc(collection(db, "items"), {
                 name: item.getName(),
                 description: item.getDescription(),
                 price: item.getPrice(),
@@ -16,54 +17,72 @@ export const itemRepo = {
                 createdAt: timeStamp
             })
 
-            return { uid: docRef.id, createdAt: timeStamp }
 
         } catch (error) {
             throw error
         }
     },
 
-    getItemByName: async function (name: string) {
+    getItemByName: async function (name: string): Promise<ItemRecord | null> {
         try {
             const q = query(collection(db, "items"), where("name", "==", name));
             const querySnapshot = await getDocs(q);
-            return querySnapshot;
 
+            if (!querySnapshot || !querySnapshot.docs) {
+                return null
+            }
+            const result = querySnapshot.docs[0]
+            const data = result.data()
+
+            return {
+                uid: result.id,
+                name: data.name,
+                description: data.description,
+                price: data.price,
+                imageUrl: data.imageUrl,
+                createdAt: data.createdAt
+            }
         } catch (error) {
             throw error
         }
     },
 
-    getItemById: async function (uid: string) {
+    getItemById: async function (uid: string): Promise<ItemRecord | null> {
         try {
             const docRef = doc(db, "items", uid)
             const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const data = docSnap.data()
-                return { uid: uid, name: data.name, description: data.description, price: data.price, imageUrl: data.imageUrl, createdAt: data.createdAt }
+            if (!docSnap.exists()) {
+                return null
             }
+
+            const data = docSnap.data()
+            return { uid: docSnap.id, name: data.name, description: data.description, price: data.price, imageUrl: data.imageUrl, createdAt: data.createdAt }
+
         } catch (error) {
             throw error
         }
     },
 
-    getItems: async function () {
+    getItems: async function (): Promise<ItemRecord[] | null> {
         try {
             const q = query(collection(db, "items"))
             const querySnapshot = await getDocs(q)
-            if (querySnapshot) {
-                const items = querySnapshot.docs.map((result) => {
-                    const data = result.data()
-                    return { uid: result.id, name: data.name, description: data.description, price: data.price, imageUrl: data.imageUrl, createdAt: data.createdAt }
-                })
-                return items
+            if (!querySnapshot || !querySnapshot.docs) {
+                return null
             }
+
+            const items = querySnapshot.docs.map((result) => {
+                const data = result.data()
+                return { uid: result.id, name: data.name, description: data.description, price: data.price, imageUrl: data.imageUrl, createdAt: data.createdAt }
+            })
+
+            return items
 
         } catch (error) {
             throw error
         }
     },
-    updateItem: async function (uid: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null) {
+    updateItem: async function (uid: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null): Promise<void> {
         try {
             const docRef = doc(db, "items", uid)
             let dataToUpdate = {}
@@ -91,7 +110,7 @@ export const itemRepo = {
     },
 
 
-    deleteItem: async function (uid: string) {
+    deleteItem: async function (uid: string): Promise<void> {
         try {
 
             const docRef = doc(db, "items", uid)
