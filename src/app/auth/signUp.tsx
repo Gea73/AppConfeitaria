@@ -42,7 +42,6 @@ export default function SignUp() {
     setTimeout(() => setSuccessBar(""), 3000);
   };
 
-
   const handleSignUp = async () => {
     try {
       if (password !== confirmPassword) {
@@ -61,9 +60,10 @@ export default function SignUp() {
       }
 
       await userService.createUser(result.uid, name, result.email);
-      showSuccessBar("Usuário criado com sucesso")
-      setTimeout(() => { router.replace("/auth/signIn"); }, 1000)
-
+      showSuccessBar("Usuário criado com sucesso");
+      setTimeout(() => {
+        router.replace("/auth/signIn");
+      }, 1000);
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
@@ -81,9 +81,8 @@ export default function SignUp() {
         await userService.createUser(user?.uid, user?.displayName, user?.email);
       }
 
-      const admin = await userService.getUser(user.uid);
-      if (admin?.getRole() === "admin") {
-        showSuccessBar("Usuário Logado com sucesso")
+      if (userExists?.getRole() === "admin") {
+        showSuccessBar("Usuário Logado com sucesso");
         setTimeout(() => {
           router.replace("/admin/home");
         }, 1000);
@@ -93,8 +92,6 @@ export default function SignUp() {
       setTimeout(() => {
         router.replace("/user/home");
       }, 1000);
-
-
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }

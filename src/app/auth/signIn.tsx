@@ -41,29 +41,26 @@ export default function SignIn() {
     setTimeout(() => setSuccessBar(""), 3000);
   };
 
-
   const handleLogin = async () => {
     try {
       const result = await signInUser(email, password);
       if (!result) {
-        throw new Error("Não foi possivel logar")
+        throw new Error("Não foi possivel logar");
       }
 
       const admin = await userService.getUser(result.uid);
       if (admin?.getRole() === "admin") {
-        showSuccessBar("Usuário logado com sucesso")
+        showSuccessBar("Usuário logado com sucesso");
         setTimeout(() => {
           router.replace("/admin/home");
         }, 1000);
 
         return;
       }
-      showSuccessBar("Usuário logado com sucesso")
+      showSuccessBar("Usuário logado com sucesso");
       setTimeout(() => {
         router.replace("/user/home");
       }, 1000);
-
-
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
@@ -81,20 +78,18 @@ export default function SignIn() {
         await userService.createUser(user?.uid, user?.displayName, user?.email);
       }
 
-      const admin = await userService.getUser(user.uid);
-      if (admin?.getRole() === "admin") {
-        showSuccessBar("Usuário logado com sucesso")
+      if (userExists?.getRole() === "admin") {
+        showSuccessBar("Usuário logado com sucesso");
         setTimeout(() => {
           router.replace("/admin/home");
         }, 1000);
         return;
       }
-      showSuccessBar("Usuário logado com sucesso")
+
+      showSuccessBar("Usuário logado com sucesso");
       setTimeout(() => {
         router.replace("/user/home");
       }, 1000);
-
-
     } catch (e: any) {
       showErrorBar(firebaseErrorMessage(e.code));
     }
