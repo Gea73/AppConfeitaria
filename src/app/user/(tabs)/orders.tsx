@@ -10,28 +10,26 @@ import { FlatList, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Orders() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(useGetUser());
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  setUser(useGetUser());
-
   useEffect(() => {
     if (!user) {
-      return
+      return;
     }
-    const unsubscribe = orderService.subscribeToCustomerOrders(user?.getUid(), (orders) => {
-      setOrders(orders);
-      setLoading(false)
-    })
-    return () => unsubscribe()
-
-  }, [user]);
+    const unsubscribe = orderService.subscribeToCustomerOrders(
+      user?.getUid(),
+      (orders) => {
+        setOrders(orders);
+        setLoading(false);
+      },
+    );
+    return () => unsubscribe();
+  }, [orders]);
 
   if (loading) {
-    return (
-      <LoadingWheel></LoadingWheel>
-    );
+    return <LoadingWheel></LoadingWheel>;
   }
 
   return (
@@ -45,10 +43,10 @@ export default function Orders() {
               data={orders}
               renderItem={({ item }) => (
                 <OrderCard
-
                   uid={item.getUid() || String(Date.now())}
                   items={item.getItems()}
                   status={item.getStatus()}
+                  statusLabel={item.getStatusLabel()}
                   total={item
                     .getItems()
                     .reduce((sum, i) => sum + i.price * i.quantity, 0)}

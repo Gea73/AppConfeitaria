@@ -9,11 +9,8 @@ import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function Account() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(useGetUser());
   const { ClearCart } = useCartContext();
-
-  setUser(useGetUser())
-
 
   return (
     <>
@@ -28,13 +25,25 @@ export default function Account() {
             <Text style={stylesheet.usernameText}>{user?.getName()}</Text>
           </View>
 
-          <AccountCard onPress={() => { }} text="Alterar Dados" icon="information-circle-outline"></AccountCard>
-          <AccountCard onPress={() => { }} text="Endereços" icon="location"></AccountCard>
-          <AccountCard onPress={() => {
-            ClearCart();
-            signOutUser();
-            router.replace("/auth/signIn");
-          }} text="Sair" icon="exit-outline"></AccountCard>
+          <AccountCard
+            onPress={() => {}}
+            text="Alterar Dados"
+            icon="information-circle-outline"
+          ></AccountCard>
+          <AccountCard
+            onPress={() => {}}
+            text="Endereços"
+            icon="location"
+          ></AccountCard>
+          <AccountCard
+            onPress={() => {
+              ClearCart();
+              signOutUser();
+              router.replace("/auth/signIn");
+            }}
+            text="Sair"
+            icon="exit-outline"
+          ></AccountCard>
         </SafeAreaView>
       </SafeAreaProvider>
     </>
@@ -66,5 +75,4 @@ const stylesheet = StyleSheet.create({
     fontSize: typography.subtitle,
     fontWeight: "bold",
   },
-
 });
