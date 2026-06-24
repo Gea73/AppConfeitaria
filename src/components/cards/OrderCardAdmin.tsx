@@ -10,6 +10,7 @@ type OrderCardProps = {
   items: OrderItem[];
   total: number;
   status: string;
+  statusLabel: string;
   customer: string;
 };
 
@@ -43,18 +44,18 @@ export default function OrderCardAdmin(props: OrderCardProps) {
       <Text>
         Cliente #{props.customer ? props.customer : "Cliente não encontrado"}
       </Text>
-      <Text>Status {props.status}</Text>
+      <Text>Status {props.statusLabel}</Text>
       <Text>{items}</Text>
       <Text>Total: R${props.total.toFixed(2).replace(".", ",")}</Text>
       <View style={stylesheet.buttonContainer}>
-        {props.status === "Em Preparação" && (
+        {props.status === "preparing" && (
           <Button
             text="Finalizar Pedido"
             onPress={() => handleDone(props.uid)}
           />
         )}
 
-        {props.status === "Aguardando confirmação" && (
+        {props.status === "pending" && (
           <Button
             text="Confirmar Pedido"
             onPress={() => handleConfirmed(props.uid)}

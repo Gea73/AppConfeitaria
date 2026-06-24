@@ -11,14 +11,14 @@ export class Order {
     private _items: OrderItem[]
     private _status: OrderStatus
     private _total: number
-  
+
     constructor(customerUid: string, items: OrderItem[], status: OrderStatus, uid?: string) {
         this._uid = this.setUid(uid)
         this._customerUid = this.setCustomerUid(customerUid)
         this._items = this.setItems(items)
         this._status = this.setStatus(status)
         this._total = this.setTotal()
-        
+
     }
 
     setUid(uid: string | undefined) {
@@ -31,7 +31,7 @@ export class Order {
         return uid
     }
 
-    getUid() {
+    getUid(): string | null {
         return this._uid
     }
 
@@ -42,7 +42,7 @@ export class Order {
         }
         return customerId
     }
-    getCustomerUid() {
+    getCustomerUid(): string {
         return this._customerUid
     }
 
@@ -53,7 +53,7 @@ export class Order {
 
         return items
     }
-    getItems() {
+    getItems(): OrderItem[] {
         return this._items
     }
 
@@ -64,23 +64,18 @@ export class Order {
 
         return status
     }
-    getStatus() {
-        if (this._status === "pending") {
-            return "Aguardando confirmação"
-        }
-
-        if (this._status === "preparing") {
-            return "Em Preparação"
-        }
-
-
-        if (this._status === "delivered") {
-            return "Entregue"
-        }
+    getStatus(): string {
         return this._status
     }
 
-
+    getStatusLabel(): string {
+        const status: Record<OrderStatus, string> = {
+            pending: "Aguardando confirmação",
+            preparing: "Em Preparação",
+            delivered: "Entregue"
+        }
+        return status[this._status]
+    }
 
     setTotal() {
         if (this._total) {
@@ -92,7 +87,7 @@ export class Order {
 
 
 
-    getTotal() {
+    getTotal(): number {
         return this._total
     }
 

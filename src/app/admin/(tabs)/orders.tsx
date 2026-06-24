@@ -1,5 +1,6 @@
 import OrderCardAdmin from "@/components/cards/OrderCardAdmin";
 import LoadingWheel from "@/components/loadingWheel";
+import NoOrders from "@/components/noOrders";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
 import { useEffect, useState } from "react";
@@ -17,7 +18,7 @@ export default function Orders() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [orders]);
 
   if (loading) {
     return <LoadingWheel></LoadingWheel>;
@@ -27,21 +28,26 @@ export default function Orders() {
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
-          <FlatList
-            data={orders}
-            renderItem={({ item }) => (
-              <OrderCardAdmin
-                uid={item.getUid() || String(Date.now())}
-                items={item.getItems()}
-                status={item.getStatus()}
-                total={item
-                  .getItems()
-                  .reduce((sum, i) => sum + i.price * i.quantity, 0)}
-                customer={item.getCustomerUid()}
-              />
-            )}
-            keyExtractor={(item) => item.getUid() ?? String(Date.now())}
-          ></FlatList>
+          {orders.length === 0 ? (
+            <NoOrders isVisible={true}></NoOrders>
+          ) : (
+            <FlatList
+              data={orders}
+              renderItem={({ item }) => (
+                <OrderCardAdmin
+                  uid={item.getUid() || String(Date.now())}
+                  items={item.getItems()}
+                  status={item.getStatus()}
+                  statusLabel={item.getStatusLabel()}
+                  total={item
+                    .getItems()
+                    .reduce((sum, i) => sum + i.price * i.quantity, 0)}
+                  customer={item.getCustomerUid()}
+                />
+              )}
+              keyExtractor={(item) => item.getUid() ?? String(Date.now())}
+            ></FlatList>
+          )}
         </SafeAreaView>
       </SafeAreaProvider>
     </>

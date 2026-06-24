@@ -9,6 +9,7 @@ type OrderCardProps = {
   items: OrderItem[];
   total: number;
   status: string;
+  statusLabel: string;
 };
 
 function getItems(items: OrderItem[]) {
@@ -25,7 +26,7 @@ export default function OrderCard(props: OrderCardProps) {
 
   return (
     <View style={stylesheet.container}>
-      <Text>Seu pedido está {props.status}</Text>
+      <Text>Seu pedido está {props.statusLabel}</Text>
       <Text>{items}</Text>
       <Text>Total: R${props.total.toFixed(2).replace(".", ",")}</Text>
       <View style={stylesheet.buttonContainer}>
