@@ -9,9 +9,8 @@ import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function Account() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(useGetUser());
   const { ClearCart } = useCartContext();
-  setUser(useGetUser())
 
   return (
     <>
@@ -25,14 +24,25 @@ export default function Account() {
             <Image source={require("@/assets/images/userImage.png")} />
             <Text style={stylesheet.usernameText}>{user?.getName()}</Text>
           </View>
-          <AccountCard text="Alterar Dados" icon="information-circle-outline" onPress={() => { }}></AccountCard>
-          <AccountCard text="Endereços" icon="location" onPress={() => { }}></AccountCard>
-          <AccountCard text="Sair" icon="exit-outline" onPress={() => {
-            ClearCart();
-            signOutUser();
-            router.replace("/auth/signIn");
-          }}></AccountCard>
-
+          <AccountCard
+            text="Alterar Dados"
+            icon="information-circle-outline"
+            onPress={() => {}}
+          ></AccountCard>
+          <AccountCard
+            text="Endereços"
+            icon="location"
+            onPress={() => {}}
+          ></AccountCard>
+          <AccountCard
+            text="Sair"
+            icon="exit-outline"
+            onPress={() => {
+              ClearCart();
+              signOutUser();
+              router.replace("/auth/signIn");
+            }}
+          ></AccountCard>
         </SafeAreaView>
       </SafeAreaProvider>
     </>

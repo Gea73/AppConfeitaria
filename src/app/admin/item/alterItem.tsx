@@ -10,7 +10,15 @@ import { colors, spacing, typography } from "@/styles/global";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function AlterItem() {
   const [item, setItem] = useState<Item>();
@@ -42,14 +50,14 @@ export default function AlterItem() {
 
   async function HandleAlterItem() {
     try {
-      const result = await itemService.updateItem(
+      await itemService.updateItem(
         String(itemId),
         name,
         description,
         Number(price),
         imageUrl,
       );
-      
+
       router.back();
     } catch (e: any) {
       showErrorBar(String(e));
@@ -64,16 +72,11 @@ export default function AlterItem() {
           text: "Sim",
           style: "destructive",
           onPress: async () => {
-            
-              await itemService.deleteItem(
-                String(itemId),
-              );
-              router.back();
-      
+            await itemService.deleteItem(String(itemId));
+            router.back();
           },
         },
       ]);
-
     } catch (e: any) {
       showErrorBar(String(e));
     }
@@ -174,14 +177,13 @@ const stylesheet = StyleSheet.create({
     color: colors.main,
   },
   itemPreviewContainer: {
-    alignItems:"center"
-    
+    alignItems: "center",
   },
 
   cancelOrder: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop:"3%",
+    marginTop: "3%",
     marginLeft: "70%",
   },
   cancelText: {

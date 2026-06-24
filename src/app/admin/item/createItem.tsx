@@ -7,10 +7,16 @@ import { NumberInput } from "@/components/forms/numberInput";
 import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { itemService } from "@/services/itemService";
-import { colors, spacing } from "@/styles/global";
+import { spacing } from "@/styles/global";
 import { router } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreateItem() {
@@ -39,7 +45,7 @@ export default function CreateItem() {
         Number(price),
         imageUrl,
       );
-      showSuccessBar("Item criado")
+      showSuccessBar("Item criado");
       setTimeout(() => router.back(), 1000);
     } catch (e: any) {
       showErrorBar(String(e));
@@ -69,7 +75,10 @@ export default function CreateItem() {
               <Title text="Criando Item"></Title>
               <View style={stylesheet.formContainer}>
                 <FormLabel text="Nome"></FormLabel>
-                <Input onChangeText={setName} placeHolder="Nome do Item"></Input>
+                <Input
+                  onChangeText={setName}
+                  placeHolder="Nome do Item"
+                ></Input>
                 <FormLabel text="Descrição"></FormLabel>
                 <Input
                   onChangeText={setDescription}
@@ -111,32 +120,6 @@ const stylesheet = StyleSheet.create({
     marginTop: spacing.md,
   },
 
-  twoButtonsContainer: {
-    borderTopWidth: 1,
-    borderTopColor: colors.main,
-    marginTop: spacing.xs,
-    paddingTop: spacing.md,
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: "10%",
-  },
-
-  forgotPasswordContainer: {
-    marginTop: 3,
-    alignSelf: "flex-start",
-    marginLeft: "13%",
-  },
-  forgotPasswordText: {
-    color: colors.main,
-    textDecorationLine: "underline",
-  },
-
-  signUpContainer: {
-    marginTop: spacing.md,
-  },
-  signUpText: {
-    color: colors.main,
-  },
   itemPreviewContainer: {
     margin: "auto",
     maxWidth: "90%",

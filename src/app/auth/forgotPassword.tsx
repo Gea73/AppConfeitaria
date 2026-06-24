@@ -7,14 +7,14 @@ import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
 import { resetPassword } from "@/firebase/authentication";
 import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
-import { colors, spacing } from "@/styles/global";
+import { spacing } from "@/styles/global";
 import { useState } from "react";
 import {
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -88,32 +88,5 @@ const stylesheet = StyleSheet.create({
 
   buttonContainer: {
     marginTop: spacing.md,
-  },
-
-  twoButtonsContainer: {
-    borderTopWidth: 1,
-    borderTopColor: colors.main,
-    marginTop: spacing.xs,
-    paddingTop: spacing.md,
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: "10%",
-  },
-
-  forgotPasswordContainer: {
-    marginTop: 3,
-    alignSelf: "flex-start",
-    marginLeft: "13%",
-  },
-  forgotPasswordText: {
-    color: colors.main,
-    textDecorationLine: "underline",
-  },
-
-  signUpContainer: {
-    marginTop: spacing.md,
-  },
-  signUpText: {
-    color: colors.main,
   },
 });
