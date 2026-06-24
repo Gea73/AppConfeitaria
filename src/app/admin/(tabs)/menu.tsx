@@ -7,12 +7,7 @@ import { itemService } from "@/services/itemService";
 import { colors, typography } from "@/styles/global";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View
-} from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Menu() {
@@ -27,13 +22,14 @@ export default function Menu() {
   }, []);
 
   function HandleEditItem(itemId: string) {
-    router.push({ pathname: "/item/alterItem", params: { itemId: itemId } });
+    router.push({
+      pathname: "/admin/item/alterItem",
+      params: { itemId: itemId },
+    });
   }
 
   if (loading) {
-    return (
-      <LoadingWheel></LoadingWheel>
-    );
+    return <LoadingWheel></LoadingWheel>;
   }
 
   return (
@@ -56,7 +52,9 @@ export default function Menu() {
                   name={item.getName()}
                   description={item.getDescription()}
                   imageUrl={item.getImageUrl()}
-                  onEdit={() => HandleEditItem(item.getUid() || String(Date.now()))}
+                  onEdit={() =>
+                    HandleEditItem(item.getUid() || String(Date.now()))
+                  }
                 />
               )}
               keyExtractor={(item) => item.getUid() ?? String(Date.now())}
@@ -66,7 +64,7 @@ export default function Menu() {
             <Button
               text="Criar Item"
               onPress={() => {
-                router.push("/item/createItem");
+                router.push("/admin/item/createItem");
               }}
             ></Button>
           </View>

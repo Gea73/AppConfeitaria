@@ -23,7 +23,7 @@ export default function NoOrders(props: NoOrdersProps) {
       <View style={stylesheet.container}>
         <Button
           text="Novo Pedido"
-          onPress={() => router.push("/order/makeOrder")}
+          onPress={() => router.push("/user/order/makeOrder")}
         ></Button>
       </View>
     </>

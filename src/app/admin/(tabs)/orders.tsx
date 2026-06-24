@@ -15,13 +15,12 @@ export default function Orders() {
       setOrders(orders);
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
   if (loading) {
-    return (
-      <LoadingWheel></LoadingWheel>
-    );
+    return <LoadingWheel></LoadingWheel>;
   }
 
   return (

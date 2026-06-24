@@ -21,7 +21,7 @@ export function CartOverlay(props: CartOverlayProps) {
         <Text style={stylesheet.text}>Itens:{props.cart.length}</Text>
 
         <TouchableOpacity
-          onPress={() => router.push("/order/checkout")}
+          onPress={() => router.push("/user/order/checkout")}
           style={stylesheet.button}
         >
           <Text style={stylesheet.buttonText}>Ver Carrinho</Text>

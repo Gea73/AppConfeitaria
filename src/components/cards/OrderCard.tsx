@@ -8,7 +8,7 @@ type OrderCardProps = {
   uid: string;
   items: OrderItem[];
   total: number;
-  status: string
+  status: string;
 };
 
 function getItems(items: OrderItem[]) {
@@ -33,7 +33,7 @@ export default function OrderCard(props: OrderCardProps) {
           text="Ver Pedido"
           onPress={() =>
             router.push({
-              pathname: "/order/orderDetails",
+              pathname: "/user/order/orderDetails",
               params: { orderId: props.uid },
             })
           }
@@ -48,9 +48,8 @@ const stylesheet = StyleSheet.create({
     paddingVertical: "2%",
     borderWidth: 0.7,
     borderColor: colors.details,
-
   },
-  buttonContainer:{
-    alignItems:"center"
-  }
+  buttonContainer: {
+    alignItems: "center",
+  },
 });

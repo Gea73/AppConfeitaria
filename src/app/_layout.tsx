@@ -1,4 +1,3 @@
-import { CartProvider } from "@/context/cartContext";
 import { auth } from "@/firebase/firebaseConfig";
 import { userService } from "@/services/userService";
 import { router, Stack } from "expo-router";
@@ -17,7 +16,7 @@ export default function Layout() {
           return;
         }
 
-          router.replace("/auth/signIn");
+        router.replace("/auth/signIn");
       } catch (error) {
         router.replace("/auth/signIn");
       }
@@ -25,9 +24,5 @@ export default function Layout() {
     return () => unsubscribe();
   }, []);
 
-  return (
-    <CartProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-    </CartProvider>
-  );
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

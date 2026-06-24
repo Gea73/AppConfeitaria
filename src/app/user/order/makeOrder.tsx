@@ -17,32 +17,29 @@ export default function MakeOrder() {
     setErrorBar(message);
     setTimeout(() => setErrorBar(""), 3000);
   };
-  const [menu, setMenu] = useState<Item[]>([])
+  const [menu, setMenu] = useState<Item[]>([]);
   const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCartContext();
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribe = itemService.subscribeToItems((items) => {
       setMenu(items);
-      setLoading(false)
-    })
-    return () => unsubscribe()
-  }, [])
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
   if (loading) {
-    return (
-      <LoadingWheel></LoadingWheel>
-    );
+    return <LoadingWheel></LoadingWheel>;
   }
 
   function handleMakeOrder() {
     try {
       if (cart.length === 0) {
-        throw new Error("Seu pedido está vazio")
+        throw new Error("Seu pedido está vazio");
       }
-      router.push("/order/checkout")
-
+      router.push("/user/order/checkout");
     } catch (e: any) {
-      showErrorBar(String(e))
+      showErrorBar(String(e));
     }
   }
   return (
@@ -63,8 +60,18 @@ export default function MakeOrder() {
                 name={item.getName()}
                 description={item.getDescription()}
                 price={item.getPrice()}
-                quantity={cart.find((i) => i.uid === item.getUid())?.quantity || 0}
-                onIncrease={() => AddItem({ uid: item.getUid() || String(Date.now()), name: item.getName(), price: item.getPrice(), description: item.getDescription(), quantity: 1 })}
+                quantity={
+                  cart.find((i) => i.uid === item.getUid())?.quantity || 0
+                }
+                onIncrease={() =>
+                  AddItem({
+                    uid: item.getUid() || String(Date.now()),
+                    name: item.getName(),
+                    price: item.getPrice(),
+                    description: item.getDescription(),
+                    quantity: 1,
+                  })
+                }
                 onDecrease={() =>
                   RemoveItem(cart.find((i) => i.uid === item.getUid()))
                 }

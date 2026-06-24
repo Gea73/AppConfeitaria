@@ -1,14 +1,12 @@
 import { Button } from "@/components/buttons/button";
-import OrderItemCard from "@/components/cards/OrderItemCard";
+import OrderItemCardNoButton from "@/components/cards/OrderItemCardNoButton";
 import ErrorBar from "@/components/errorBar";
-import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
-import { useCartContext } from "@/context/cartContext";
-import { auth } from "@/firebase/firebaseConfig";
+import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
 import { colors, typography } from "@/styles/global";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -19,65 +17,48 @@ import {
   View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-
-export default function Checkout() {
+export default function OrderDetails() {
   const [errorBar, setErrorBar] = useState("");
-  const [successBar, setSuccessBar] = useState("");
   const showErrorBar = (message: string) => {
     setErrorBar(message);
     setTimeout(() => setErrorBar(""), 3000);
   };
-  const showSuccessBar = (message: string) => {
-    setSuccessBar(message);
-    setTimeout(() => setSuccessBar(""), 3000);
-  };
+  const [order, setOrder] = useState<Order>();
+  const { orderId } = useLocalSearchParams();
 
-  const { cart, AddItem, RemoveItem, ClearCart, GetTotal } = useCartContext();
-
-  function HandleCancelOrder() {
-    Alert.alert("Cancelar Pedido", "Deseja mesmo cancelar?", [
-      { text: "Não", style: "cancel" },
-      {
-        text: "Sim",
-        style: "destructive",
-        onPress: () => {
-          ClearCart();
-          router.back();
-        },
-      },
-    ]);
-  }
-
-  async function HandleMakeOrder() {
-    try {
-      const uid = auth.currentUser?.uid;
-      if (!uid) {
-        throw new Error("Invalid user");
+  useEffect(() => {
+    async function getOrder() {
+      const order = await orderService.getOrder(String(orderId));
+      if (order) {
+        setOrder(order);
       }
-      await orderService.createOrder(uid, cart, "pending");
-      showSuccessBar("Pedido realizado com sucesso")
-      setTimeout(() => {
-        ClearCart();
-        router.replace("/user/home")
+    }
+    getOrder();
+  }, [orderId]);
 
-      }, 1000);
-
+  async function HandleCancelOrder() {
+    try {
+      Alert.alert("Cancelar Pedido", "Desejo mesmo cancelar o pedido?", [
+        { text: "Não", style: "cancel" },
+        {
+          text: "Sim",
+          style: "destructive",
+          onPress: async () => {
+            await orderService.deleteOrder(String(orderId));
+            router.back();
+          },
+        },
+      ]);
     } catch (e: any) {
       showErrorBar(String(e));
     }
   }
 
-  useEffect(() => {
-    if (cart.length <= 0) {
-      router.push("/order/makeOrder");
-    }
-  }, [cart]);
   return (
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
           <ErrorBar message={errorBar}></ErrorBar>
-          <SuccessBar message={successBar}></SuccessBar>
           <Title text="Resumo do Pedido"></Title>
 
           <TouchableOpacity
@@ -90,18 +71,14 @@ export default function Checkout() {
 
           <View style={stylesheet.itemsContainer}>
             <FlatList
-              data={cart}
+              data={order?.getItems()}
               renderItem={({ item }) => (
-                <OrderItemCard
+                <OrderItemCardNoButton
                   uid={item.uid}
                   name={item.name}
                   description={item.description}
                   price={item.price}
-                  quantity={cart.find((i) => i.uid === item.uid)?.quantity || 0}
-                  onIncrease={() => AddItem({ ...item, quantity: 1 })}
-                  onDecrease={() =>
-                    RemoveItem(cart.find((i) => i.uid === item.uid))
-                  }
+                  quantity={item.quantity}
                 />
               )}
               keyExtractor={(item) => item.uid}
@@ -110,28 +87,33 @@ export default function Checkout() {
           <View style={stylesheet.smallButtonContainer}>
             <Button
               text="Editar Pedido"
-              onPress={() => router.push("/order/makeOrder")}
+              onPress={() =>
+                router.push({
+                  pathname: "/user/order/editOrder",
+                  params: { orderId: orderId },
+                })
+              }
             ></Button>
           </View>
           <View style={stylesheet.orderContainer}>
             <Text style={stylesheet.orderText}>Valor Total</Text>
             <Text style={stylesheet.orderText}>
-              R$ {GetTotal().toFixed(2).replace(".", ",")}
+              R$
+              {order
+                ?.getItems()
+                .reduce((sum, i) => sum + i.quantity * i.price, 0)
+                .toFixed(2)
+                .replace(".", ",")}
             </Text>
             <Text style={stylesheet.orderText}>Endereço de Entrega</Text>
             <Text style={stylesheet.orderText}>A adicionar</Text>
-          </View>
-          <View style={stylesheet.buttonContainer}>
-            <Button
-              text="Fazer Pedido "
-              onPress={() => HandleMakeOrder()}
-            ></Button>
           </View>
         </SafeAreaView>
       </SafeAreaProvider>
     </>
   );
 }
+
 const stylesheet = StyleSheet.create({
   header: {
     paddingTop: "10%",
