@@ -1,6 +1,5 @@
 import { OrderItem } from "@/types/orderItem";
 import { OrderStatus } from "@/types/orderStatus";
-import { FieldValue, Timestamp } from "firebase/firestore";
 
 
 
@@ -12,14 +11,14 @@ export class Order {
     private _items: OrderItem[]
     private _status: OrderStatus
     private _total: number
-    private _createdAt: Timestamp | FieldValue | null
-    constructor(customerUid: string, items: OrderItem[], status: OrderStatus, uid?: string, createdAt?: Timestamp | FieldValue) {
+  
+    constructor(customerUid: string, items: OrderItem[], status: OrderStatus, uid?: string) {
         this._uid = this.setUid(uid)
         this._customerUid = this.setCustomerUid(customerUid)
         this._items = this.setItems(items)
         this._status = this.setStatus(status)
         this._total = this.setTotal()
-        this._createdAt = this.setCreatedAt(createdAt)
+        
     }
 
     setUid(uid: string | undefined) {
@@ -82,16 +81,6 @@ export class Order {
     }
 
 
-    setCreatedAt(createdAt: Timestamp | FieldValue | undefined) {
-        if (!createdAt) {
-            return null
-        }
-
-        return createdAt
-    }
-    getCreatedAt() {
-        return this._createdAt
-    }
 
     setTotal() {
         if (this._total) {

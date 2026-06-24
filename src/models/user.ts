@@ -1,16 +1,13 @@
-import { FieldValue, Timestamp } from "firebase/firestore";
 type Role = "user" | "admin";
 export class User {
     private _uid: string
     private _name: string
     private _email: string
-    private _createdAt: Timestamp | FieldValue | null
     private _role: Role
-    constructor(uid: string, name: string, email: string, role: Role, createdAt?: Timestamp | FieldValue) {
+    constructor(uid: string, name: string, email: string, role: Role,) {
         this._uid = this.setUid(uid)
         this._name = this.setName(name)
         this._email = this.setEmail(email)
-        this._createdAt = this.setCreatedAt(createdAt)
         this._role = this.setRole(role)
     }
 
@@ -57,16 +54,7 @@ export class User {
         return this._email
     }
 
-    setCreatedAt(createdAt: Timestamp | FieldValue | undefined) {
-        if (!createdAt) {
-            return null
-        }
 
-        return createdAt
-    }
-    getCreatedAt() {
-        return this._createdAt
-    }
     setRole(role: Role) {
         if (!role) {
             throw new Error("Role is null")
