@@ -4,14 +4,11 @@ import { Item } from "../models/item";
 import { itemRepo } from "../repositories/itemRepo";
 
 export const itemService = {
-    createItem: async function (name: string, description: string, price: number, imageUrl: string) {
+    createItem: async function (name: string, description: string, price: number, imageUrl: string): Promise<void> {
         try {
             const item = new Item(name, description, price, imageUrl);
-            const data = await itemRepo.createItem(item);
-            item.setUid(data.uid)
-            item.setCreatedAt(data.createdAt)
+            await itemRepo.createItem(item);
 
-            return item;
 
         } catch (error) {
             throw new Error("Item can't be created", {
@@ -22,11 +19,10 @@ export const itemService = {
 
     },
 
-    updateItem: async function (uid: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null) {
+    updateItem: async function (uid: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null): Promise<void> {
         try {
 
             await itemRepo.updateItem(uid, name, description, price, imageUrl)
-
 
         } catch (error) {
             throw new Error("Item can't be updated", {
@@ -36,16 +32,16 @@ export const itemService = {
 
     },
 
-    getItem: async function (uid: string) {
+    getItem: async function (uid: string): Promise<Item | null> {
         try {
-
 
             const data = await itemRepo.getItemById(uid);
             if (!data) {
-                throw new Error("Item can't be updated")
+                return null
             }
-            const item = new Item(data?.name, data?.description, data?.price, data?.imageUrl, uid, data?.createdAt)
-            return item;
+
+            return new Item(data?.name, data?.description, data?.price, data?.imageUrl, data.uid)
+
 
         } catch (error) {
             throw new Error("Item can't be fetched", {
@@ -55,13 +51,14 @@ export const itemService = {
 
     },
 
-    getItems: async function () {
+    getItems: async function (): Promise<Item[] | null> {
         try {
             const data = await itemRepo.getItems();
             if (!data) {
-                throw new Error("Item can't be fetched")
+                return null
             }
-            const items = data?.map((i) => { return new Item(i.name, i.description, i.price, i.imageUrl, i.uid, i.createdAt) })
+            
+            const items = data?.map((i) => { return new Item(i.name, i.description, i.price, i.imageUrl, i.uid) })
             return items
 
         } catch (error) {
@@ -71,9 +68,11 @@ export const itemService = {
         }
     },
 
-    deleteItem: async function (uid: string) {
+    deleteItem: async function (uid: string): Promise<void> {
         try {
+
             await itemRepo.deleteItem(uid);
+
         } catch (error) {
             throw new Error("Item can't be deleted", {
                 cause: error
@@ -82,13 +81,20 @@ export const itemService = {
 
     },
     subscribeToItems: function (callback: (items: Item[]) => void) {
-        return onSnapshot(collection(db, "items"), (snapshot) => {
-            const items = snapshot.docs.map((doc) => {
-                const data = doc.data()
-                return new Item(data.name, data.description, data.price, data.imageUrl, doc.id, data.createdAt)
-            })
-            callback(items)
-        })
+        try {
 
+
+            return onSnapshot(collection(db, "items"), (snapshot) => {
+                const items = snapshot.docs.map((doc) => {
+                    const data = doc.data()
+                    return new Item(data.name, data.description, data.price, data.imageUrl, doc.id)
+                })
+                callback(items)
+            })
+        } catch (error) {
+            throw new Error("It was not possible to subscribe to items", {
+                cause: error
+            })
+        }
     }
 }

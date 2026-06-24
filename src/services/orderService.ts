@@ -7,17 +7,10 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 export const orderService = {
 
-    createOrder: async function (customerId: string, items: OrderItem[], status: OrderStatus) {
+    createOrder: async function (customerId: string, items: OrderItem[], status: OrderStatus): Promise<void> {
         try {
             const order = new Order(customerId, items, status);
-            const data = await orderRepo.createOrder(order);
-            if (!data) {
-                throw new Error("Order couldn't be created")
-            }
-            order.setUid(data.uid)
-            order.setCreatedAt(data.createdAt)
-
-            return order;
+            await orderRepo.createOrder(order);
 
         } catch (error) {
             throw new Error("Order couldn't be created", {
@@ -26,7 +19,7 @@ export const orderService = {
         }
     },
 
-    updateOrder: async function (orderId: string, items: OrderItem[] | null, status: string | null) {
+    updateOrder: async function (orderId: string, items: OrderItem[] | null, status: string | null): Promise<void> {
         try {
 
             await orderRepo.updateOrder(orderId, status, items)
@@ -38,40 +31,35 @@ export const orderService = {
         }
 
     },
-    getOrder: async function (orderId: string | null): Promise<Order | null> {
+    getOrder: async function (orderId: string): Promise<Order | null> {
         try {
-            if (orderId) {
-                const data = await orderRepo.getOrderById(orderId);
-                if (!data) {
-                    throw new Error("Order couldn't be fetched")
-                }
-                const order = new Order(data?.customerId, data?.items, data?.status, orderId, data?.createdAt)
-                return order
+
+            const data = await orderRepo.getOrderById(orderId);
+
+            if (!data) {
+                return null
             }
 
-            return null
+            return new Order(data?.customerUid, data?.items, data?.status, data.uid)
+
+
         } catch (error) {
             throw new Error("Order couldn't be fetched", {
                 cause: error
             })
         }
     },
-    getOrders: async function (customerId: string | null): Promise<Order[] | null> {
+    getOrders: async function (customerId: string): Promise<Order[] | null> {
         try {
-            if (customerId) {
-                const data = await orderRepo.getOrdersByCustomer(customerId);
-                if (!data) {
-                    throw new Error("Order couldn't be fetched")
-                }
 
-                const orders = data?.map((o) => { return new Order(o.customerId, o.items, o.status, o.uid, o.createdAt) })
-                if (!orders) {
-                    throw new Error("Order couldn't be fetched")
-                }
-
-                return orders
+            const data = await orderRepo.getOrdersByCustomer(customerId);
+            if (!data) {
+                return null
             }
-            return null
+
+            const orders = data?.map((o) => { return new Order(o.customerUid, o.items, o.status, o.uid) })
+            return orders
+
         } catch (error) {
             throw new Error("Order couldn't be fetched", {
                 cause: error
@@ -79,16 +67,16 @@ export const orderService = {
         }
 
     },
-    getAllOrders: async function () {
+    getAllOrders: async function (): Promise<Order[] | null> {
         try {
             const data = await orderRepo.getOrders()
+
             if (!data) {
-                throw new Error("Order couldn't be fetched")
+                return null
             }
-            const orders = data?.map((o) => { return new Order(o.customerId, o.items, o.status, o.uid, o.createdAt) })
-            if (!orders) {
-                throw new Error("Order couldn't be fetched")
-            }
+
+            const orders = data?.map((o) => { return new Order(o.customerUid, o.items, o.status, o.uid) })
+
             return orders
         } catch (error) {
             throw new Error("Order couldn't be fetched", {
@@ -97,37 +85,52 @@ export const orderService = {
         }
 
     },
-    deleteOrder: async function (orderId: string) {
+
+    deleteOrder: async function (orderId: string): Promise<void> {
         try {
+
             await orderRepo.deleteOrder(orderId)
+
         } catch (error) {
             throw new Error("Order couldn't be deleted", {
                 cause: error
             })
         }
     },
-    subscribeToAllOrders: function (callback: (orders: Order[]) => void) {
-        return onSnapshot(collection(db, "orders"), (snapshot) => {
-            const items = snapshot.docs.map((doc) => {
-                const data = doc.data()
-                return new Order(data.customerId, data.items, data.status, doc.id, data.createdAt)
-            })
-            callback(items)
-        })
 
+    subscribeToAllOrders: function (callback: (orders: Order[]) => void) {
+        try {
+            return onSnapshot(collection(db, "orders"), (snapshot) => {
+                const orders = snapshot.docs.map((doc) => {
+                    const data = doc.data()
+                    return new Order(data.customerId, data.items, data.status, doc.id)
+                })
+                callback(orders)
+            })
+
+        } catch (error) {
+            throw new Error("It was not possible to subscribe to orders", {
+                cause: error
+            })
+        }
     },
     subscribeToCustomerOrders: function (customerId: string, callback: (orders: Order[]) => void) {
+        try {
 
-        const q = query(collection(db, "orders"), where("customerId", "==", customerId));
 
+            const q = query(collection(db, "orders"), where("customerId", "==", customerId));
 
-        return onSnapshot(q, (snapshot) => {
-            const orders = snapshot.docs.map((doc) => {
-                const data = doc.data()
-                return new Order(data.customerId, data.items, data.status, doc.id, data.createdAt)
+            return onSnapshot(q, (snapshot) => {
+                const orders = snapshot.docs.map((doc) => {
+                    const data = doc.data()
+                    return new Order(data.customerId, data.items, data.status, doc.id)
+                })
+                callback(orders)
             })
-            callback(orders)
-        })
+        } catch (error) {
+            throw new Error("It was not possible to subscribe to customer orders", {
+                cause: error
+            })
+        }
     }
-
 }
