@@ -14,11 +14,9 @@ import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(useGetUser());
   const [lastOrder, setLastOrder] = useState<Order>();
   const [loading, setLoading] = useState<boolean>(true);
-
-  setUser(useGetUser());
 
   useEffect(() => {
     if (!user) {
@@ -26,8 +24,8 @@ export default function Home() {
     }
     const unsubscribe = orderService.subscribeToCustomerOrders(
       user?.getUid(),
-      (lastOrder) => {
-        setLastOrder(lastOrder.at(-1));
+      (orders) => {
+        setLastOrder(orders[0]);
         setLoading(false);
       },
     );
@@ -50,6 +48,7 @@ export default function Home() {
               uid={lastOrder.getUid() || String(Date.now())}
               items={lastOrder.getItems()}
               status={lastOrder.getStatus()}
+              statusLabel={lastOrder.getStatusLabel()}
               total={lastOrder
                 .getItems()
                 .reduce((sum, i) => sum + i.price * i.quantity, 0)}

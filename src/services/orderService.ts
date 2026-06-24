@@ -3,7 +3,7 @@ import { Order } from "@/models/order";
 import { orderRepo } from "@/repositories/orderRepo";
 import { OrderItem } from "@/types/orderItem";
 import { OrderStatus } from "@/types/orderStatus";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 
 export const orderService = {
 
@@ -118,7 +118,7 @@ export const orderService = {
         try {
 
 
-            const q = query(collection(db, "orders"), where("customerId", "==", customerId));
+            const q = query(collection(db, "orders"), where("customerId", "==", customerId),orderBy("createdAt","desc"));
 
             return onSnapshot(q, (snapshot) => {
                 const orders = snapshot.docs.map((doc) => {
