@@ -18,25 +18,28 @@ export function useCart() {
     }, [cart, isFirstLoading])
 
     function AddItem(item: OrderItem) {
-        const itemExist = cart.find((i) => i.uid === item.uid)
-        if (itemExist) {
-            setCart(cart.map((i) => i.uid === item.uid ? { ...i, quantity: i.quantity + 1 } : i))
-            return;
-        }
-        setCart([...cart, { ...item, quantity: 1 }]);
+        setCart(prev => {
+            const itemExist = prev.find((i) => i.uid === item.uid)
+            if (itemExist) {
+                return prev.map((i) => i.uid === item.uid ? { ...i, quantity: i.quantity + 1 } : i)
+            }
+
+            return [...prev, { ...item, quantity: 1 }];
+        })
+
 
     }
     function RemoveItem(item: OrderItem | undefined) {
         if (!item) {
             return;
         }
-        setCart(cart.map((i) => i.uid === item.uid ? { ...i, quantity: i.quantity - 1 } : i)
+        setCart(prev => prev.map((i) => i.uid === item.uid ? { ...i, quantity: i.quantity - 1 } : i)
             .filter((i) => i.quantity > 0))
 
     }
     function ClearCart() {
         setCart([])
-        
+
     }
 
     function GetTotal() {
