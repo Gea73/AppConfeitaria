@@ -7,7 +7,7 @@ import { Title } from "@/components/title";
 import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";
 import { colors, spacing, typography } from "@/styles/global";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {

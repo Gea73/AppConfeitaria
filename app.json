@@ -28,7 +28,9 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Shafarik-Regular.ttf"]
+          "fonts": [
+            "./assets/fonts/Shafarik-Regular.ttf"
+          ]
         }
       ],
       "expo-router",
@@ -39,7 +41,10 @@
           "image": "./assets/images/logo1024.png",
           "resizeMode": "contain"
         }
-      ]
+      ],
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

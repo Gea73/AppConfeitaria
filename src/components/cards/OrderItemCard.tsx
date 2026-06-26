@@ -1,5 +1,5 @@
 import { colors, typography } from "@/styles/global";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type ItemProps = {
@@ -16,12 +16,15 @@ export default function OrderItemCard(props: ItemProps) {
   return (
     <View style={stylesheet.container}>
       <View style={stylesheet.imageContainer}>
-      <Image style={stylesheet.itemPhoto} source={require("@/assets/images/cake.png")}></Image>
+        <Image
+          style={stylesheet.itemPhoto}
+          source={require("@/assets/images/cake.png")}
+        ></Image>
       </View>
       <View style={stylesheet.textContainer}>
         <Text style={stylesheet.nameText}>{props.name}</Text>
         <Text style={stylesheet.descriptionText}>{props.description}</Text>
-       
+
         <View style={stylesheet.buttonsContainer}>
           <TouchableOpacity onPress={props.onIncrease}>
             <Ionicons
@@ -38,7 +41,9 @@ export default function OrderItemCard(props: ItemProps) {
               color={colors.details}
             ></Ionicons>
           </TouchableOpacity>
-           <Text style={stylesheet.priceText}>R$ {props.price.toFixed(2).replace(".",",")}</Text>
+          <Text style={stylesheet.priceText}>
+            R$ {props.price.toFixed(2).replace(".", ",")}
+          </Text>
         </View>
       </View>
     </View>
@@ -52,11 +57,11 @@ const stylesheet = StyleSheet.create({
     borderColor: colors.details,
     flexDirection: "row",
   },
-  imageContainer:{
-    alignItems:"center",
+  imageContainer: {
+    alignItems: "center",
   },
-  itemPhoto:{
-    flex:1
+  itemPhoto: {
+    flex: 1,
   },
   textContainer: {
     paddingHorizontal: "5%",
@@ -66,16 +71,16 @@ const stylesheet = StyleSheet.create({
     fontSize: typography.subtitle,
     fontWeight: "bold",
   },
-  descriptionText:{
-    marginTop:"5%"
+  descriptionText: {
+    marginTop: "5%",
   },
-  priceText:{
-     fontSize: typography.subtitle,
+  priceText: {
+    fontSize: typography.subtitle,
     fontWeight: "bold",
-    marginLeft:"5%"
+    marginLeft: "5%",
   },
   buttonsContainer: {
-    marginTop:"10%",
+    marginTop: "10%",
     flexDirection: "row",
     gap: "3%",
   },
@@ -85,7 +90,7 @@ const stylesheet = StyleSheet.create({
     borderColor: colors.details,
     borderRadius: 5,
     textAlign: "center",
-    textAlignVertical:"center",
-    width:"15%"
+    textAlignVertical: "center",
+    width: "15%",
   },
 });

@@ -7,11 +7,10 @@ export async function signUpUser(email: string, password: string) {
 
     try {
 
-
         const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-        const user = userCredential.user
+        return userCredential.user
 
-        return user
+         
     } catch (error) {
         throw error
     }
@@ -22,9 +21,9 @@ export async function signInUser(email: string, password: string) {
 
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
-        const user = userCredential.user
+        return userCredential.user
         
-        return user
+         
     } catch (error) {
         throw error
     }
@@ -33,6 +32,7 @@ export async function signInUser(email: string, password: string) {
 export async function validateUserPassword(password: string) {
     try {
         const status = await validatePassword(getAuth(), password)
+
         if (!status.isValid) {
             throw new Error("Senha deve conter 8 caracteres com letras,números e caracteres especiais")
         }
@@ -59,22 +59,3 @@ export async function resetPassword(email: string) {
 
 
 }
-/*
-const provider = new GoogleAuthProvider()
-
-async function signInGoogle() {
-    try {
-
-
-        const result = await signInWithPopup(auth, provider)
-
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken
-        const user = result.user;
-
-        return user;
-    } catch (error) {
-        throw error
-    }
-}
-    */

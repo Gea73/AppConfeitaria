@@ -5,7 +5,6 @@ export const colors = {
     active: "#e89ab0",
     light: "#F2B7C6",
     mid: "#DD9296",
-    strong: "#CC76A1",
     main:"#EBB7B7",
     text: "white",
     details:"#B3B3B3"
