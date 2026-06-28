@@ -110,10 +110,12 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| uid | string |
-| name | string |
-| email | string |
-| role | string |
+| uid | varchar |
+| name | varchar |
+| password_hash | varchar |
+| role | varchar |
+| createdAt | dateTime |
+
 
 ---
 
@@ -121,11 +123,11 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| uid | string |
-| customerId | string |
-| status | string |
-| total | number |
-| createdAt | timestamp |
+| uid | varchar |
+| customerId | varchar |
+| status | varchar |
+| total | decimal |
+| createdAt | dateTime |
 
 ---
 
@@ -133,11 +135,22 @@ src/
 
 | Campo | Tipo |
 |---|---|
-| uid | string |
-| name | string |
-| description | string |
-| price | number |
-| imagemUrl | string |
+| uid | varchar |
+| name | varchar |
+| description | varchar |
+| price | decimal |
+| imageUrl | varchar |
+| createdAt | dateTime |
 
 ---
+
+## Pedidos-Itens
+
+| Campo | Tipo |
+|---|---|
+| uid | varchar |
+| orderId | varchar |
+| itemId | varchar |
+| quantity | int |
+| price | decimal |
 
