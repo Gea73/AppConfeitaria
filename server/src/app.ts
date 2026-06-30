@@ -2,9 +2,9 @@ import express, { Errback, NextFunction, Request, Response } from "express";
 
 const app = express();
 
-import { router as itemRouter } from "../src/routes/itemRoutes.js";
-import { router as orderRouter } from "../src/routes/orderRoutes.js";
-import { router as userRouter } from "../src/routes/userRoutes.js";
+import { router as itemRouter } from "./routes/itemRoutes.js";
+import { router as orderRouter } from "./routes/orderRoutes.js";
+import { router as userRouter } from "./routes/userRoutes.js";
 
 
 app.disable("x-powered-by");
