@@ -1,7 +1,5 @@
-import { db } from "@/firebase/firebaseConfig";
-import { collection, onSnapshot } from "firebase/firestore";
+/*
 import { Item } from "../models/item";
-import { itemRepo } from "../repositories/itemRepo";
 
 export const itemService = {
     createItem: async function (name: string, description: string, price: number, imageUrl: string): Promise<void> {
@@ -98,3 +96,4 @@ export const itemService = {
         }
     }
 }
+    */

@@ -1,5 +1,5 @@
+/*
 import { User } from "../models/user";
-import { userRepo } from "../repositories/userRepo";
 
 export const userService = {
     createUser: async function (uid: string, name: string, email: string): Promise<void> {
@@ -38,3 +38,4 @@ export const userService = {
 
 
 }
+*/

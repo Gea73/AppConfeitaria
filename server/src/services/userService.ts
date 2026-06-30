@@ -43,6 +43,38 @@ export const userService = {
         }
 
     },
+    getUserByEmail: async function (email: string) {
+        try {
+
+
+            const result = await userRepo.getUserByEmail(email)
+
+            if (!result) {
+                return null
+            }
+
+            return new User(result.uid, result.name, result.email, result.role)
+        } catch (error) {
+            throw new Error("User couldn't be fetched", {
+                cause: error
+            })
+        }
+    },
+    getPasswordHash: async function (id: string) {
+        try {
+            const result = await userRepo.getPasswordHash(id)
+
+            if (!result) {
+                return null
+            }
+
+            return result
+        } catch (error) {
+            throw new Error("User couldn't be fetched", {
+                cause: error
+            })
+        }
+    }
 
 
 

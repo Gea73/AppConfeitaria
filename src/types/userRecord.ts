@@ -1,4 +1,3 @@
-import { FieldValue, Timestamp } from "firebase/firestore"
 
 
 export type UserRecord = {
@@ -6,5 +5,5 @@ export type UserRecord = {
     name: string
     email: string
     role: "user" | "admin"
-    createdAt: FieldValue | Timestamp
+    createdAt: Date
 }

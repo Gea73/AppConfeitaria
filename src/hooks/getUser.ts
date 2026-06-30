@@ -1,3 +1,4 @@
+/*
 import { auth } from "@/firebase/firebaseConfig";
 import { User } from "@/models/user";
 import { userService } from "@/services/userService";
@@ -20,3 +21,4 @@ export default function useGetUser(): User | null {
     return user
 
 }
+    */

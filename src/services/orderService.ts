@@ -1,9 +1,8 @@
-import { db } from "@/firebase/firebaseConfig";
+/*
 import { Order } from "@/models/order";
-import { orderRepo } from "@/repositories/orderRepo";
 import { OrderItem } from "@/types/orderItem";
 import { OrderStatus } from "@/types/orderStatus";
-import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
+
 
 export const orderService = {
 
@@ -134,3 +133,4 @@ export const orderService = {
         }
     }
 }
+    */

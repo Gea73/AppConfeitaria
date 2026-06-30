@@ -1,3 +1,5 @@
+
+/*
 import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, validatePassword } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 
@@ -59,3 +61,4 @@ export async function resetPassword(email: string) {
 
 
 }
+*/

@@ -39,4 +39,19 @@ export const userRepo = {
       throw error
     }
   },
+  getUserByEmail: async function (email: string) {
+    try {
+      const result = await
+        pool
+          .request()
+          .input("email", mssql.VarChar, email).query(`SELECT ID,NAME,EMAIL,ROLE,CREATEDAT FROM ASUAESCOLHA.USERS WHERE EMAIL = @email`)
+
+      const data = result.recordset[0]
+
+      return { uid: data.ID, name: data.NAME, email: data.EMAIL, role: data.ROLE, createdAt: data.CREATEDAT }
+
+    } catch (error) {
+      throw error
+    }
+  }
 }
