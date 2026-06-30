@@ -2,11 +2,16 @@ import dotenv from "dotenv";
 import mssql from "mssql";
 dotenv.config();
 
-console.log(process.env.DB_USER);
+
+if (!process.env.DB_USER || !process.env.DB_PWD || !process.env.DB_SERVER || !process.env.DB_NAME) {
+  throw new Error("Invalid enviromental variables")
+}
+
+
 const config = {
   user: process.env.DB_USER,
   password: process.env.DB_PWD,
-  server: "ANA\\SQLEXPRESS",
+  server: process.env.DB_SERVER,
   database: process.env.DB_NAME,
 
   pool: {
