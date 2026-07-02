@@ -1,15 +1,25 @@
-/*
+
 import { Order } from "@/models/order";
 import { OrderItem } from "@/types/orderItem";
 import { OrderStatus } from "@/types/orderStatus";
-
+const API_URL = process.env.API_URL
 
 export const orderService = {
 
     createOrder: async function (customerId: string, items: OrderItem[], status: OrderStatus): Promise<void> {
         try {
-            const order = new Order(customerId, items, status);
-            await orderRepo.createOrder(order);
+
+
+            const response = await fetch(`${API_URL}/order/}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ customerId: customerId, items: items, status: status })
+            })
+
+            if (!response.ok) {
+                throw new Error("Order couldn't be created")
+            }
+
 
         } catch (error) {
             throw new Error("Order couldn't be created", {
@@ -21,7 +31,16 @@ export const orderService = {
     updateOrder: async function (orderId: string, items: OrderItem[] | null, status: string | null): Promise<void> {
         try {
 
-            await orderRepo.updateOrder(orderId, status, items)
+            const response = await fetch(`${API_URL}/order/${orderId}}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ items, status })
+            })
+
+            if (!response.ok) {
+                throw new Error("Order couldn't be updated")
+            }
+
 
         } catch (error) {
             throw new Error("Order couldn't be updated", {
@@ -33,13 +52,22 @@ export const orderService = {
     getOrder: async function (orderId: string): Promise<Order | null> {
         try {
 
-            const data = await orderRepo.getOrderById(orderId);
+            const response = await fetch(`${API_URL}/order/${orderId}}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+
+            })
+
+            if (!response.ok) {
+                throw new Error("Order couldn't be fetched")
+            }
+            const data = await response.json()
 
             if (!data) {
                 return null
             }
 
-            return new Order(data?.customerUid, data?.items, data?.status, data.uid)
+            return new Order(data?.customerId, data?.items, data?.status, data.id)
 
 
         } catch (error) {
@@ -51,12 +79,22 @@ export const orderService = {
     getOrders: async function (customerId: string): Promise<Order[] | null> {
         try {
 
-            const data = await orderRepo.getOrdersByCustomer(customerId);
+            const response = await fetch(`${API_URL}/customer/${customerId}}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+
+            })
+
+            if (!response.ok) {
+                throw new Error("Orders couldn't be fetched")
+            }
+            const data = await response.json()
+
             if (!data) {
                 return null
             }
 
-            const orders = data?.map((o) => { return new Order(o.customerUid, o.items, o.status, o.uid) })
+            const orders = data?.map((o: Order) => { return new Order(o.getCustomerId(), o.getItems(), o.getStatus(), o.getId()) })
             return orders
 
         } catch (error) {
@@ -68,13 +106,22 @@ export const orderService = {
     },
     getAllOrders: async function (): Promise<Order[] | null> {
         try {
-            const data = await orderRepo.getOrders()
+            const response = await fetch(`${API_URL}/order/all}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+
+            })
+
+            if (!response.ok) {
+                throw new Error("Orders couldn't be fetched")
+            }
+            const data = await response.json()
 
             if (!data) {
                 return null
             }
 
-            const orders = data?.map((o) => { return new Order(o.customerUid, o.items, o.status, o.uid) })
+            const orders = data?.map((o: Order) => { return new Order(o.getCustomerId(), o.getItems(), o.getStatus(), o.getId()) })
 
             return orders
         } catch (error) {
@@ -88,7 +135,15 @@ export const orderService = {
     deleteOrder: async function (orderId: string): Promise<void> {
         try {
 
-            await orderRepo.deleteOrder(orderId)
+            const response = await fetch(`${API_URL}/order/${orderId}}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+
+            })
+
+            if (!response.ok) {
+                throw new Error("Order couldn't be deleted")
+            }
 
         } catch (error) {
             throw new Error("Order couldn't be deleted", {
@@ -97,40 +152,5 @@ export const orderService = {
         }
     },
 
-    subscribeToAllOrders: function (callback: (orders: Order[]) => void) {
-        try {
-            return onSnapshot(collection(db, "orders"), (snapshot) => {
-                const orders = snapshot.docs.map((doc) => {
-                    const data = doc.data()
-                    return new Order(data.customerId, data.items, data.status, doc.id)
-                })
-                callback(orders)
-            })
 
-        } catch (error) {
-            throw new Error("It was not possible to subscribe to orders", {
-                cause: error
-            })
-        }
-    },
-    subscribeToCustomerOrders: function (customerId: string, callback: (orders: Order[]) => void) {
-        try {
-
-
-            const q = query(collection(db, "orders"), where("customerId", "==", customerId),orderBy("createdAt","desc"));
-
-            return onSnapshot(q, (snapshot) => {
-                const orders = snapshot.docs.map((doc) => {
-                    const data = doc.data()
-                    return new Order(data.customerId, data.items, data.status, doc.id)
-                })
-                callback(orders)
-            })
-        } catch (error) {
-            throw new Error("It was not possible to subscribe to customer orders", {
-                cause: error
-            })
-        }
-    }
 }
-    */

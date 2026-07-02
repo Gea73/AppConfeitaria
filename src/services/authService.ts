@@ -1,4 +1,5 @@
 import * as SecureStore from "expo-secure-store"
+const API_URL = process.env.API_URL
 
 export const authService = {
 
@@ -17,7 +18,8 @@ export const authService = {
             return null
         }
 
-        const response = await fetch("", {
+        const response = await fetch(`${API_URL}/auth/`, {
+            method: "GET",
             headers: { Authorization: `Bearer ${token}` }
         })
 
@@ -26,11 +28,14 @@ export const authService = {
             return null
         }
 
-        return response.json()
+        const data = await response.json()
+        const user = data.user
+
+        return user
 
     },
     signIn: async function (email: string, password: string) {
-        const response = await fetch("", {
+        const response = await fetch(`${API_URL}/auth/}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })

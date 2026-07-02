@@ -1,12 +1,21 @@
-/*
+
 import { User } from "../models/user";
+const API_URL = process.env.API_URL
 
 export const userService = {
-    createUser: async function (uid: string, name: string, email: string): Promise<void> {
+    createUser: async function (name: string, email: string, password: string,): Promise<void> {
         try {
 
-            const user = new User(uid, name, email, "user")
-            await userRepo.createUser(user)
+            const response = await fetch(`${API_URL}/user/}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: name, email: email, password: password })
+            })
+
+            if (!response.ok) {
+                throw new Error("User couldn't be created")
+            }
+
 
         } catch (error) {
             throw new Error("User couldn't be created", {
@@ -15,17 +24,26 @@ export const userService = {
         }
     },
 
-    getUser: async function (uid: string): Promise<User | null> {
+    getUser: async function (id: string): Promise<User | null> {
         try {
 
+            const response = await fetch(`${API_URL}/user/${id}}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
 
-            const data = await userRepo.getUserById(uid)
+            })
+
+            if (!response.ok) {
+                throw new Error("User couldn't be fetched")
+            }
+
+            const data = await response.json()
 
             if (!data) {
                 return null
             }
 
-            return new User(data.uid,data.name,data.email,data.role)
+            return new User(data.id, data.name, data.email, data.role)
         } catch (error) {
             throw new Error("User couldn't be fetched", {
                 cause: error
@@ -38,4 +56,3 @@ export const userService = {
 
 
 }
-*/
