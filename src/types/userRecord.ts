@@ -1,7 +1,7 @@
 
 
 export type UserRecord = {
-    uid: string
+    id: string
     name: string
     email: string
     role: "user" | "admin"

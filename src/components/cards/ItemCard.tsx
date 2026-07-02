@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { Button } from "../buttons/button";
 
 type ItemProps = {
-  uid: string;
+  id: string;
   name: string;
   description: string;
   price: number;

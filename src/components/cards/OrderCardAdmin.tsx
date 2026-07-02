@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../buttons/button";
 
 type OrderCardProps = {
-  uid: string;
+  id: string;
   items: OrderItem[];
   total: number;
   status: string;
@@ -28,19 +28,19 @@ export default function OrderCardAdmin(props: OrderCardProps) {
   const [confirmed, setConfirmed] = useState<boolean>(false);
   const [done, setDone] = useState<boolean>(false);
 
-  async function handleConfirmed(uid: string) {
-    await orderService.updateOrder(uid, null, "preparing");
+  async function handleConfirmed(id: string) {
+    await orderService.updateOrder(id, null, "preparing");
     setConfirmed(true);
   }
 
-  async function handleDone(uid: string) {
-    await orderService.updateOrder(uid, null, "delivered");
+  async function handleDone(id: string) {
+    await orderService.updateOrder(id, null, "delivered");
     setDone(true);
   }
 
   return (
     <View style={stylesheet.container}>
-      <Text>Pedido #{props.uid}</Text>
+      <Text>Pedido #{props.id}</Text>
       <Text>
         Cliente #{props.customer ? props.customer : "Cliente não encontrado"}
       </Text>
@@ -51,14 +51,14 @@ export default function OrderCardAdmin(props: OrderCardProps) {
         {props.status === "preparing" && (
           <Button
             text="Finalizar Pedido"
-            onPress={() => handleDone(props.uid)}
+            onPress={() => handleDone(props.id)}
           />
         )}
 
         {props.status === "pending" && (
           <Button
             text="Confirmar Pedido"
-            onPress={() => handleConfirmed(props.uid)}
+            onPress={() => handleConfirmed(props.id)}
           />
         )}
       </View>

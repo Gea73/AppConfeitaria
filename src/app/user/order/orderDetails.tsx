@@ -74,14 +74,14 @@ export default function OrderDetails() {
               data={order?.getItems()}
               renderItem={({ item }) => (
                 <OrderItemCardNoButton
-                  uid={item.uid}
+                  id={item.id}
                   name={item.name}
                   description={item.description}
                   price={item.price}
                   quantity={item.quantity}
                 />
               )}
-              keyExtractor={(item) => item.uid}
+              keyExtractor={(item) => item.id}
             ></FlatList>
           </View>
           <View style={stylesheet.smallButtonContainer}>

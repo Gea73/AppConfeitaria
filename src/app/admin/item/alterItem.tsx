@@ -93,7 +93,7 @@ export default function AlterItem() {
           >
             <View style={stylesheet.itemPreviewContainer}>
               <ItemCardNoButton
-                uid=""
+                id=""
                 name={name}
                 description={description}
                 price={Number(price)}

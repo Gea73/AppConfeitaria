@@ -6,44 +6,42 @@ import { OrderStatus } from "@/types/orderStatus";
 
 
 export class Order {
-    private _uid: string | null
-    private _customerUid: string
+    private _id: string
+    private _customerId: string
     private _items: OrderItem[]
     private _status: OrderStatus
     private _total: number
 
-    constructor(customerUid: string, items: OrderItem[], status: OrderStatus, uid?: string) {
-        this._uid = this.setUid(uid)
-        this._customerUid = this.setCustomerUid(customerUid)
+    constructor(customerId: string, items: OrderItem[], status: OrderStatus, id: string) {
+        this._id = this.setId(id)
+        this._customerId = this.setCustomerId(customerId)
         this._items = this.setItems(items)
         this._status = this.setStatus(status)
         this._total = this.setTotal()
 
     }
 
-    setUid(uid: string | undefined) {
-        if (!uid) {
-            return null
+    setId(id: string ) {
+       
+        if (id && id.trim().length === 0) {
+            throw new Error("id is empty")
         }
-        if (uid && uid.trim().length === 0) {
-            throw new Error("uid is empty")
-        }
-        return uid
+        return id
     }
 
-    getUid(): string | null {
-        return this._uid
+    getId(): string {
+        return this._id
     }
 
 
-    setCustomerUid(customerId: string) {
+    setCustomerId(customerId: string) {
         if (!customerId || customerId.trim().length === 0) {
-            throw new Error("Customer uid is empty")
+            throw new Error("Customer id is empty")
         }
         return customerId
     }
-    getCustomerUid(): string {
-        return this._customerUid
+    getCustomerId(): string {
+        return this._customerId
     }
 
     setItems(items: OrderItem[]) {
@@ -64,7 +62,7 @@ export class Order {
 
         return status
     }
-    getStatus(): string {
+    getStatus(): OrderStatus {
         return this._status
     }
 

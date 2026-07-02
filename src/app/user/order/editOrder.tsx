@@ -63,21 +63,21 @@ export default function EditOrder() {
     );
   }
 
-  function IncreaseItem(uid: string) {
-    const item = modifiedItems.find((i) => i.uid === uid);
+  function IncreaseItem(id: string) {
+    const item = modifiedItems.find((i) => i.id === id);
 
     if (item) {
-      setModifiedItems(prev => prev.map((i) => (i.uid === uid ? { ...i, quantity: i.quantity + 1 } : i)));
+      setModifiedItems(prev => prev.map((i) => (i.id === id ? { ...i, quantity: i.quantity + 1 } : i)));
     }
   }
 
-  function RemoveItem(uid: string) {
-    const item = modifiedItems.find((i) => i.uid === uid);
+  function RemoveItem(id: string) {
+    const item = modifiedItems.find((i) => i.id === id);
     if (item) {
       const newItem = { ...item, quantity: item.quantity - 1 };
       setModifiedItems(
         modifiedItems
-          .map((i) => (i.uid === uid ? newItem : i))
+          .map((i) => (i.id === id ? newItem : i))
           .filter((i) => i.quantity > 0),
       );
     }
@@ -105,16 +105,16 @@ export default function EditOrder() {
             data={modifiedItems}
             renderItem={({ item }) => (
               <OrderItemCard
-                uid={item.uid}
+                id={item.id}
                 name={item.name}
                 description={item.description}
                 price={item.price}
                 quantity={item.quantity}
-                onIncrease={() => IncreaseItem(item.uid)}
-                onDecrease={() => RemoveItem(item.uid)}
+                onIncrease={() => IncreaseItem(item.id)}
+                onDecrease={() => RemoveItem(item.id)}
               />
             )}
-            keyExtractor={(item) => item.uid}
+            keyExtractor={(item) => item.id}
           ></FlatList>
           <View style={stylesheet.buttonContainer}>
             <Button

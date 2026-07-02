@@ -2,7 +2,7 @@ import { colors, typography } from "@/styles/global";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 type ItemProps = {
-  uid: string;
+  id: string;
   name: string;
   description: string;
   price: number;

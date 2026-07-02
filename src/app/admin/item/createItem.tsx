@@ -65,7 +65,7 @@ export default function CreateItem() {
             <ScrollView>
               <View style={stylesheet.itemPreviewContainer}>
                 <ItemCardNoButton
-                  uid=""
+                  id=""
                   name={name}
                   description={description}
                   price={Number(price)}

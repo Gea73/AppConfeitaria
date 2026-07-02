@@ -19,9 +19,9 @@ export function useCart() {
 
     function AddItem(item: OrderItem) {
         setCart(prev => {
-            const itemExist = prev.find((i) => i.uid === item.uid)
+            const itemExist = prev.find((i) => i.id === item.id)
             if (itemExist) {
-                return prev.map((i) => i.uid === item.uid ? { ...i, quantity: i.quantity + 1 } : i)
+                return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i)
             }
 
             return [...prev, { ...item, quantity: 1 }];
@@ -33,7 +33,7 @@ export function useCart() {
         if (!item) {
             return;
         }
-        setCart(prev => prev.map((i) => i.uid === item.uid ? { ...i, quantity: i.quantity - 1 } : i)
+        setCart(prev => prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i)
             .filter((i) => i.quantity > 0))
 
     }

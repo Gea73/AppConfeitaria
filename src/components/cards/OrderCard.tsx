@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../buttons/button";
 
 type OrderCardProps = {
-  uid: string;
+  id: string;
   items: OrderItem[];
   total: number;
   status: string;
@@ -35,7 +35,7 @@ export default function OrderCard(props: OrderCardProps) {
           onPress={() =>
             router.push({
               pathname: "/user/order/orderDetails",
-              params: { orderId: props.uid },
+              params: { orderId: props.id },
             })
           }
         ></Button>
