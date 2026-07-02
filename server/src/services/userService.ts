@@ -60,21 +60,7 @@ export const userService = {
             })
         }
     },
-    getPasswordHash: async function (id: string) {
-        try {
-            const result = await userRepo.getPasswordHash(id)
 
-            if (!result) {
-                return null
-            }
-
-            return result
-        } catch (error) {
-            throw new Error("User couldn't be fetched", {
-                cause: error
-            })
-        }
-    }
 
 
 
