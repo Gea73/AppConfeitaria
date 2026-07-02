@@ -1,6 +1,7 @@
-/*
-import { auth } from "@/firebase/firebaseConfig";
+
+
 import { User } from "@/models/user";
+import { authService } from "@/services/authService";
 import { userService } from "@/services/userService";
 import { useEffect, useState } from "react";
 
@@ -8,12 +9,12 @@ export default function useGetUser(): User | null {
     const [user, setUser] = useState<User | null>(null)
     useEffect(() => {
         async function getUser() {
-            const uid = auth.currentUser?.uid;
-            if (!uid) {
+            const user = await authService.getCurrentUser()
+            if (!user.id) {
                 return null
             }
 
-            setUser(await userService.getUser(uid))
+            setUser(await userService.getUser(user.id))
 
         }
         getUser();
@@ -21,4 +22,3 @@ export default function useGetUser(): User | null {
     return user
 
 }
-    */
