@@ -21,7 +21,7 @@ const config = {
   },
   options: {
     trustedConnection: false,
-    encrypt: false,
+    encrypt: true,
     trustServerCertificate: true,
     enableArithAbort: true,
     instanceName: "SQLEXPRESS",
