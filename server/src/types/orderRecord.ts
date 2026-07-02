@@ -3,7 +3,7 @@ import { OrderStatus } from "./orderStatus.js"
 
 export type OrderRecord = {
     uid: string
-    customerUid: string
+    customerId: string
     items: OrderItem[]
     status: OrderStatus
     total: number,
