@@ -1,23 +1,21 @@
 import LoadingWheel from "@/components/loadingWheel";
-import { auth } from "@/firebase/firebaseConfig";
-import { userService } from "@/services/userService";
+import { authService } from "@/services/authService";
+//import { userService } from "@/services/userService";
 import { router, Stack } from "expo-router";
-import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 export default function Layout() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (userSignIn) => {
+    (async () => {
       try {
-        if (userSignIn) {
-          const user = await userService.getUser(userSignIn.uid);
+        const user = await authService.getCurrentUser();
 
+        if (user) {
           router.replace(
             user?.getRole() === "admin" ? "/admin/home" : "/user/home",
           );
-          return;
         }
 
         router.replace("/auth/signIn");
@@ -26,9 +24,7 @@ export default function Layout() {
       } finally {
         setLoading(false);
       }
-    });
-
-    return () => unsubscribe();
+    })();
   }, []);
 
   if (loading) {
