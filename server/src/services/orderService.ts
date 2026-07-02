@@ -3,14 +3,19 @@ import { Order } from "../models/order.js";
 import { orderRepo } from "../repositories/orderRepo.js";
 import { OrderItem } from "../types/orderItem.js";
 import { OrderStatus } from "../types/orderStatus.js";
-
+import { v7 as uuidv7 } from "uuid";
 
 export const orderService = {
 
     createOrder: async function (customerId: string, items: OrderItem[], status: OrderStatus): Promise<void> {
         try {
-            const order = new Order(customerId, items, status);
+
+            const id = uuidv7();
+            const total = items.reduce((sum, item) => sum + item.quantity * item.price, 0)
+            const order = new Order(id, customerId, items, status, total);
+            
             await orderRepo.createOrder(order);
+
 
         } catch (error) {
             throw new Error("Order couldn't be created", {
@@ -40,7 +45,7 @@ export const orderService = {
                 return null
             }
 
-            return new Order(data?.customerUid, data?.items, data?.status, data.uid)
+            return new Order(data.uid, data?.customerId, data?.items, data?.status,data.total)
 
 
         } catch (error) {
@@ -57,7 +62,7 @@ export const orderService = {
                 return null
             }
 
-            const orders = data?.map((o) => { return new Order(o.customerUid, o.items, o.status, o.uid) })
+            const orders = data?.map((o) => { return new Order(o.uid, o.customerId, o.items, o.status,o.total) })
             return orders
 
         } catch (error) {
@@ -75,7 +80,7 @@ export const orderService = {
                 return null
             }
 
-            const orders = data?.map((o) => { return new Order(o.customerUid, o.items, o.status, o.uid) })
+            const orders = data?.map((o) => { return new Order(o.uid, o.customerId, o.items, o.status,o.total) })
 
             return orders
         } catch (error) {
