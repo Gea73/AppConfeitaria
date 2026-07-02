@@ -17,7 +17,7 @@ export const controller = {
 
             const { user, accessToken } = await authService.signIn(email, password)
 
-            return res.status(200).json({ user: { id: user.getUid(), role: user.getRole() }, token: accessToken })
+            return res.status(200).json({ user: { id: user.getId(), role: user.getRole() }, token: accessToken })
 
         } catch (error) {
             res.status(500).json({ message: "Server Error" });

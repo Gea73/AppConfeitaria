@@ -24,10 +24,10 @@ export const itemService = {
 
     },
 
-    updateItem: async function (uid: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null): Promise<void> {
+    updateItem: async function (id: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null): Promise<void> {
         try {
 
-            await itemRepo.updateItem(uid, name, description, price, imageUrl)
+            await itemRepo.updateItem(id, name, description, price, imageUrl)
 
         } catch (error) {
             throw new Error("Item can't be updated", {
@@ -37,15 +37,15 @@ export const itemService = {
 
     },
 
-    getItem: async function (uid: string): Promise<Item | null> {
+    getItem: async function (id: string): Promise<Item | null> {
         try {
 
-            const data = await itemRepo.getItemById(uid);
+            const data = await itemRepo.getItemById(id);
             if (!data) {
                 return null
             }
 
-            return new Item(data?.uid,data?.name, data?.description, data?.price, data?.imageUrl)
+            return new Item(data?.id,data?.name, data?.description, data?.price, data?.imageUrl)
 
 
         } catch (error) {
@@ -63,7 +63,7 @@ export const itemService = {
                 return null
             }
 
-            const items = data?.map((i) => { return new Item(i.uid,i.name, i.description, i.price, i.imageUrl ) })
+            const items = data?.map((i) => { return new Item(i.id,i.name, i.description, i.price, i.imageUrl ) })
             return items
 
         } catch (error) {
@@ -73,10 +73,10 @@ export const itemService = {
         }
     },
 
-    deleteItem: async function (uid: string): Promise<void> {
+    deleteItem: async function (id: string): Promise<void> {
         try {
 
-            await itemRepo.deleteItem(uid);
+            await itemRepo.deleteItem(id);
 
         } catch (error) {
             throw new Error("Item can't be deleted", {

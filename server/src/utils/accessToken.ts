@@ -11,7 +11,7 @@ if (!JWT_SECRET) {
 
 function generateAccessToken(user: User) {
 
-    return jwt.sign({ id: user.getUid(), role: user.getRole() }, JWT_SECRET as string, { expiresIn: "60m" });
+    return jwt.sign({ id: user.getId(), role: user.getRole() }, JWT_SECRET as string, { expiresIn: "60m" });
 }
 
 export { generateAccessToken };

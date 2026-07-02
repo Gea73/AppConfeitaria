@@ -25,17 +25,17 @@ export const userService = {
         }
     },
 
-    getUser: async function (uid: string): Promise<User | null> {
+    getUser: async function (id: string): Promise<User | null> {
         try {
 
 
-            const result = await userRepo.getUserById(uid)
+            const result = await userRepo.getUserById(id)
 
             if (!result) {
                 return null
             }
 
-            return new User(result.uid, result.name, result.email, result.role)
+            return new User(result.id, result.name, result.email, result.role)
         } catch (error) {
             throw new Error("User couldn't be fetched", {
                 cause: error
@@ -53,7 +53,7 @@ export const userService = {
                 return null
             }
 
-            return new User(result.uid, result.name, result.email, result.role)
+            return new User(result.id, result.name, result.email, result.role)
         } catch (error) {
             throw new Error("User couldn't be fetched", {
                 cause: error

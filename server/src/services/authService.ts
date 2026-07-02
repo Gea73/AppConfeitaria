@@ -22,7 +22,7 @@ export const authService = {
                 throw new Error("Invalid credentials")
             }
 
-            const password_hash = await userRepo.getUserPassword(user.getUid())
+            const password_hash = await userRepo.getUserPassword(user.getId())
             const isValid = await argon2id.verify(password_hash, password)
 
             if (!isValid) {

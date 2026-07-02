@@ -9,7 +9,7 @@ export const itemRepo = {
         try {
             await pool
                 .request()
-                .input("id", mssql.UniqueIdentifier, item.getUid())
+                .input("id", mssql.UniqueIdentifier, item.getId())
                 .input("name", mssql.VarChar, item.getName())
                 .input("description", mssql.VarChar, item.getDescription())
                 .input("price", mssql.Decimal, item.getPrice())
@@ -39,7 +39,7 @@ export const itemRepo = {
             }
 
             return {
-                uid: data.ID,
+                id: data.ID,
                 name: data.NAME,
                 description: data.DESCRIPTION,
                 price: data.PRICE,
@@ -65,7 +65,7 @@ export const itemRepo = {
             }
 
             return {
-                uid: data.ID,
+                id: data.ID,
                 name: data.NAME,
                 description: data.DESCRIPTION,
                 price: data.PRICE,
@@ -83,7 +83,7 @@ export const itemRepo = {
 
             const result = await
                 pool
-                    .request().query(`SELECT ID AS uid,NAME AS name,DESCRIPTION AS description,PRICE AS price,IMAGEURL AS imageUrl,CREATEDAT AS createdAt FROM ASUAESCOLHA.ITEMS`)
+                    .request().query(`SELECT ID AS id,NAME AS name,DESCRIPTION AS description,PRICE AS price,IMAGEURL AS imageUrl,CREATEDAT AS createdAt FROM ASUAESCOLHA.ITEMS`)
 
             return result.recordset
 

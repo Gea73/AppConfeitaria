@@ -1,27 +1,27 @@
 type Role = "user" | "admin";
 export class User {
-    private _uid: string
+    private _id: string
     private _name: string
     private _email: string
     private _role: Role
-    constructor(uid: string, name: string, email: string, role: Role,) {
-        this._uid = this.setUid(uid)
+    constructor(id: string, name: string, email: string, role: Role,) {
+        this._id = this.setId(id)
         this._name = this.setName(name)
         this._email = this.setEmail(email)
         this._role = this.setRole(role)
     }
 
-    setUid(uid: string) {
+    setId(id: string) {
 
-        if (!uid || uid.trim().length === 0) {
-            throw new Error("UId is empty")
+        if (!id || id.trim().length === 0) {
+            throw new Error("Id is empty")
         }
-        return uid;
+        return id;
     }
 
-    getUid():string {
+    getId():string {
 
-        return this._uid
+        return this._id
     }
 
 

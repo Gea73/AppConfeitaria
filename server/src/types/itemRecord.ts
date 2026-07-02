@@ -1,6 +1,6 @@
 
 export type ItemRecord = {
-    uid: string
+    id: string
     name: string
     description: string
     price: number

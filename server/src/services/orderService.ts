@@ -45,7 +45,7 @@ export const orderService = {
                 return null
             }
 
-            return new Order(data.uid, data?.customerId, data?.items, data?.status,data.total)
+            return new Order(data.id, data?.customerId, data?.items, data?.status,data.total)
 
 
         } catch (error) {
@@ -62,7 +62,7 @@ export const orderService = {
                 return null
             }
 
-            const orders = data?.map((o) => { return new Order(o.uid, o.customerId, o.items, o.status,o.total) })
+            const orders = data?.map((o) => { return new Order(o.id, o.customerId, o.items, o.status,o.total) })
             return orders
 
         } catch (error) {
@@ -80,7 +80,7 @@ export const orderService = {
                 return null
             }
 
-            const orders = data?.map((o) => { return new Order(o.uid, o.customerId, o.items, o.status,o.total) })
+            const orders = data?.map((o) => { return new Order(o.id, o.customerId, o.items, o.status,o.total) })
 
             return orders
         } catch (error) {

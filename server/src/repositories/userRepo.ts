@@ -9,7 +9,7 @@ export const userRepo = {
 
       await pool
         .request()
-        .input("id", mssql.UniqueIdentifier, user.getUid())
+        .input("id", mssql.UniqueIdentifier, user.getId())
         .input("name", mssql.VarChar, user.getName())
         .input("email", mssql.VarChar, user.getEmail())
         .input("password_hash", mssql.VarChar, password_hash)
@@ -38,7 +38,7 @@ export const userRepo = {
         return null
       }
 
-      return { uid: data.ID, name: data.NAME, email: data.EMAIL, role: data.ROLE, createdAt: data.CREATEDAT }
+      return { id: data.ID, name: data.NAME, email: data.EMAIL, role: data.ROLE, createdAt: data.CREATEDAT }
 
     } catch (error) {
       throw error
@@ -57,7 +57,7 @@ export const userRepo = {
         return null
       }
 
-      return { uid: data.ID, name: data.NAME, email: data.EMAIL, role: data.ROLE, createdAt: data.CREATEDAT }
+      return { id: data.ID, name: data.NAME, email: data.EMAIL, role: data.ROLE, createdAt: data.CREATEDAT }
 
     } catch (error) {
       throw error

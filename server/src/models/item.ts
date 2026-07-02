@@ -1,13 +1,13 @@
 
 export class Item {
-    private _uid: string
+    private _id: string
     private _name: string
     private _description: string
     private _price: number
     private _imageUrl: string
   
-    constructor(uid: string,name: string, description: string, price: number, imageUrl: string, ) {
-        this._uid = this.setUid(uid)
+    constructor(id: string,name: string, description: string, price: number, imageUrl: string, ) {
+        this._id = this.setId(id)
         this._name = this.setName(name)
         this._description = this.setDescription(description)
         this._price = this.setPrice(price)
@@ -15,15 +15,15 @@ export class Item {
        
     }
 
-    setUid(uid: string) {
-        if (!uid || uid.trim().length === 0) {
-            throw new Error("UId is empty")
+    setId(id: string) {
+        if (!id || id.trim().length === 0) {
+            throw new Error("Id is empty")
         }
-        return uid
+        return id
     }
 
-    getUid():string {
-        return this._uid
+    getId():string {
+        return this._id
     }
 
 
