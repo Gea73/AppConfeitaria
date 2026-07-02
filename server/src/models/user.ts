@@ -19,7 +19,7 @@ export class User {
         return uid;
     }
 
-    getUid() {
+    getUid():string {
 
         return this._uid
     }

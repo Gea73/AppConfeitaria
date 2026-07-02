@@ -6,32 +6,29 @@ import { OrderStatus } from "../types/orderStatus.js";
 
 
 export class Order {
-    private _uid: string | null
+    private _uid: string
     private _customerUid: string
     private _items: OrderItem[]
     private _status: OrderStatus
     private _total: number
 
-    constructor(customerUid: string, items: OrderItem[], status: OrderStatus, uid?: string) {
+    constructor(uid: string, customerUid: string, items: OrderItem[], status: OrderStatus, total: number) {
         this._uid = this.setUid(uid)
         this._customerUid = this.setCustomerUid(customerUid)
         this._items = this.setItems(items)
         this._status = this.setStatus(status)
-        this._total = this.setTotal()
+        this._total = this.setTotal(total)
 
     }
 
-    setUid(uid: string | undefined) {
-        if (!uid) {
-            return null
-        }
-        if (uid && uid.trim().length === 0) {
-            throw new Error("uid is empty")
+    setUid(uid: string) {
+        if (!uid || uid.trim().length === 0) {
+            throw new Error("UId is empty")
         }
         return uid
     }
 
-    getUid(): string | null {
+    getUid(): string {
         return this._uid
     }
 
@@ -77,11 +74,12 @@ export class Order {
         return status[this._status]
     }
 
-    setTotal() {
-        if (this._total) {
-            return this._total;
+    setTotal(total: number) {
+        if (!total || total <= 0) {
+            throw new Error("Total is invalid")
         }
-        return this._items.reduce((sum, item) => sum + item.quantity * item.price, 0)
+
+        return total
     }
 
 
