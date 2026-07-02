@@ -1,11 +1,17 @@
 
 import { Item } from "../models/item.js";
 import { itemRepo } from "../repositories/itemRepo.js";
+import { v7 as uuidv7 } from "uuid";
+
 
 export const itemService = {
     createItem: async function (name: string, description: string, price: number, imageUrl: string): Promise<void> {
         try {
-            const item = new Item(name, description, price, imageUrl);
+
+            const id = uuidv7();
+
+            const item = new Item(id,name, description, price, imageUrl);
+
             await itemRepo.createItem(item);
 
 
@@ -39,7 +45,7 @@ export const itemService = {
                 return null
             }
 
-            return new Item(data?.name, data?.description, data?.price, data?.imageUrl, data.uid)
+            return new Item(data?.uid,data?.name, data?.description, data?.price, data?.imageUrl)
 
 
         } catch (error) {
@@ -56,8 +62,8 @@ export const itemService = {
             if (!data) {
                 return null
             }
-            
-            const items = data?.map((i) => { return new Item(i.name, i.description, i.price, i.imageUrl, i.uid) })
+
+            const items = data?.map((i) => { return new Item(i.uid,i.name, i.description, i.price, i.imageUrl ) })
             return items
 
         } catch (error) {

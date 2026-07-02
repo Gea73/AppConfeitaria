@@ -7,7 +7,7 @@ export const itemRepo = {
 
     createItem: async function (item: Item): Promise<void> {
         try {
-            pool
+            await pool
                 .request()
                 .input("id", mssql.UniqueIdentifier, item.getUid())
                 .input("name", mssql.VarChar, item.getName())
@@ -33,6 +33,11 @@ export const itemRepo = {
                     .input("name", mssql.VarChar, name).query(`SELECT ID,NAME,DESCRIPTION,PRICE,IMAGEURL,CREATEDAT FROM ASUAESCOLHA.ITEMS WHERE NAME = @name`)
 
             const data = result.recordset[0]
+
+            if (!data) {
+                return null
+            }
+
             return {
                 uid: data.ID,
                 name: data.NAME,
@@ -54,6 +59,11 @@ export const itemRepo = {
                     .input("ID", mssql.UniqueIdentifier, id).query(`SELECT ID,NAME,DESCRIPTION,PRICE,IMAGEURL,CREATEDAT FROM ASUAESCOLHA.ITEMS WHERE ID = @id`)
 
             const data = result.recordset[0]
+
+                  if (!data) {
+                return null
+            }
+
             return {
                 uid: data.ID,
                 name: data.NAME,
@@ -84,16 +94,16 @@ export const itemRepo = {
     updateItem: async function (id: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null): Promise<void> {
         try {
             let updateQuery = ""
-            if (!name) {
+            if (name) {
                 updateQuery += `NAME = ${name},`
             }
-            if (!description) {
+            if (description) {
                 updateQuery += `DESCRIPTION = ${description},`
             }
-            if (!price) {
+            if (price) {
                 updateQuery += `PRICE = ${price},`
             }
-            if (!imageUrl) {
+            if (imageUrl) {
                 updateQuery += `IMAGEURL = ${imageUrl}`
             }
 
