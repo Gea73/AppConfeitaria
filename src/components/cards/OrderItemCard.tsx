@@ -3,7 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type ItemProps = {
-  uid: string;
+  id: string;
   name: string;
   description: string;
   price: number;
