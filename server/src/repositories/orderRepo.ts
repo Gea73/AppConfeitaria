@@ -1,9 +1,9 @@
+import mssql from "mssql";
+import { v7 as uuidv7 } from "uuid";
+import pool from "../config/db.js";
 import { Order } from "../models/order.js";
 import { OrderItem } from "../types/orderItem.js";
 import { OrderRecord } from "../types/orderRecord.js";
-import mssql from "mssql";
-import pool from "../config/db.js";
-import { v7 as uuidv7 } from "uuid";
 
 export const orderRepo = {
     createOrder: async function (order: Order): Promise<void> {
@@ -115,7 +115,7 @@ export const orderRepo = {
             const result = await
                 pool
                     .request()
-                    .input("customerId", mssql.UniqueIdentifier, customerId).query(`SELECT ID AS id,CUSTOMERID AS customerId,STATUS AS status,TOTAL AS total,CREATEDAT AS createdAt FROM ASUAESCOLHA.ORDERS WHERE CUSTOMERID = @customerId`)
+                    .input("customerId", mssql.UniqueIdentifier, customerId).query(`SELECT ID AS id,CUSTOMERID AS customerId,STATUS AS status,TOTAL AS total,CREATEDAT AS createdAt FROM ASUAESCOLHA.ORDERS WHERE CUSTOMERID = @customerId ORDER BY CREATEDAT DESC`)
 
             const orders = result.recordset
             const orderWithItems = await Promise.all(orders.map(async (order) => {
