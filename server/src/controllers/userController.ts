@@ -31,7 +31,7 @@ export const controller = {
             const id = req.params.id.toString().trim()
             const result = await userService.getUser(id)
 
-            return res.status(200).json(JSON.stringify(result))
+            return res.status(200).json(result)
 
         } catch (error) {
             res.status(500).json({ message: "Server Error" });

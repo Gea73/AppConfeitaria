@@ -9,6 +9,7 @@ export const controller = {
 
             name = String(name).trim()
             price = Number(price)
+            description = String(description).trim()
             imageUrl = String(imageUrl).trim()
 
             if (!name || !description || !price || !imageUrl) {
@@ -31,7 +32,7 @@ export const controller = {
 
             const result = await itemService.getItem(id)
 
-            return res.status(200).json(JSON.stringify(result))
+            return res.status(200).json(result)
 
         } catch (error) {
             res.status(500).json({ message: "Server Error" });
@@ -44,7 +45,7 @@ export const controller = {
 
             const result = await itemService.getItems()
 
-            return res.status(200).json(JSON.stringify(result))
+            return res.status(200).json(result)
         } catch (error) {
             res.status(500).json({ message: "Server Error" });
             throw error
@@ -59,6 +60,7 @@ export const controller = {
 
             name = String(name).trim()
             price = Number(price)
+            description = String(description).trim()
             imageUrl = String(imageUrl).trim()
 
             if (!name || !description || !price || !imageUrl) {

@@ -25,7 +25,7 @@ export const controller = {
 
             const result = await orderService.getOrder(id)
 
-            return res.status(200).json(JSON.stringify(result))
+            return res.status(200).json(result)
 
         } catch (error) {
             res.status(500).json({ message: "Server Error" });
@@ -39,7 +39,7 @@ export const controller = {
 
             const result = await orderService.getOrders(customerId)
 
-            return res.status(200).json(JSON.stringify(result))
+            return res.status(200).json(result)
 
         } catch (error) {
             res.status(500).json({ message: "Server Error" });
@@ -51,7 +51,7 @@ export const controller = {
 
             const result = await orderService.getAllOrders()
 
-            return res.status(200).json(JSON.stringify(result))
+            return res.status(200).json(result)
 
         } catch (error) {
             res.status(500).json({ message: "Server Error" });
