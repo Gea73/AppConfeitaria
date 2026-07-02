@@ -1,8 +1,9 @@
 import AccountCard from "@/components/cards/accountCard";
 import { useCartContext } from "@/context/cartContext";
-import { signOutUser } from "@/firebase/authentication";
+
 import useGetUser from "@/hooks/getUser";
 import { User } from "@/models/user";
+import { authService } from "@/services/authService";
 import { colors, typography } from "@/styles/global";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -37,9 +38,9 @@ export default function Account() {
           <AccountCard
             text="Sair"
             icon="exit-outline"
-            onPress={() => {
+            onPress={async () => {
               ClearCart();
-              signOutUser();
+              await authService.signOut();
               router.replace("/auth/signIn");
             }}
           ></AccountCard>

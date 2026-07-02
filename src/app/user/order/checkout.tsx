@@ -4,19 +4,19 @@ import ErrorBar from "@/components/errorBar";
 import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { useCartContext } from "@/context/cartContext";
-import { auth } from "@/firebase/firebaseConfig";
+import { authService } from "@/services/authService";
 import { orderService } from "@/services/orderService";
 import { colors, typography } from "@/styles/global";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -50,11 +50,12 @@ export default function Checkout() {
 
   async function HandleMakeOrder() {
     try {
-      const uid = auth.currentUser?.uid;
-      if (!uid) {
+      const user = await authService.getCurrentUser();
+
+      if (!user.id) {
         throw new Error("Invalid user");
       }
-      await orderService.createOrder(uid, cart, "pending");
+      await orderService.createOrder(user.id, cart, "pending");
       showSuccessBar("Pedido realizado com sucesso");
       setTimeout(() => {
         ClearCart();
@@ -91,18 +92,18 @@ export default function Checkout() {
               data={cart}
               renderItem={({ item }) => (
                 <OrderItemCard
-                  uid={item.uid}
+                  id={item.id}
                   name={item.name}
                   description={item.description}
                   price={item.price}
-                  quantity={cart.find((i) => i.uid === item.uid)?.quantity || 0}
+                  quantity={cart.find((i) => i.id === item.id)?.quantity || 0}
                   onIncrease={() => AddItem({ ...item, quantity: 1 })}
                   onDecrease={() =>
-                    RemoveItem(cart.find((i) => i.uid === item.uid))
+                    RemoveItem(cart.find((i) => i.id === item.id))
                   }
                 />
               )}
-              keyExtractor={(item) => item.uid}
+              keyExtractor={(item) => item.id}
             ></FlatList>
           </View>
           <View style={stylesheet.smallButtonContainer}>

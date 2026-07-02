@@ -5,8 +5,6 @@ import { FormLabel } from "@/components/forms/formLabel";
 import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
-import { resetPassword } from "@/firebase/authentication";
-import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
 import { spacing } from "@/styles/global";
 import { useState } from "react";
 import {
@@ -28,10 +26,10 @@ export default function ForgotPassword() {
         showErrorBar("Email invalido");
         return;
       }
-      await resetPassword(email);
+      // await resetPassword(email);
       showSuccessBar("Email enviado com sucesso");
     } catch (e: any) {
-      showErrorBar(firebaseErrorMessage(e.code));
+      showErrorBar(e);
     }
   };
 

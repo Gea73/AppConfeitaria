@@ -1,5 +1,4 @@
-import { auth } from "@/firebase/firebaseConfig";
-import { userService } from "@/services/userService";
+import { authService } from "@/services/authService";
 import { colors } from "@/styles/global";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, Tabs } from "expo-router";
@@ -8,13 +7,15 @@ import { useEffect } from "react";
 export default function TabLayout() {
   useEffect(() => {
     async function verifyRole() {
-      const uid = auth.currentUser?.uid;
-      if (!uid) {
+      const user = await authService.getCurrentUser();
+
+      if (!user.id) {
         router.replace("/auth/signIn");
         return;
       }
-      const user = await userService.getUser(uid);
-      if (user?.getRole() !== "admin") router.replace("/user/home");
+      // const user = await userService.getUser(id);
+      //   if (user?.getRole() !== "admin") router.replace("/user/home");
+      if (user.role !== "admin") router.replace("/user/home");
     }
 
     verifyRole();

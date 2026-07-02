@@ -1,4 +1,3 @@
-import { ButtonGoogle } from "@/components/buttons/buttonGoogle";
 import { ButtonSquare } from "@/components/buttons/buttonSquare";
 import ErrorBar from "@/components/errorBar";
 import { EmailInput } from "@/components/forms/emailInput";
@@ -8,9 +7,6 @@ import { PasswordInput } from "@/components/forms/passwordInput";
 import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
-import { signUpUser } from "@/firebase/authentication";
-import { firebaseErrorMessage } from "@/firebase/firebaseErrors";
-import { useGoogleSignIn } from "@/firebase/googleAuthentication";
 import { userService } from "@/services/userService";
 import { colors, spacing } from "@/styles/global";
 import { router } from "expo-router";
@@ -25,7 +21,6 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignUp() {
-  const { signInWithGoogle, isReady } = useGoogleSignIn();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -48,54 +43,22 @@ export default function SignUp() {
         showErrorBar("Senhas não coincidem");
         return;
       }
-      const result = await signUpUser(email, password);
-      if (!result) {
-        showErrorBar("Não foi possivel criar o usuário");
-        return;
-      }
 
-      if (!result.email) {
+      if (!email) {
         showErrorBar("Email Invalido");
         return;
       }
+      await userService.createUser(name, email, password);
 
-      await userService.createUser(result.uid, name, result.email);
       showSuccessBar("Usuário criado com sucesso");
       setTimeout(() => {
         router.replace("/auth/signIn");
       }, 1000);
     } catch (e: any) {
-      showErrorBar(firebaseErrorMessage(e.code));
+      showErrorBar(e);
     }
   };
-  const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithGoogle();
-      const user = result?.user;
-      if (!user || !user.displayName || !user.email) {
-        throw new Error("Login com Google não retornou dados");
-      }
 
-      const userExists = await userService.getUser(user.uid);
-      if (!userExists) {
-        await userService.createUser(user?.uid, user?.displayName, user?.email);
-      }
-
-      if (userExists?.getRole() === "admin") {
-        showSuccessBar("Usuário Logado com sucesso");
-        setTimeout(() => {
-          router.replace("/admin/home");
-        }, 1000);
-
-        return;
-      }
-      setTimeout(() => {
-        router.replace("/user/home");
-      }, 1000);
-    } catch (e: any) {
-      showErrorBar(firebaseErrorMessage(e.code));
-    }
-  };
   return (
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
@@ -138,10 +101,6 @@ export default function SignUp() {
                   onPress={handleSignUp}
                   text="Cadastre-se"
                 ></ButtonSquare>
-                <ButtonGoogle
-                  onPress={handleGoogleLogin}
-                  isReady={isReady}
-                ></ButtonGoogle>
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
