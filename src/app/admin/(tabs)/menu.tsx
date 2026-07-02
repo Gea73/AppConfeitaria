@@ -14,11 +14,20 @@ export default function Menu() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
-    const unsubscribe = itemService.subscribeToItems((items) => {
-      setItems(items);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    async function getItems() {
+      try {
+        const result = await itemService.getItems();
+        if (!result) {
+          return;
+        }
+        setItems(result);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getItems();
   }, []);
 
   function HandleEditItem(itemId: string) {
@@ -47,17 +56,17 @@ export default function Menu() {
               data={items}
               renderItem={({ item }) => (
                 <ItemCard
-                  uid={item.getUid() || String(Date.now())}
+                  id={item.getId() || String(Date.now())}
                   price={item.getPrice()}
                   name={item.getName()}
                   description={item.getDescription()}
                   imageUrl={item.getImageUrl()}
                   onEdit={() =>
-                    HandleEditItem(item.getUid() || String(Date.now()))
+                    HandleEditItem(item.getId() || String(Date.now()))
                   }
                 />
               )}
-              keyExtractor={(item) => item.getUid() ?? String(Date.now())}
+              keyExtractor={(item) => item.getId() ?? String(Date.now())}
             ></FlatList>
           )}
           <View style={stylesheet.buttonContainer}>

@@ -1,4 +1,5 @@
 import OrderCard from "@/components/cards/OrderCard";
+import ErrorBar from "@/components/errorBar";
 import LoadingWheel from "@/components/loadingWheel";
 import NoOrders from "@/components/noOrders";
 import useGetUser from "@/hooks/getUser";
@@ -14,18 +15,36 @@ export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [errorBar, setErrorBar] = useState("");
+  const [successBar, setSuccessBar] = useState("");
+  const showErrorBar = (message: string) => {
+    setErrorBar(message);
+    setTimeout(() => setErrorBar(""), 3000);
+  };
+  const showSuccessBar = (message: string) => {
+    setSuccessBar(message);
+    setTimeout(() => setSuccessBar(""), 3000);
+  };
+
   useEffect(() => {
     if (!user) {
       return;
     }
-    const unsubscribe = orderService.subscribeToCustomerOrders(
-      user?.getUid(),
-      (orders) => {
-        setOrders(orders);
+    async function getCustomerOrders(id: string) {
+      try {
+        const result = await orderService.getOrders(id);
+        if (!result) {
+          return;
+        }
+        setOrders(result);
+      } catch (error) {
+        showErrorBar(String(error));
+      } finally {
         setLoading(false);
-      },
-    );
-    return () => unsubscribe();
+      }
+    }
+
+    getCustomerOrders(user.getId());
   }, [orders]);
 
   if (loading) {
@@ -36,6 +55,7 @@ export default function Orders() {
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
+          <ErrorBar message={errorBar}></ErrorBar>
           {orders.length === 0 ? (
             <NoOrders isVisible={true}></NoOrders>
           ) : (
@@ -43,7 +63,7 @@ export default function Orders() {
               data={orders}
               renderItem={({ item }) => (
                 <OrderCard
-                  uid={item.getUid() || String(Date.now())}
+                  id={item.getId() || String(Date.now())}
                   items={item.getItems()}
                   status={item.getStatus()}
                   statusLabel={item.getStatusLabel()}
@@ -52,7 +72,7 @@ export default function Orders() {
                     .reduce((sum, i) => sum + i.price * i.quantity, 0)}
                 />
               )}
-              keyExtractor={(item) => item.getUid() ?? String(Date.now())}
+              keyExtractor={(item) => item.getId() ?? String(Date.now())}
             ></FlatList>
           )}
         </SafeAreaView>

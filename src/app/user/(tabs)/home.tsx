@@ -1,5 +1,6 @@
 import { Button } from "@/components/buttons/button";
 import OrderCard from "@/components/cards/OrderCard";
+import ErrorBar from "@/components/errorBar";
 import LoadingWheel from "@/components/loadingWheel";
 import NoOrders from "@/components/noOrders";
 import { TopLogo } from "@/components/topLogo";
@@ -18,18 +19,37 @@ export default function Home() {
   const [lastOrder, setLastOrder] = useState<Order>();
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [errorBar, setErrorBar] = useState("");
+  const [successBar, setSuccessBar] = useState("");
+  const showErrorBar = (message: string) => {
+    setErrorBar(message);
+    setTimeout(() => setErrorBar(""), 3000);
+  };
+  const showSuccessBar = (message: string) => {
+    setSuccessBar(message);
+    setTimeout(() => setSuccessBar(""), 3000);
+  };
+
   useEffect(() => {
     if (!user) {
       return;
     }
-    const unsubscribe = orderService.subscribeToCustomerOrders(
-      user?.getUid(),
-      (orders) => {
-        setLastOrder(orders[0]);
+
+    async function getCustomerOrders(id: string) {
+      try {
+        const result = await orderService.getOrders(id);
+        if (!result) {
+          return;
+        }
+        setLastOrder(result[0]);
+      } catch (error) {
+        showErrorBar(String(error));
+      } finally {
         setLoading(false);
-      },
-    );
-    return () => unsubscribe();
+      }
+    }
+
+    getCustomerOrders(user.getId());
   }, [user]);
 
   if (loading) {
@@ -40,12 +60,13 @@ export default function Home() {
     <>
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
+          <ErrorBar message={errorBar}></ErrorBar>
           <TopLogo></TopLogo>
           {!lastOrder ? (
             <NoOrders isVisible={true}></NoOrders>
           ) : (
             <OrderCard
-              uid={lastOrder.getUid() || String(Date.now())}
+              id={lastOrder.getId() || String(Date.now())}
               items={lastOrder.getItems()}
               status={lastOrder.getStatus()}
               statusLabel={lastOrder.getStatusLabel()}

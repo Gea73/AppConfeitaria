@@ -12,12 +12,20 @@ export default function Orders() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const unsubscribe = orderService.subscribeToAllOrders((orders) => {
-      setOrders(orders);
-      setLoading(false);
-    });
+    async function getAllOrders() {
+      try {
+        const result = await orderService.getAllOrders();
+        if (!result) {
+          return;
+        }
+        setOrders(result);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    }
 
-    return () => unsubscribe();
+    getAllOrders();
   }, [orders]);
 
   if (loading) {
@@ -35,17 +43,17 @@ export default function Orders() {
               data={orders}
               renderItem={({ item }) => (
                 <OrderCardAdmin
-                  uid={item.getUid() || String(Date.now())}
+                  id={item.getId() || String(Date.now())}
                   items={item.getItems()}
                   status={item.getStatus()}
                   statusLabel={item.getStatusLabel()}
                   total={item
                     .getItems()
                     .reduce((sum, i) => sum + i.price * i.quantity, 0)}
-                  customer={item.getCustomerUid()}
+                  customer={item.getCustomerId()}
                 />
               )}
-              keyExtractor={(item) => item.getUid() ?? String(Date.now())}
+              keyExtractor={(item) => item.getId() ?? String(Date.now())}
             ></FlatList>
           )}
         </SafeAreaView>

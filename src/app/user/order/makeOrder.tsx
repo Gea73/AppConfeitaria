@@ -22,11 +22,19 @@ export default function MakeOrder() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const unsubscribe = itemService.subscribeToItems((items) => {
-      setMenu(items);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    async function getItems() {
+      try {
+        const result = await itemService.getItems();
+        if (!result) {
+          return;
+        }
+        setMenu(result);
+      } catch (error) {
+        showErrorBar(String(error));
+      } finally {
+        setLoading(false);
+      }
+    }
   }, []);
   if (loading) {
     return <LoadingWheel></LoadingWheel>;
@@ -56,16 +64,16 @@ export default function MakeOrder() {
             data={menu}
             renderItem={({ item }) => (
               <OrderItemCard
-                uid={item.getUid() || String(Date.now())}
+                id={item.getId() || String(Date.now())}
                 name={item.getName()}
                 description={item.getDescription()}
                 price={item.getPrice()}
                 quantity={
-                  cart.find((i) => i.uid === item.getUid())?.quantity || 0
+                  cart.find((i) => i.id === item.getId())?.quantity || 0
                 }
                 onIncrease={() =>
                   AddItem({
-                    uid: item.getUid() || String(Date.now()),
+                    id: item.getId() || String(Date.now()),
                     name: item.getName(),
                     price: item.getPrice(),
                     description: item.getDescription(),
@@ -73,11 +81,11 @@ export default function MakeOrder() {
                   })
                 }
                 onDecrease={() =>
-                  RemoveItem(cart.find((i) => i.uid === item.getUid()))
+                  RemoveItem(cart.find((i) => i.id === item.getId()))
                 }
               />
             )}
-            keyExtractor={(item) => item.getUid() ?? String(Date.now())}
+            keyExtractor={(item) => item.getId() ?? String(Date.now())}
           ></FlatList>
           <View style={stylesheet.buttonContainer}>
             <Button
