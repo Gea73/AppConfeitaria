@@ -1,13 +1,13 @@
 
 import { Item } from "../models/item";
-const API_URL = process.env.API_URL
+const API_URL = process.env.EXPO_PUBLIC_API_URL
 
 export const itemService = {
     createItem: async function (name: string, description: string, price: number, imageUrl: string): Promise<void> {
         try {
 
 
-            const response = await fetch(`${API_URL}/item/}`, {
+            const response = await fetch(`${API_URL}/item/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name: name, description: description, price: price, imageUrl: imageUrl })
@@ -30,7 +30,7 @@ export const itemService = {
     updateItem: async function (id: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null): Promise<void> {
         try {
 
-            const response = await fetch(`${API_URL}/item/${id}}`, {
+            const response = await fetch(`${API_URL}/item/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name: name, description: description, price: price, imageUrl: imageUrl })
@@ -52,7 +52,7 @@ export const itemService = {
     getItem: async function (id: string): Promise<Item | null> {
         try {
 
-            const response = await fetch(`${API_URL}/item/${id}}`, {
+            const response = await fetch(`${API_URL}/item/${id}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
 
@@ -79,7 +79,7 @@ export const itemService = {
 
     getItems: async function (): Promise<Item[] | null> {
         try {
-            const response = await fetch(`${API_URL}/item/}}`, {
+            const response = await fetch(`${API_URL}/item/`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
 
@@ -93,7 +93,7 @@ export const itemService = {
                 return null
             }
 
-            const items = data?.map((i: Item) => { return new Item(i.getName(), i.getDescription(), i.getPrice(), i.getImageUrl(), i.getId()) })
+            const items = data?.map((i:any) => { return new Item(i.name, i.description, i.price, i.imageUrl, i.id) })
             return items
 
         } catch (error) {
@@ -106,7 +106,7 @@ export const itemService = {
     deleteItem: async function (id: string): Promise<void> {
         try {
 
-            const response = await fetch(`${API_URL}/item/${id}}`, {
+            const response = await fetch(`${API_URL}/item/${id}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
 

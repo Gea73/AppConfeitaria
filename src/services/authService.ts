@@ -1,5 +1,5 @@
 import * as SecureStore from "expo-secure-store"
-const API_URL = process.env.API_URL
+const API_URL = process.env.EXPO_PUBLIC_API_URL
 
 export const authService = {
 
@@ -35,20 +35,27 @@ export const authService = {
 
     },
     signIn: async function (email: string, password: string) {
-        const response = await fetch(`${API_URL}/auth/}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        })
+        try {
 
 
-        if (!response.ok) {
-            throw new Error("Invalid credentials")
+            const response = await fetch(`${API_URL}/auth/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            })
+
+
+            if (!response.ok) {
+                throw new Error("Invalid credentials Front")
+            }
+
+            const { user, token } = await response.json()
+            await this.setToken(token)
+            return user
+        } catch (error) {
+            console.log(error)
+            throw error
         }
-
-        const { user, token } = await response.json()
-        await this.setToken(token)
-        return user
     },
     signOut: async function () {
         await this.clearToken();
