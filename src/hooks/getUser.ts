@@ -10,7 +10,7 @@ export default function useGetUser(): User | null {
     useEffect(() => {
         async function getUser() {
             const user = await authService.getCurrentUser()
-            if (!user.id) {
+            if (!user || !user.id) {
                 return null
             }
 

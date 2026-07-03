@@ -1,7 +1,7 @@
-import { Item } from "../models/item.js";
-import { ItemRecord } from "../types/itemRecord.js";
 import mssql from "mssql";
 import pool from "../config/db.js";
+import { Item } from "../models/item.js";
+import { ItemRecord } from "../types/itemRecord.js";
 
 export const itemRepo = {
 
@@ -60,7 +60,7 @@ export const itemRepo = {
 
             const data = result.recordset[0]
 
-                  if (!data) {
+            if (!data) {
                 return null
             }
 
@@ -93,26 +93,27 @@ export const itemRepo = {
     },
     updateItem: async function (id: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null): Promise<void> {
         try {
-            let updateQuery = ""
+            const req = pool.request().input("ID", mssql.UniqueIdentifier, id)
+            const updates: string[] = []
             if (name) {
-                updateQuery += `NAME = ${name},`
+                req.input("name", mssql.VarChar, name);
+                updates.push("NAME=@name")
             }
             if (description) {
-                updateQuery += `DESCRIPTION = ${description},`
+                req.input("description", mssql.VarChar, description);
+                updates.push("DESCRIPTION=@description")
             }
             if (price) {
-                updateQuery += `PRICE = ${price},`
+                req.input("price", mssql.Decimal, price);
+                updates.push("PRICE=@price")
             }
             if (imageUrl) {
-                updateQuery += `IMAGEURL = ${imageUrl}`
+                req.input("imageUrl", mssql.VarChar, imageUrl);
+                updates.push("IMAGEURL=@imageUrl")
             }
-
-            if (updateQuery === "") {
-                return
-            }
+            if (!updates.length) return
             await
-                pool
-                    .request().input("ID", mssql.UniqueIdentifier, id).query(`UPDATE ASUAESCOLHA.ITEMS SET ${updateQuery} WHERE ID = @id`)
+                req.query(`UPDATE ASUAESCOLHA.ITEMS SET ${updates.join(",")} WHERE ID = @id`)
 
         } catch (error) {
             throw error

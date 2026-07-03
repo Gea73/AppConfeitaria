@@ -1,9 +1,9 @@
 
+import argon2id from "argon2"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import { userRepo } from "../repositories/userRepo.js"
 import { generateAccessToken } from "../utils/accessToken.js"
 import { userService } from "./userService.js"
-import argon2id from "argon2"
-import jwt, { JwtPayload } from "jsonwebtoken"
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -19,17 +19,17 @@ export const authService = {
             const user = await userService.getUserByEmail(email)
 
             if (!user) {
-                throw new Error("Invalid credentials")
+                throw new Error("Invalid credentials email")
             }
 
-            const password_hash = await userRepo.getUserPassword(user.getId())
+            const password_hash = await userRepo.getUserPassword(user.id)
             const isValid = await argon2id.verify(password_hash, password)
 
             if (!isValid) {
-                throw new Error("Invalid credentials")
+                throw new Error("Invalid credentials password")
             }
 
-            const accessToken = generateAccessToken(user)
+            const accessToken = generateAccessToken(user.id,user.role)
 
             return { user, accessToken }
 

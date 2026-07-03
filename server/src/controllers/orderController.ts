@@ -47,6 +47,7 @@ export const controller = {
         }
     },
     getAllOrders: async function (req: Request, res: Response) {
+           console.log("GET /order/all reached");
         try {
 
             const result = await orderService.getAllOrders()
