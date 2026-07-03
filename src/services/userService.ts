@@ -1,12 +1,12 @@
 
 import { User } from "../models/user";
-const API_URL = process.env.API_URL
+const API_URL = process.env.EXPO_PUBLIC_API_URL
 
 export const userService = {
     createUser: async function (name: string, email: string, password: string,): Promise<void> {
         try {
 
-            const response = await fetch(`${API_URL}/user/}`, {
+            const response = await fetch(`${API_URL}/user/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name: name, email: email, password: password })
@@ -27,7 +27,7 @@ export const userService = {
     getUser: async function (id: string): Promise<User | null> {
         try {
 
-            const response = await fetch(`${API_URL}/user/${id}}`, {
+            const response = await fetch(`${API_URL}/user/${id}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
 
