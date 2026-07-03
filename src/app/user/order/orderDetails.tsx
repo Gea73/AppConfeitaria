@@ -1,6 +1,7 @@
 import { Button } from "@/components/buttons/button";
 import OrderItemCardNoButton from "@/components/cards/OrderItemCardNoButton";
 import ErrorBar from "@/components/errorBar";
+import LoadingWheel from "@/components/loadingWheel";
 import { Title } from "@/components/title";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
@@ -9,12 +10,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function OrderDetails() {
@@ -25,16 +26,28 @@ export default function OrderDetails() {
   };
   const [order, setOrder] = useState<Order>();
   const { orderId } = useLocalSearchParams();
-
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     async function getOrder() {
-      const order = await orderService.getOrder(String(orderId));
-      if (order) {
-        setOrder(order);
+      try {
+        const order = await orderService.getOrder(String(orderId));
+        if (order) {
+          setOrder(order);
+
+        }
+
+      } catch (error: any) {
+        showErrorBar(String(error.message))
       }
+      finally {
+        setLoading(false);
+      }
+
     }
     getOrder();
   }, [orderId]);
+
+
 
   async function HandleCancelOrder() {
     try {
@@ -49,10 +62,18 @@ export default function OrderDetails() {
           },
         },
       ]);
-    } catch (e: any) {
-      showErrorBar(String(e));
+    } catch (error: any) {
+      showErrorBar(String(error.message));
     }
   }
+
+
+  if (loading) {
+    return (
+      <LoadingWheel></LoadingWheel>
+    );
+  }
+
 
   return (
     <>
