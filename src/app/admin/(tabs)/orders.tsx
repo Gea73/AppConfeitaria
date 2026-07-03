@@ -3,7 +3,8 @@ import LoadingWheel from "@/components/loadingWheel";
 import NoOrders from "@/components/noOrders";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router/build/react-navigation";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,22 +12,38 @@ export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    async function getAllOrders() {
-      try {
-        const result = await orderService.getAllOrders();
-        if (!result) {
-          return;
-        }
-        setOrders(result);
-      } catch (error) {
-      } finally {
-        setLoading(false);
+
+  async function getAllOrders() {
+    try {
+      const result = await orderService.getAllOrders();
+      if (!result) {
+        throw new Error("Erro no getallorders")
+
       }
+      console.log("Before setOrders");
+      setOrders(result);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      console.log("Before setLoading(false)");
+      setLoading(false);
     }
+  }
+
+
+  useFocusEffect(
+    useCallback(() => {
+      getAllOrders()
+    }, [])
+  )
+
+
+
+  useEffect(() => {
+
 
     getAllOrders();
-  }, [orders]);
+  }, []);
 
   if (loading) {
     return <LoadingWheel></LoadingWheel>;
@@ -43,7 +60,7 @@ export default function Orders() {
               data={orders}
               renderItem={({ item }) => (
                 <OrderCardAdmin
-                  id={item.getId() || String(Date.now())}
+                  id={item.getId()}
                   items={item.getItems()}
                   status={item.getStatus()}
                   statusLabel={item.getStatusLabel()}
@@ -53,7 +70,7 @@ export default function Orders() {
                   customer={item.getCustomerId()}
                 />
               )}
-              keyExtractor={(item) => item.getId() ?? String(Date.now())}
+              keyExtractor={(item) => item.getId()}
             ></FlatList>
           )}
         </SafeAreaView>

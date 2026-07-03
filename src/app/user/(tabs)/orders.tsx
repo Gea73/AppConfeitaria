@@ -4,17 +4,17 @@ import LoadingWheel from "@/components/loadingWheel";
 import NoOrders from "@/components/noOrders";
 import useGetUser from "@/hooks/getUser";
 import { Order } from "@/models/order";
-import { User } from "@/models/user";
 import { orderService } from "@/services/orderService";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router/build/react-navigation";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Orders() {
-  const [user, setUser] = useState<User | null>(useGetUser());
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const user = useGetUser()
   const [errorBar, setErrorBar] = useState("");
   const [successBar, setSuccessBar] = useState("");
   const showErrorBar = (message: string) => {
@@ -26,26 +26,43 @@ export default function Orders() {
     setTimeout(() => setSuccessBar(""), 3000);
   };
 
+
+  async function getCustomerOrders(id: string) {
+
+    try {
+
+      const result = await orderService.getOrders(id);
+      if (!result) {
+        return;
+      }
+      setOrders(result);
+    } catch (error: any) {
+      showErrorBar(String(error.message));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!user) {
+        return;
+      }
+      getCustomerOrders(user.getId())
+    }, [user])
+  )
+
+
+
   useEffect(() => {
     if (!user) {
       return;
     }
-    async function getCustomerOrders(id: string) {
-      try {
-        const result = await orderService.getOrders(id);
-        if (!result) {
-          return;
-        }
-        setOrders(result);
-      } catch (error) {
-        showErrorBar(String(error));
-      } finally {
-        setLoading(false);
-      }
-    }
+
 
     getCustomerOrders(user.getId());
-  }, [orders]);
+  }, [user]);
 
   if (loading) {
     return <LoadingWheel></LoadingWheel>;

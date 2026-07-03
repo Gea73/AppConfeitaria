@@ -1,21 +1,18 @@
-import { Button } from "@/components/buttons/button";
 import OrderCard from "@/components/cards/OrderCard";
 import ErrorBar from "@/components/errorBar";
 import LoadingWheel from "@/components/loadingWheel";
 import NoOrders from "@/components/noOrders";
-import { TopLogo } from "@/components/topLogo";
 import useGetUser from "@/hooks/getUser";
 import { Order } from "@/models/order";
-import { User } from "@/models/user";
 import { orderService } from "@/services/orderService";
 import { colors, spacing } from "@/styles/global";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router/build/react-navigation";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
-  const [user, setUser] = useState<User | null>(useGetUser());
+  const user = useGetUser();
   const [lastOrder, setLastOrder] = useState<Order>();
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -30,24 +27,38 @@ export default function Home() {
     setTimeout(() => setSuccessBar(""), 3000);
   };
 
+  async function getCustomerOrders(id: string) {
+    try {
+      const result = await orderService.getOrders(id);
+      if (!result) {
+        return;
+      }
+      setLastOrder(result[0]);
+    } catch (error: any) {
+      showErrorBar(String(error.message));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+  useFocusEffect(
+
+    useCallback(() => {
+      if (!user) {
+        return;
+      }
+      getCustomerOrders(user.getId())
+    }, [user])
+  )
+
+
   useEffect(() => {
     if (!user) {
       return;
     }
 
-    async function getCustomerOrders(id: string) {
-      try {
-        const result = await orderService.getOrders(id);
-        if (!result) {
-          return;
-        }
-        setLastOrder(result[0]);
-      } catch (error) {
-        showErrorBar(String(error));
-      } finally {
-        setLoading(false);
-      }
-    }
+
 
     getCustomerOrders(user.getId());
   }, [user]);
@@ -61,7 +72,7 @@ export default function Home() {
       <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <SafeAreaView style={{ flex: 1 }}>
           <ErrorBar message={errorBar}></ErrorBar>
-          <TopLogo></TopLogo>
+
           {!lastOrder ? (
             <NoOrders isVisible={true}></NoOrders>
           ) : (
@@ -77,10 +88,7 @@ export default function Home() {
           )}
 
           <View style={stylesheet.container}>
-            <Button
-              text="Novo Pedido"
-              onPress={() => router.push("/user/order/makeOrder")}
-            ></Button>
+
           </View>
         </SafeAreaView>
       </SafeAreaProvider>

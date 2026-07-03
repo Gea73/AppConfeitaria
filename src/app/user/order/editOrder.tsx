@@ -7,7 +7,8 @@ import { orderService } from "@/services/orderService";
 import { colors, typography } from "@/styles/global";
 import { OrderItem } from "@/types/orderItem";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router/build/react-navigation";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -28,26 +29,35 @@ export default function EditOrder() {
   const { orderId } = useLocalSearchParams();
 
 
+
+  async function getOrder() {
+    try {
+      const order = await orderService.getOrder(String(orderId));
+      if (order) {
+        setOrder(order);
+
+      }
+
+    } catch (error: any) {
+      showErrorBar(String(error.message))
+    }
+    finally {
+      setLoading(false);
+    }
+
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getOrder()
+    }, [])
+  )
+
+
+
   useEffect(() => {
 
 
-
-    async function getOrder() {
-      try {
-        const order = await orderService.getOrder(String(orderId));
-        if (order) {
-          setOrder(order);
-
-        }
-
-      } catch (e: any) {
-        showErrorBar(String(e))
-      }
-      finally {
-        setLoading(false);
-      }
-
-    }
     getOrder();
   }, [orderId]);
 
@@ -86,9 +96,9 @@ export default function EditOrder() {
   async function HandleEditOrder() {
     try {
       await orderService.updateOrder(String(orderId), modifiedItems, null)
-      router.back();
-    } catch (e: any) {
-      showErrorBar(String(e));
+      router.replace("/user/(tabs)/home");
+    } catch (error: any) {
+      showErrorBar(String(error.message));
     }
   }
   return (

@@ -6,26 +6,38 @@ import { Item } from "@/models/item";
 import { itemService } from "@/services/itemService";
 import { colors, typography } from "@/styles/global";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router/build/react-navigation";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Menu() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  useEffect(() => {
-    async function getItems() {
-      try {
-        const result = await itemService.getItems();
-        if (!result) {
-          return;
-        }
-        setItems(result);
-      } catch (error) {
-      } finally {
-        setLoading(false);
+
+  async function getItems() {
+    try {
+      const result = await itemService.getItems();
+      if (!result) {
+        return;
       }
+      setItems(result);
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
+  }
+
+
+
+  useFocusEffect(
+    useCallback(() => {
+      getItems()
+    }, [])
+  )
+
+
+  useEffect(() => {
 
     getItems();
   }, []);
