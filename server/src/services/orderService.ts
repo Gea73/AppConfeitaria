@@ -1,9 +1,9 @@
 
+import { v7 as uuidv7 } from "uuid";
 import { Order } from "../models/order.js";
 import { orderRepo } from "../repositories/orderRepo.js";
 import { OrderItem } from "../types/orderItem.js";
 import { OrderStatus } from "../types/orderStatus.js";
-import { v7 as uuidv7 } from "uuid";
 
 export const orderService = {
 
@@ -13,7 +13,7 @@ export const orderService = {
             const id = uuidv7();
             const total = items.reduce((sum, item) => sum + item.quantity * item.price, 0)
             const order = new Order(id, customerId, items, status, total);
-            
+
             await orderRepo.createOrder(order);
 
 
@@ -36,7 +36,7 @@ export const orderService = {
         }
 
     },
-    getOrder: async function (orderId: string): Promise<Order | null> {
+    getOrder: async function (orderId: string) {
         try {
 
             const data = await orderRepo.getOrderById(orderId);
@@ -45,7 +45,9 @@ export const orderService = {
                 return null
             }
 
-            return new Order(data.id, data?.customerId, data?.items, data?.status,data.total)
+            return {
+                id: data.id, customerId: data?.customerId, items: data?.items, status: data?.status, total: data.total
+            }
 
 
         } catch (error) {
@@ -54,7 +56,7 @@ export const orderService = {
             })
         }
     },
-    getOrders: async function (customerId: string): Promise<Order[] | null> {
+    getOrders: async function (customerId: string) {
         try {
 
             const data = await orderRepo.getOrdersByCustomer(customerId);
@@ -62,7 +64,7 @@ export const orderService = {
                 return null
             }
 
-            const orders = data?.map((o) => { return new Order(o.id, o.customerId, o.items, o.status,o.total) })
+            const orders = data?.map((o) => { return { id: o.id, customerId: o.customerId, items: o.items, status: o.status, total: o.total } })
             return orders
 
         } catch (error) {
@@ -72,7 +74,7 @@ export const orderService = {
         }
 
     },
-    getAllOrders: async function (): Promise<Order[] | null> {
+    getAllOrders: async function () {
         try {
             const data = await orderRepo.getOrders()
 
@@ -80,7 +82,7 @@ export const orderService = {
                 return null
             }
 
-            const orders = data?.map((o) => { return new Order(o.id, o.customerId, o.items, o.status,o.total) })
+            const orders = data?.map((o) => { return { id: o.id, customerId: o.customerId, items: o.items, status: o.status, total: o.total } })
 
             return orders
         } catch (error) {
@@ -113,7 +115,7 @@ export const orderService = {
                 })
                 callback(orders)
             })
-
+ 
         } catch (error) {
             throw new Error("It was not possible to subscribe to orders", {
                 cause: error
@@ -122,10 +124,10 @@ export const orderService = {
     },
     subscribeToCustomerOrders: function (customerId: string, callback: (orders: Order[]) => void) {
         try {
-
-
+ 
+ 
             const q = query(collection(db, "orders"), where("customerId", "==", customerId), orderBy("createdAt", "desc"));
-
+ 
             return onSnapshot(q, (snapshot) => {
                 const orders = snapshot.docs.map((doc) => {
                     const data = doc.data()

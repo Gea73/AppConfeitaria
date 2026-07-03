@@ -1,7 +1,7 @@
+import argon2id from "argon2";
+import { v7 as uuidv7 } from "uuid";
 import { User } from "../models/user.js";
 import { userRepo } from "../repositories/userRepo.js";
-import { v7 as uuidv7 } from "uuid";
-import argon2id from "argon2"
 
 export const userService = {
     createUser: async function (name: string, email: string, password: string): Promise<void> {
@@ -25,7 +25,7 @@ export const userService = {
         }
     },
 
-    getUser: async function (id: string): Promise<User | null> {
+    getUser: async function (id: string) {
         try {
 
 
@@ -35,7 +35,7 @@ export const userService = {
                 return null
             }
 
-            return new User(result.id, result.name, result.email, result.role)
+            return { id: result.id, name: result.name, email: result.email, role: result.role }
         } catch (error) {
             throw new Error("User couldn't be fetched", {
                 cause: error
@@ -53,7 +53,7 @@ export const userService = {
                 return null
             }
 
-            return new User(result.id, result.name, result.email, result.role)
+            return  { id: result.id, name: result.name, email: result.email, role: result.role }
         } catch (error) {
             throw new Error("User couldn't be fetched", {
                 cause: error

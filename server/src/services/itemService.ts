@@ -1,7 +1,7 @@
 
+import { v7 as uuidv7 } from "uuid";
 import { Item } from "../models/item.js";
 import { itemRepo } from "../repositories/itemRepo.js";
-import { v7 as uuidv7 } from "uuid";
 
 
 export const itemService = {
@@ -10,7 +10,7 @@ export const itemService = {
 
             const id = uuidv7();
 
-            const item = new Item(id,name, description, price, imageUrl);
+            const item = new Item(id, name, description, price, imageUrl);
 
             await itemRepo.createItem(item);
 
@@ -37,7 +37,7 @@ export const itemService = {
 
     },
 
-    getItem: async function (id: string): Promise<Item | null> {
+    getItem: async function (id: string) {
         try {
 
             const data = await itemRepo.getItemById(id);
@@ -45,7 +45,7 @@ export const itemService = {
                 return null
             }
 
-            return new Item(data?.id,data?.name, data?.description, data?.price, data?.imageUrl)
+            return { id: data?.id, name: data?.name, description: data?.description, price: data?.price, imageUrl: data?.imageUrl }
 
 
         } catch (error) {
@@ -56,14 +56,14 @@ export const itemService = {
 
     },
 
-    getItems: async function (): Promise<Item[] | null> {
+    getItems: async function () {
         try {
             const data = await itemRepo.getItems();
             if (!data) {
                 return null
             }
 
-            const items = data?.map((i) => { return new Item(i.id,i.name, i.description, i.price, i.imageUrl ) })
+            const items = data?.map((i) => { return { id: i.id, name: i.name, description: i.description, price: i.price, imageUrl: i.imageUrl } })
             return items
 
         } catch (error) {
