@@ -1,16 +1,14 @@
 import AccountCard from "@/components/cards/accountCard";
 import { useCartContext } from "@/context/cartContext";
 import useGetUser from "@/hooks/getUser";
-import { User } from "@/models/user";
 import { authService } from "@/services/authService";
 import { colors, typography } from "@/styles/global";
 import { router } from "expo-router";
-import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function Account() {
-  const [user, setUser] = useState<User | null>(useGetUser());
   const { ClearCart } = useCartContext();
+  const user = useGetUser()
 
   return (
     <>
