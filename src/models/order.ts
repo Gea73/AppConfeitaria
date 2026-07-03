@@ -12,17 +12,17 @@ export class Order {
     private _status: OrderStatus
     private _total: number
 
-    constructor(customerId: string, items: OrderItem[], status: OrderStatus, id: string) {
+    constructor(customerId: string, items: OrderItem[], status: OrderStatus, id: string, total: number) {
         this._id = this.setId(id)
         this._customerId = this.setCustomerId(customerId)
         this._items = this.setItems(items)
         this._status = this.setStatus(status)
-        this._total = this.setTotal()
+        this._total = this.setTotal(total)
 
     }
 
-    setId(id: string ) {
-       
+    setId(id: string) {
+
         if (id && id.trim().length === 0) {
             throw new Error("id is empty")
         }
@@ -75,11 +75,11 @@ export class Order {
         return status[this._status]
     }
 
-    setTotal() {
-        if (this._total) {
-            return this._total;
+    setTotal(total: number) {
+        if (!total || total <= 0) {
+            throw new Error("Total is invalid")
         }
-        return this._items.reduce((sum, item) => sum + item.quantity * item.price, 0)
+        return total;
     }
 
 
