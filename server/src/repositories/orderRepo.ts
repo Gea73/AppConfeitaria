@@ -48,25 +48,28 @@ export const orderRepo = {
             throw error
         }
     },
-    createMov: async function (id: string, orderId: string, itemId: string, quantity: number) {
-        try {
-            await pool.request()
-                .input("id", mssql.UniqueIdentifier, id)
-                .input("orderId", mssql.UniqueIdentifier, orderId)
-                .input("itemId", mssql.UniqueIdentifier, itemId)
-                .input("quantity", mssql.Int, quantity)
-                .query(`
-            INSERT INTO ASUAESCOLHA.MOVEMENT
-            (ID,ORDERID, ITEMID, QUANTITY)
-            VALUES (@id,@orderId,@itemId,@quantity)
-        `);
-        } catch (error) {
-            throw error
-        }
-    },
+
 
     updateOrder: async function (id: string, status: string | null, items: OrderItem[] | null): Promise<void> {
         try {
+
+            if (status) {
+                await
+                    pool
+                        .request().input("id", mssql.UniqueIdentifier, id).input("status", mssql.VarChar, status).query(`UPDATE ASUAESCOLHA.ORDERS SET STATUS = @status WHERE ID = @id`)
+            }
+            if (items) {
+                for (const item of items) {
+                    await pool.request()
+                        .input("orderId", mssql.UniqueIdentifier, id)
+                        .input("itemId", mssql.UniqueIdentifier, item.id)
+                        .input("quantity", mssql.Int, item.quantity)
+                        .query(`
+            UPDATE ASUAESCOLHA.MOVEMENT SET QUANTITY = @quantity WHERE ORDERID = @orderId AND ITEMID = @itemId
+        `);
+                }
+            }
+
 
 
 
@@ -97,12 +100,12 @@ export const orderRepo = {
 
 
             return {
-                id: data.ID,
-                customerId: data.CUSTOMERID,
-                status: data.STATUS,
-                total: data.TOTAL,
+                id: data.id,
+                customerId: data.customerId,
+                status: data.status,
+                total: data.total,
                 items: items,
-                createdAt: data.CREATEDAT
+                createdAt: data.createdAt
             }
 
         } catch (error) {
@@ -142,7 +145,7 @@ export const orderRepo = {
             const orders = result.recordset
 
             const ordersWithItems = await Promise.all(orders.map(async (order) => {
-                const resultItems = await pool.request().input("id", mssql.UniqueIdentifier, order.id).query(`SELECT i.ID,i.NAME,i.DESCRIPTION,i.PRICE,i.IMAGEURL,mov.QUANTITY FROM ASUAESCOLHA.ITEMS i INNER JOIN ASUAESCOLHA.MOVEMENT mov ON mov.ITEMID = i.ID WHERE mov.ORDERID = @id`)
+                const resultItems = await pool.request().input("id", mssql.UniqueIdentifier, order.id).query(`SELECT i.ID AS id,i.NAME AS name,i.DESCRIPTION AS description,i.PRICE AS price,i.IMAGEURL AS imageUrl,mov.QUANTITY AS quantity FROM ASUAESCOLHA.ITEMS i INNER JOIN ASUAESCOLHA.MOVEMENT mov ON mov.ITEMID = i.ID WHERE mov.ORDERID = @id`)
                 return { ...order, items: resultItems.recordset }
 
             }))
@@ -155,14 +158,25 @@ export const orderRepo = {
     },
 
     deleteOrder: async function (id: string): Promise<void> {
+        const transaction = new mssql.Transaction(pool)
+        let started = false
         try {
-            await
-                pool
-                    .request()
-                    .input("ID", mssql.UniqueIdentifier, id).query(`DELETE FROM ASUAESCOLHA.ORDERS WHERE ID = @id`)
+            await transaction.begin()
+            started = true
+            await transaction.request().input("id", mssql.UniqueIdentifier, id).query(`DELETE FROM ASUAESCOLHA.MOVEMENT WHERE ORDERID = @id`)
+
+            await transaction
+                .request()
+                .input("id", mssql.UniqueIdentifier, id).query(`DELETE FROM ASUAESCOLHA.ORDERS WHERE ID = @id`)
 
 
+
+            await transaction.commit()
         } catch (error) {
+            if (started) {
+                await transaction.rollback()
+            }
+
             throw error
         }
     }
