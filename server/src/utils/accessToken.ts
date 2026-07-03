@@ -1,6 +1,5 @@
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { User } from "../models/user.js";
+import jwt from "jsonwebtoken";
 dotenv.config()
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -9,9 +8,10 @@ if (!JWT_SECRET) {
 }
 
 
-function generateAccessToken(user: User) {
+function generateAccessToken(id: string, role: string) {
 
-    return jwt.sign({ id: user.getId(), role: user.getRole() }, JWT_SECRET as string, { expiresIn: "60m" });
+    return jwt.sign({ id: id, role: role }, JWT_SECRET as string, { expiresIn: "60m" });
 }
 
 export { generateAccessToken };
+
