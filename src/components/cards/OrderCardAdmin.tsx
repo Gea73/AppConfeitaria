@@ -1,6 +1,7 @@
 import { orderService } from "@/services/orderService";
 import { colors } from "@/styles/global";
 import { OrderItem } from "@/types/orderItem";
+import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../buttons/button";
@@ -31,11 +32,14 @@ export default function OrderCardAdmin(props: OrderCardProps) {
   async function handleConfirmed(id: string) {
     await orderService.updateOrder(id, null, "preparing");
     setConfirmed(true);
+    router.navigate("/admin/(tabs)/orders")
+    
   }
 
   async function handleDone(id: string) {
     await orderService.updateOrder(id, null, "delivered");
     setDone(true);
+      router.navigate("/admin/(tabs)/orders")
   }
 
   return (

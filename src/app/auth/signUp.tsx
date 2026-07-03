@@ -54,8 +54,8 @@ export default function SignUp() {
       setTimeout(() => {
         router.replace("/auth/signIn");
       }, 1000);
-    } catch (e: any) {
-      showErrorBar(e);
+    } catch (error: any) {
+      showErrorBar(error.message);
     }
   };
 

@@ -9,7 +9,7 @@ export default function TabLayout() {
     async function verifyRole() {
       const user = await authService.getCurrentUser();
 
-      if (!user.id) {
+      if (!user || !user?.id) {
         router.replace("/auth/signIn");
         return;
       }

@@ -29,12 +29,14 @@ export default function MakeOrder() {
           return;
         }
         setMenu(result);
-      } catch (error) {
-        showErrorBar(String(error));
+      } catch (error: any) {
+        showErrorBar(String(error.message));
       } finally {
         setLoading(false);
       }
+
     }
+    getItems()
   }, []);
   if (loading) {
     return <LoadingWheel></LoadingWheel>;
@@ -46,8 +48,8 @@ export default function MakeOrder() {
         throw new Error("Seu pedido está vazio");
       }
       router.push("/user/order/checkout");
-    } catch (e: any) {
-      showErrorBar(String(e));
+    } catch (error: any) {
+      showErrorBar(String(error.message));
     }
   }
   return (

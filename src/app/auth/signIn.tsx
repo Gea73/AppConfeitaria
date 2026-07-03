@@ -8,7 +8,6 @@ import SuccessBar from "@/components/successBar";
 import { Title } from "@/components/title";
 import { TopLogo } from "@/components/topLogo";
 import { authService } from "@/services/authService";
-import { userService } from "@/services/userService";
 import { colors, spacing } from "@/styles/global";
 import { Link, router } from "expo-router";
 import { useState } from "react";
@@ -44,8 +43,8 @@ export default function SignIn() {
         throw new Error("Não foi possivel logar");
       }
 
-      const admin = await userService.getUser(result.id);
-      if (admin?.getRole() === "admin") {
+      
+      if (result.role === "admin") {
         showSuccessBar("Usuário logado com sucesso");
         setTimeout(() => {
           router.replace("/admin/home");
@@ -57,8 +56,9 @@ export default function SignIn() {
       setTimeout(() => {
         router.replace("/user/home");
       }, 1000);
-    } catch (e: any) {
-      showErrorBar(e);
+    } catch (error: any) {
+      showErrorBar(error.message);
+      console.log(error)
     }
   };
 

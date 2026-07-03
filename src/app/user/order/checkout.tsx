@@ -52,7 +52,7 @@ export default function Checkout() {
     try {
       const user = await authService.getCurrentUser();
 
-      if (!user.id) {
+      if (!user || !user.id) {
         throw new Error("Invalid user");
       }
       await orderService.createOrder(user.id, cart, "pending");
@@ -61,8 +61,8 @@ export default function Checkout() {
         ClearCart();
         router.replace("/user/home");
       }, 1000);
-    } catch (e: any) {
-      showErrorBar(String(e));
+    } catch (error: any) {
+      showErrorBar(String(error.message));
     }
   }
 

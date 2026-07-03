@@ -16,6 +16,7 @@ export default function Layout() {
           router.replace(
             user?.getRole() === "admin" ? "/admin/home" : "/user/home",
           );
+          return;
         }
 
         router.replace("/auth/signIn");

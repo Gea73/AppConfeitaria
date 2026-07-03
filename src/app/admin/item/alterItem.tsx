@@ -59,8 +59,8 @@ export default function AlterItem() {
       );
 
       router.back();
-    } catch (e: any) {
-      showErrorBar(String(e));
+    } catch (error: any) {
+      showErrorBar(String(error.message));
     }
   }
 
@@ -77,8 +77,8 @@ export default function AlterItem() {
           },
         },
       ]);
-    } catch (e: any) {
-      showErrorBar(String(e));
+    } catch (error: any) {
+      showErrorBar(String(error.message));
     }
   }
   return (

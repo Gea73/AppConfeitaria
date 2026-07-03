@@ -28,8 +28,8 @@ export default function ForgotPassword() {
       }
       // await resetPassword(email);
       showSuccessBar("Email enviado com sucesso");
-    } catch (e: any) {
-      showErrorBar(e);
+    } catch (error: any) {
+      showErrorBar(error.message);
     }
   };
 

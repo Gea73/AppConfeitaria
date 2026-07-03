@@ -47,8 +47,8 @@ export default function CreateItem() {
       );
       showSuccessBar("Item criado");
       setTimeout(() => router.back(), 1000);
-    } catch (e: any) {
-      showErrorBar(String(e));
+    } catch (error: any) {
+      showErrorBar(String(error.message));
     }
   }
   return (
