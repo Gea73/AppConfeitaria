@@ -14,7 +14,7 @@ export default function Layout() {
 
         if (user) {
           router.replace(
-            user?.getRole() === "admin" ? "/admin/home" : "/user/home",
+            user.role === "admin" ? "/admin/home" : "/user/home",
           );
           return;
         }

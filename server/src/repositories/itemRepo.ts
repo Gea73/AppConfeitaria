@@ -56,7 +56,7 @@ export const itemRepo = {
             const result = await
                 pool
                     .request()
-                    .input("ID", mssql.UniqueIdentifier, id).query(`SELECT ID,NAME,DESCRIPTION,PRICE,IMAGEURL,CREATEDAT FROM ASUAESCOLHA.ITEMS WHERE ID = @id`)
+                    .input("id", mssql.UniqueIdentifier, id).query(`SELECT ID,NAME,DESCRIPTION,PRICE,IMAGEURL,CREATEDAT FROM ASUAESCOLHA.ITEMS WHERE ID = @id`)
 
             const data = result.recordset[0]
 
@@ -93,7 +93,7 @@ export const itemRepo = {
     },
     updateItem: async function (id: string, name: string | null, description: string | null, price: number | null, imageUrl: string | null): Promise<void> {
         try {
-            const req = pool.request().input("ID", mssql.UniqueIdentifier, id)
+            const req = pool.request().input("id", mssql.UniqueIdentifier, id)
             const updates: string[] = []
             if (name) {
                 req.input("name", mssql.VarChar, name);
@@ -128,7 +128,7 @@ export const itemRepo = {
             await
                 pool
                     .request()
-                    .input("ID", mssql.UniqueIdentifier, id).query(`DELETE FROM ASUAESCOLHA.ITEMS WHERE ID = @id`)
+                    .input("id", mssql.UniqueIdentifier, id).query(`DELETE FROM ASUAESCOLHA.ITEMS WHERE ID = @id`)
 
 
         } catch (error) {

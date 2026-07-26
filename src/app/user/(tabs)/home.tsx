@@ -1,3 +1,4 @@
+import { Button } from "@/components/buttons/button";
 import OrderCard from "@/components/cards/OrderCard";
 import ErrorBar from "@/components/errorBar";
 import LoadingWheel from "@/components/loadingWheel";
@@ -6,6 +7,7 @@ import useGetUser from "@/hooks/getUser";
 import { Order } from "@/models/order";
 import { orderService } from "@/services/orderService";
 import { colors, spacing } from "@/styles/global";
+import { router } from "expo-router";
 import { useFocusEffect } from "expo-router/build/react-navigation";
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -88,7 +90,10 @@ export default function Home() {
           )}
 
           <View style={stylesheet.container}>
-
+            <Button
+              text="Novo Pedido"
+              onPress={() => router.push("/user/order/makeOrder")}
+            ></Button>
           </View>
         </SafeAreaView>
       </SafeAreaProvider>
