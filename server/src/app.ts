@@ -2,15 +2,15 @@ import express, { NextFunction, Request, Response } from "express";
 
 const app = express();
 
+import { router as authRouter } from "./routes/authRoutes.js";
 import { router as itemRouter } from "./routes/itemRoutes.js";
 import { router as orderRouter } from "./routes/orderRoutes.js";
 import { router as userRouter } from "./routes/userRoutes.js";
-import { router as authRouter } from "./routes/authRoutes.js";
 
 
 
 app.disable("x-powered-by");
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "100kb" }));
 
 app.use("/item", itemRouter)
 app.use("/order", orderRouter)
