@@ -12,7 +12,7 @@ export const controller = {
             password = String(password).trim()
 
             if (!email || !password) {
-                return res.status(400).json({ message: "FAILURE" })
+                return res.status(401).json({ message: "FAILURE" })
             }
 
             const { user, accessToken } = await authService.signIn(email, password)
