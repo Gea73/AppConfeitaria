@@ -1,3 +1,8 @@
+[![React Native](https://img.shields.io/badge/React_Native-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#)
+[![Expo](https://img.shields.io/badge/Expo-000020?logo=expo&logoColor=fff)](#)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)](#)
+[![Firebase](https://img.shields.io/badge/Firebase-039BE5?logo=Firebase&logoColor=white)](#)
+
 # Sistema de Confeitaria
 
 Aplicativo mobile de cardápio online para confeitaria, desenvolvido com React Native, Expo e Firebase.
